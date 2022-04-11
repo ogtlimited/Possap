@@ -1,0 +1,107 @@
+[
+    {
+        "page_label": "Police Extract",
+        "fields": [
+            {
+                "field_id": "extractCategory",
+                "field_label": "Select Category of Extract",
+                "field_mandatory": "yes",
+                "field_placeholder": "Select an extract category.",
+                "field_type": "checkmark",
+                "field_options": ["Loss of Document", "Loss of Property", "Others"],
+
+                "filed_value": ""
+            },
+            {
+                "field_id": "documentLost",
+                "field_label": "Loss of Document",
+                "field_mandatory": "yes",
+                "field_placeholder": "Loss of Document",
+                "field_type": "checkmark",
+                "field_options": ["Identification", "Certificate", "Book/Journal", "Vehicle Particulars", "Government issued document", "Others"],
+                "filed_value": ""
+            },
+            {
+                "field_id": "propertyLost",
+                "field_label": "Loss of Property",
+                "field_mandatory": "yes",
+                "field_placeholder": "Loss of Property",
+                "field_type": "checkmark",
+                "field_options": ["Vehicle", "Mobile device", "Electrical / Electronics equipment", "Household equipment", "Clothing / Wears", "Others"],
+                "filed_value": ""
+            },
+            {
+                "field_id": "extractReason",
+                "field_label": "Reason for Request",
+                "field_mandatory": "yes",
+                "field_placeholder": "Enter your reason for extract",
+                "field_type": "text",
+                "filed_value": ""
+            },
+            {
+                "field_id": "wasReported",
+                "field_label": "Was incident reported at a police station?",
+                "field_mandatory": "yes",
+                "field_placeholder": "",
+                "field_type": "radio",
+                "filed_value": ""
+            },
+            {
+                "field_id": "dateReported",
+                "field_label": "Select the date the incident was reported",
+                "field_mandatory": "yes",
+                "field_placeholder": "Enter Incident Reported Date",
+                "field_type": "date",
+                "filed_value": ""
+            },
+            {
+                "field_id": "courtAffidavit",
+                "field_label": "Upload Court Affidavit",
+                "field_mandatory": "yes",
+                "field_placeholder": "Add a court affidavit file here. Maximum size: 1MB",
+                "field_type": "file",
+                "filed_value": ""
+            },
+            {
+                "field_id": "affidavitNumber",
+                "field_label": "Affidavit Number",
+                "field_mandatory": "yes",
+                "field_placeholder": "Enter Affidavit Number",
+                "field_type": "text",
+                "filed_value": ""
+            },
+            {
+                "field_id": "affidavitDateOfIssuance",
+                "field_label": "Affidavit Date of Issuance",
+                "field_mandatory": "yes",
+                "field_placeholder": "Enter affidavit date of issuance",
+                "field_type": "date",
+                "filed_value": ""
+            },
+            {
+                "field_id": "extractState",
+                "field_label": "State",
+                "field_mandatory": "yes",
+                "field_placeholder": "Select State of the Police Formation/Division",
+                "field_type": "select",
+                "filed_value": ""
+            },
+            {
+                "field_id": "extractLga",
+                "field_label": "Local Government Area",
+                "field_mandatory": "yes",
+                "field_placeholder": "Select LGA of the Police Formation/Division",
+                "field_type": "select",
+                "filed_value": ""
+            },
+            {
+                "field_id": "extractPoliceDivision",
+                "field_label": "Select the Police Formation/Division",
+                "field_mandatory": "yes",
+                "field_placeholder": "Select the Formation/Division",
+                "field_type": "select",
+                "filed_value": ""
+            }
+        ]
+    }
+]

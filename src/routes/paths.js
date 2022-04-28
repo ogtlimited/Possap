@@ -36,10 +36,13 @@ export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
-    ecommerce: path(ROOTS_DASHBOARD, '/ecommerce'),
-    analytics: path(ROOTS_DASHBOARD, '/analytics'),
-    banking: path(ROOTS_DASHBOARD, '/banking'),
-    booking: path(ROOTS_DASHBOARD, '/booking')
+    finances: path(ROOTS_DASHBOARD, '/finances')
+  },
+  reports: {
+    root: path(ROOTS_DASHBOARD, '/reports'),
+    extract: path(ROOTS_DASHBOARD, '/reports/police-extract'),
+    clearance: path(ROOTS_DASHBOARD, '/reports/character-certificate'),
+    guard: path(ROOTS_DASHBOARD, '/reports/guard-services')
   },
   services: {
     root: path(ROOTS_DASHBOARD, '/requests'),

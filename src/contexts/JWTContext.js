@@ -1,8 +1,9 @@
 import { createContext, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 // utils
-import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
+
+import { FetchUser, LoginUser, RegisterUser } from '../_apis_/auth';
 
 // ----------------------------------------------------------------------
 
@@ -63,36 +64,26 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  console.log(state);
+  const initialize = async () => {
+    try {
+      const accessToken = window.localStorage.getItem('accessToken');
 
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        const accessToken = window.localStorage.getItem('accessToken');
+      if (accessToken && isValidToken(accessToken)) {
+        setSession(accessToken);
+        // const response = await axios.get('/api/account/my-account');
+        // const response = await FetchUser();
+        // const { user } = response.data;
+        const user = JSON.parse(localStorage.getItem('possap-user'));
 
-        if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
-
-          const response = await axios.get('/api/account/my-account');
-          const { user } = response.data;
-
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: true,
-              user
-            }
-          });
-        } else {
-          dispatch({
-            type: 'INITIALIZE',
-            payload: {
-              isAuthenticated: false,
-              user: null
-            }
-          });
-        }
-      } catch (err) {
-        console.error(err);
+        dispatch({
+          type: 'INITIALIZE',
+          payload: {
+            isAuthenticated: true,
+            user
+          }
+        });
+      } else {
         dispatch({
           type: 'INITIALIZE',
           payload: {
@@ -101,36 +92,44 @@ function AuthProvider({ children }) {
           }
         });
       }
-    };
-
+    } catch (err) {
+      console.error(err);
+      dispatch({
+        type: 'INITIALIZE',
+        payload: {
+          isAuthenticated: false,
+          user: null
+        }
+      });
+    }
+  };
+  useEffect(() => {
     initialize();
   }, []);
 
   const login = async (email, password) => {
     console.log(email);
-    const response = await axios.post('/api/account/login', {
+    const response = await LoginUser({
       email,
       password
     });
-    console.log(response);
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
+    const { data, token } = response.data;
+    console.log(data);
+    console.log(token);
+    localStorage.setItem('possap-user', JSON.stringify(data));
+    setSession(token.token);
     dispatch({
       type: 'LOGIN',
       payload: {
-        user
+        user: data
       }
     });
+    initialize();
   };
 
-  const register = async (email, password, firstName, lastName) => {
-    const response = await axios.post('/api/account/register', {
-      email,
-      password,
-      firstName,
-      lastName
-    });
+  const register = async (data) => {
+    console.log('JWT', data);
+    const response = await RegisterUser(data);
     const { accessToken, user } = response.data;
 
     window.localStorage.setItem('accessToken', accessToken);

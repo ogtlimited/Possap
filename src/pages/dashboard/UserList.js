@@ -21,9 +21,7 @@ import {
   TableContainer,
   TablePagination
 } from '@material-ui/core';
-// redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getUserList, deleteUser } from '../../redux/slices/user';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -81,7 +79,6 @@ function applySortFilter(array, comparator, query) {
 export default function UserList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const dispatch = useDispatch();
   const userList = [
     {
       id: 1,
@@ -132,10 +129,6 @@ export default function UserList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  useEffect(() => {
-    dispatch(getUserList());
-  }, [dispatch]);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -180,7 +173,7 @@ export default function UserList() {
   };
 
   const handleDeleteUser = (userId) => {
-    dispatch(deleteUser(userId));
+    console.log(userId);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;

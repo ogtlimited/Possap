@@ -17,6 +17,7 @@ import { SelectService } from '../components/_external-pages/services';
 import EXTRACT from '../json-form/police-extract.json';
 import CHARACTERCERT from '../json-form/policeCharacterCertificate.json';
 import GUARDSERVICES from '../json-form/escortAndGuardServices.json';
+import { PoliceExtractForm, CharacterCertForm, EGForm } from '../components/services';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -52,7 +53,7 @@ export default function Payment() {
     },
     validationSchema: PaymentSchema,
     onSubmit: async (values, { resetForm }) => {
-      console.log(values);
+      // console.log(values);
       await fakeRequest(500);
 
       resetForm();
@@ -60,7 +61,7 @@ export default function Payment() {
     }
   });
   const { values, errors, isSubmitting } = formik;
-  console.log(values);
+
   return (
     <RootStyle title="Request Service ">
       <Container maxWidth="lg">
@@ -97,21 +98,14 @@ export default function Payment() {
               <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
                 <Grid p={3} container spacing={upMd ? 5 : 2}>
                   <Grid item xs={12} md={7}>
-                    {values.serviceType}
-                    <ServiceForm
-                      isSubmitting={isSubmitting}
-                      errors={errors}
-                      schema={
-                        values.serviceType === sTypes[0]
-                          ? EXTRACT
+                        {values.serviceType === sTypes[0]
+                          ? <PoliceExtractForm />
                           : values.serviceType === sTypes[1]
-                          ? CHARACTERCERT
+                          ? <CharacterCertForm />
                           : values.serviceType === sTypes[2]
-                          ? GUARDSERVICES
+                          ? <EGForm />
                           : []
-                      }
-                      formik={formik}
-                    />
+                        }
                   </Grid>
                   {/* <Grid item xs={12} md={4}>
                     <PaymentMethods formik={formik} />

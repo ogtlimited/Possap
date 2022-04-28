@@ -18,14 +18,12 @@ import 'slick-carousel/slick/slick-theme.css';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { Provider as ReduxProvider } from 'react-redux';
-import { PersistGate } from 'redux-persist/lib/integration/react';
+
 // material
 import AdapterDateFns from '@material-ui/lab/AdapterDateFns';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
-// redux
-import { store, persistor } from './redux/store';
 // contexts
+import { QueryClientProvider, QueryClient } from 'react-query';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { CollapseDrawerProvider } from './contexts/CollapseDrawerContext';
 // components
@@ -38,24 +36,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // ----------------------------------------------------------------------
-
+const queryClient = new QueryClient();
 ReactDOM.render(
   <HelmetProvider>
-    <ReduxProvider store={store}>
-      <PersistGate loading={<LoadingScreen />} persistor={persistor}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <SettingsProvider>
-            <CollapseDrawerProvider>
-              <BrowserRouter>
-                <AuthProvider>
-                  <App />
-                </AuthProvider>
-              </BrowserRouter>
-            </CollapseDrawerProvider>
-          </SettingsProvider>
-        </LocalizationProvider>
-      </PersistGate>
-    </ReduxProvider>
+    <QueryClientProvider client={queryClient}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <SettingsProvider>
+          <CollapseDrawerProvider>
+            <BrowserRouter>
+              <AuthProvider>
+                <App />
+              </AuthProvider>
+            </BrowserRouter>
+          </CollapseDrawerProvider>
+        </SettingsProvider>
+      </LocalizationProvider>
+    </QueryClientProvider>
   </HelmetProvider>,
   document.getElementById('root')
 );

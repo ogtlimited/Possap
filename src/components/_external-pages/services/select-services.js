@@ -78,8 +78,6 @@ SelectService.propTypes = {
 export default function SelectService({ formik }) {
   const [show, setShow] = useState(false);
   const { values, getFieldProps } = formik;
-  console.log(formik);
-  console.log(values);
   const handleCollapseIn = () => {
     setShow((prev) => !prev);
   };

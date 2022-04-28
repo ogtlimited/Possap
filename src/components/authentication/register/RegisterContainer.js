@@ -34,15 +34,16 @@ import RegisterForm from './RegisterForm';
 export default function RegisterContainer() {
   const isMountedRef = useIsMountedRef();
   const [currentStep, setcurrentStep] = useState('one');
+  const [verfiedData, setverfiedData] = useState(null)
   const [formOne, setformOne] = useState(null);
   const [formTwo, setformTwo] = useState(null);
 
   return (
     <Stack spacing={3}>
       {currentStep === 'one' ? (
-        <RegisterOneForm formSubmit={setformOne} setcurrentStep={setcurrentStep} />
+        <RegisterOneForm formSubmit={setformOne} setverfiedData={setverfiedData} setcurrentStep={setcurrentStep} />
       ) : (
-        <RegisterForm formSubmit={setformTwo} setcurrentStep={setcurrentStep} />
+        <RegisterForm formSubmit={setformTwo} formOne={formOne} verfiedData={verfiedData} setcurrentStep={setcurrentStep} />
       )}
     </Stack>
   );

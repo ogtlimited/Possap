@@ -1,7 +1,7 @@
 {
   "name": "Possap",
   "author": "Outsource Global Devs",
-  "version": "2.5.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
@@ -82,6 +82,7 @@
     "react-image-lightbox": "^5.1.4",
     "react-infinite-scroll-component": "^6.1.0",
     "react-intersection-observer": "^8.32.0",
+    "react-query": "^3.34.19",
     "react-quill": "^2.0.0-beta.2",
     "react-redux": "^7.2.4",
     "react-router": "^6.0.0-beta.1",

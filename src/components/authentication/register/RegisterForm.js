@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useSnackbar } from 'notistack5';
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -19,12 +19,43 @@ import useIsMountedRef from '../../../hooks/useIsMountedRef';
 import { MIconButton } from '../../@material-extend';
 // ----------------------------------------------------------------------
 
-export default function RegisterForm({ setcurrentStep }) {
+export default function RegisterForm({ setcurrentStep, verfiedData, formOne }) {
   const { register } = useAuth();
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
+  const [userState, setuserState] = useState('');
+  const [userLGA, setuserLGA] = useState('second');
   const [lgaList, setlgaList] = useState([]);
+  const [initialValues, setinitialValues] = useState({
+    email: '',
+    fullName: '',
+    phone: '',
+    state: '',
+    lga: '',
+    address: '',
+    password: ''
+  });
+  useEffect(() => {
+    if (verfiedData) {
+      const state = verfiedData?.residence_state.includes('Abuja')
+        ? 'Federal Capital Territory'
+        : NaijaStates.states().filter((state) => state.includes(verfiedData?.residence_state))[0];
+      const lga = NaijaStates.lgas(state).lgas.filter((state) => state.includes(verfiedData?.residence_lga))[0];
+      setuserState(state);
+      setuserLGA(lga);
+
+      setinitialValues({
+        ...initialValues,
+        fullName: `${verfiedData?.firstname} ${verfiedData?.surname} ${verfiedData?.middlename}`,
+        phone: verfiedData?.telephoneno,
+        email: verfiedData?.email,
+        address: `${verfiedData?.residence_Town}, ${verfiedData?.residence_AdressLine1}`,
+        state,
+        lga
+      });
+    }
+  }, [verfiedData]);
 
   const RegisterSchema = Yup.object().shape({
     fullName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Name required'),
@@ -32,24 +63,22 @@ export default function RegisterForm({ setcurrentStep }) {
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
     state: Yup.string().required('state is required'),
-    lga: Yup.string().required('LGA is required')
+    lga: Yup.string().required('LGA is required'),
+    address: Yup.string().required('Address is required')
   });
-  console.log(NaijaStates.states());
-  console.log(NaijaStates.lgas('Oyo'));
 
   const formik = useFormik({
-    initialValues: {
-      email: '',
-      fullName: '',
-      phone: '',
-      state: '',
-      lga: '',
-      password: ''
-    },
+    initialValues,
+    enableReinitialize: true,
     validationSchema: RegisterSchema,
     onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        await register(values.email, values.password, values.firstName, values.lastName);
+        const formValues = {
+          ...formOne,
+          ...values
+        };
+        console.log(formValues);
+        await register(formValues);
         enqueueSnackbar('Register success', {
           variant: 'success',
           action: (key) => (
@@ -81,6 +110,7 @@ export default function RegisterForm({ setcurrentStep }) {
 
           <TextField
             fullWidth
+            disabled
             label="Full Name"
             {...getFieldProps('fullName')}
             error={Boolean(touched.fullName && errors.fullName)}
@@ -117,7 +147,7 @@ export default function RegisterForm({ setcurrentStep }) {
               }}
               id="combo-box-demo"
               options={getFormOptions(NaijaStates.states())}
-              // {...getFieldProps('state')}
+              value={userState}
               error={Boolean(touched.state && errors.state)}
               helperText={touched.state && errors.state}
               renderInput={(params) => <TextField {...params} label="State" />}
@@ -133,12 +163,21 @@ export default function RegisterForm({ setcurrentStep }) {
               }}
               SelectProps={{ native: true }}
               options={lgaList}
+              value={userLGA}
               error={Boolean(touched.lga && errors.lga)}
               helperText={touched.lga && errors.lga}
               renderInput={(params) => <TextField {...params} label="LGA" />}
             />
           </Stack>
-
+          <TextField
+            id="outlined-multiline-flexible"
+            label="Address"
+            multiline
+            maxRows={4}
+            {...getFieldProps('address')}
+            error={Boolean(touched.address && errors.address)}
+            helperText={touched.address && errors.address}
+          />
           <TextField
             fullWidth
             autoComplete="current-password"

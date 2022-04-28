@@ -50,7 +50,7 @@ IconCollapse.propTypes = {
 
 function IconCollapse({ onToggleCollapse, collapseClick }) {
   return (
-    <Tooltip title="Mini Menu">
+    <Tooltip title="Possap Menu">
       <CardActionArea
         onClick={onToggleCollapse}
         sx={{
@@ -145,7 +145,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
               <MyAvatar />
               <Box sx={{ ml: 2 }}>
                 <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                  {user?.displayName}
+                  {user?.fullName}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                   {user?.role}

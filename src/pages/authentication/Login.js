@@ -4,8 +4,7 @@ import { styled } from '@material-ui/core/styles';
 import { Box, Card, Stack, Link, Container, Typography, Button } from '@material-ui/core';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
-// hooks
-import useAuth from '../../hooks/useAuth';
+
 // layouts
 import AuthLayout from '../../layouts/AuthLayout';
 // components
@@ -44,16 +43,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const { method, login } = useAuth();
-
-  const handleLoginAuth0 = async () => {
-    try {
-      await login();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <RootStyle title="Login | Possap">
       <AuthLayout>

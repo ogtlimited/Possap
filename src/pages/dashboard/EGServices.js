@@ -22,9 +22,7 @@ import {
   TableContainer,
   TablePagination
 } from '@material-ui/core';
-// redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getUserList, deleteUser } from '../../redux/slices/user';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
@@ -82,7 +80,6 @@ function applySortFilter(array, comparator, query) {
 export default function EGService() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const dispatch = useDispatch();
   const userList = [
     {
       id: 1,
@@ -183,10 +180,6 @@ export default function EGService() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  useEffect(() => {
-    dispatch(getUserList());
-  }, [dispatch]);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -228,10 +221,6 @@ export default function EGService() {
 
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
-  };
-
-  const handleDeleteUser = (userId) => {
-    dispatch(deleteUser(userId));
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -305,7 +294,7 @@ export default function EGService() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu onDelete={() => alert(id)} userName={name} />
                         </TableCell>
                       </TableRow>
                     );

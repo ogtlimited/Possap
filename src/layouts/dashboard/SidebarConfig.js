@@ -14,6 +14,8 @@ const ICONS = {
   user: getIcon('ic_user'),
   dashboard: getIcon('ic_dashboard'),
   booking: getIcon('ic_booking'),
+  reports: getIcon('ic_analytics'),
+  finances: getIcon('ic_finances'),
   settings: getIcon('ic_settings'),
   exit: getIcon('ic_exit')
 };
@@ -29,7 +31,21 @@ const sidebarConfig = [
         path: PATH_DASHBOARD.general.app,
         icon: ICONS.dashboard
       },
-      { title: 'Reports', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics }
+      {
+        title: 'finance',
+        path: PATH_DASHBOARD.general.finances,
+        icon: ICONS.finances
+      },
+      {
+        title: 'Reports',
+        path: PATH_DASHBOARD.general.reports,
+        icon: ICONS.reports,
+        children: [
+          { title: 'Extract Report', path: PATH_DASHBOARD.reports.extract },
+          { title: 'Character Certificate Report', path: PATH_DASHBOARD.reports.clearance },
+          { title: 'E & G Services Reports', path: PATH_DASHBOARD.reports.guard }
+        ]
+      }
     ]
   },
 

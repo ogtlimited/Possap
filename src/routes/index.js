@@ -78,6 +78,16 @@ export default function Router() {
       children: [
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <GeneralApp /> },
+        { path: 'reports', element: <Reports /> },
+        {
+          path: 'reports',
+          children: [
+            { path: '/', element: <Navigate to="/dashboard/reports/police-extract" replace /> },
+            { path: 'police-extract', element: <Reports /> },
+            { path: 'character-certificate', element: <Reports /> },
+            { path: 'guard-services', element: <Reports /> }
+          ]
+        },
         {
           path: 'user',
           children: [
@@ -135,6 +145,7 @@ const Services = Loadable(lazy(() => import('../pages/Services')));
 
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
+const Reports = Loadable(lazy(() => import('../pages/dashboard/Reports')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const CreateUser = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const Extract = Loadable(lazy(() => import('../pages/dashboard/Extract')));

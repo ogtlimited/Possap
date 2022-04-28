@@ -3,8 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { styled } from '@material-ui/core/styles';
 import { Box, Card, Link, Container, Typography, Tooltip } from '@material-ui/core';
-// hooks
-import useAuth from '../../hooks/useAuth';
+
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // layouts
@@ -45,8 +44,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Register() {
-  const { method } = useAuth();
-
   return (
     <RootStyle title="Register | Possap">
       <AuthLayout>

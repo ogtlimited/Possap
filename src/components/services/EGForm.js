@@ -10,6 +10,7 @@ import { Stack, Alert, TextField, Autocomplete, MenuItem, Select, FormControl, I
 import { DesktopDatePicker, LoadingButton } from '@material-ui/lab';
 
 // hooks
+import CreateEGService from '../../mutations/EGServices.mutation';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import { EGCATEGORYTYPE, EGSERVICECATEGORY, EGUNIT, TACTICALSQUAD } from './form-contants';
 import { getFormOptions } from '../../utils/getFormOptions';
@@ -37,6 +38,7 @@ export default function EGForm() {
     extractPoliceDivision: Yup.string().required('ID No is required'),
     status: Yup.string().required('ID No is required')
   });
+  const mutation = CreateEGService();
   useEffect(() => {
     console.log(data);
   }, [data]);
@@ -60,15 +62,8 @@ export default function EGForm() {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         console.log(values);
-        // await login(values.email, values.password);
-        // enqueueSnackbar('Login success', {
-        //   variant: 'success',
-        //   action: (key) => (
-        //     <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-        //       <Icon icon={closeFill} />
-        //     </MIconButton>
-        //   )
-        // });
+        mutation.mutate(values);
+
         if (isMountedRef.current) {
           setSubmitting(false);
         }

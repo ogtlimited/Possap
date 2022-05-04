@@ -34,6 +34,7 @@ import { MIconButton } from '../@material-extend';
 import { DOCUMENTLOSS, EXTRACTCATEGORYLIST, PROPERTYLOSS } from './form-contants';
 import { MotionInView, varFadeInUp } from '../animate';
 import { UploadSingleFile } from '../upload';
+import PoliceExtractMutation from '../../mutations/policeExtract.mutation';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -84,6 +85,8 @@ export default function PoliceExtractForm() {
     extractPoliceState: Yup.string().required('State is required')
   });
 
+  const mutation = PoliceExtractMutation();
+
   const formik = useFormik({
     initialValues: {
       extractCategory: '',
@@ -104,6 +107,7 @@ export default function PoliceExtractForm() {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         console.log(values);
+        mutation.mutate(values);
         // await login(values.email, values.password);
         // enqueueSnackbar('Login success', {
         //   variant: 'success',

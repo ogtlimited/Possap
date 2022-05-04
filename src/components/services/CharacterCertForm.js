@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import NaijaStates from 'naija-state-local-government';
+
 // material
 import {
   Stack,
@@ -32,6 +33,7 @@ import { LoadingButton } from '@material-ui/lab';
 // hooks
 import arrowBackFill from '@iconify/icons-eva/arrow-back-fill';
 import closeFill from '@iconify/icons-eva/close-fill';
+import CharacterCertificateMutation from '../../mutations/characterCertificate.mutation';
 import { getFormOptions } from '../../utils/getFormOptions';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import { MIconButton } from '../@material-extend';
@@ -57,6 +59,8 @@ export default function CharacterCertForm() {
     status: Yup.string().required('ID No is required')
   });
 
+  const mutation = CharacterCertificateMutation();
+
   const formik = useFormik({
     initialValues: {
       requestType: '',
@@ -78,7 +82,7 @@ export default function CharacterCertForm() {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         console.log(values);
-        // await mutation.mutate(values);
+        mutation.mutate(values);
         enqueueSnackbar('Form submitted success', {
           variant: 'success',
           action: (key) => (

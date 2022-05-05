@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
@@ -23,6 +23,7 @@ import fakeRequest from '../../../utils/fakeRequest';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 //
 import countries from './countries';
+import usePoliceData from '../../../db/usePoliceData';
 
 // ----------------------------------------------------------------------
 
@@ -33,7 +34,45 @@ UserNewForm.propTypes = {
 
 export default function UserNewForm({ isEdit, currentUser }) {
   const navigate = useNavigate();
+  const { data: response, error } = usePoliceData();
+  const [policeData, setpoliceData] = useState([]);
+  const [department, setdepartment] = useState({});
+  const [officerSection, setofficerSection] = useState([]);
+  const [officerSubSection, setofficerSubSection] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+  const handleChange = (event, setFieldValue, fieldName, data, next) => {
+    const val = event.target.value;
+    console.log(data, fieldName);
+    let fValues = [];
+    if (data.sub) {
+      fValues = data.sub.map((v) => v.Name);
+    } else {
+      fValues = data.map((v) => v.name);
+    }
+    const index = fValues.indexOf(val);
+    console.log(val, data, data.Name, data.name);
+    // console.log(fValues.indexOf(val));
+    setFieldValue(fieldName, val);
+    if (val === data[index]?.name || val === data[index]?.Name) {
+      console.log(data[index].sub);
+      next(data[index]);
+      // setofficerSection(policeData[index].sub);
+    }
+    if (val === data.name || val === data.Name) {
+      console.log(data[index].sub);
+      next(data[index]);
+      // setofficerSection(policeData[index].sub);
+    }
+  };
+  if (error) {
+    console.log(error);
+  }
+  useEffect(() => {
+    if (response?.data) {
+      console.log(response?.data);
+      setpoliceData(response.data.data);
+    }
+  }, [response]);
 
   const NewUserSchema = Yup.object().shape({
     apNumber: Yup.string().optional('AP Number is optional'),
@@ -197,14 +236,15 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     label="Officer Formation"
                     placeholder="officerFormation"
                     {...getFieldProps('officerFormation')}
+                    onChange={(evt) => handleChange(evt, setFieldValue, 'officerFormation', policeData, setdepartment)}
                     SelectProps={{ native: true }}
                     error={Boolean(touched.officerFormation && errors.officerFormation)}
                     helperText={touched.officerFormation && errors.officerFormation}
                   >
                     <option value="" />
-                    {countries.map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
+                    {policeData.map((option) => (
+                      <option key={option.name} value={option.name}>
+                        {option.name}
                       </option>
                     ))}
                   </TextField>
@@ -215,15 +255,19 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     placeholder="officerDeptartment"
                     {...getFieldProps('officerDeptartment')}
                     SelectProps={{ native: true }}
+                    onChange={(evt) =>
+                      handleChange(evt, setFieldValue, 'officerDeptartment', department, setofficerSection)
+                    }
                     error={Boolean(touched.officerDeptartment && errors.officerDeptartment)}
                     helperText={touched.officerDeptartment && errors.officerDeptartment}
                   >
                     <option value="" />
-                    {countries.map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
+                    {department.sub &&
+                      department?.sub?.map((option) => (
+                        <option key={option.code} value={option.Name}>
+                          {`${option.Name} ${option.Address}`}
+                        </option>
+                      ))}
                   </TextField>
                 </Stack>
 
@@ -235,15 +279,19 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     placeholder="Officer Section"
                     {...getFieldProps('officerSection')}
                     SelectProps={{ native: true }}
+                    onChange={(evt) =>
+                      handleChange(evt, setFieldValue, 'officerSection', officerSection, officerSubSection)
+                    }
                     error={Boolean(touched.officerSection && errors.officerSection)}
                     helperText={touched.officerSection && errors.officerSection}
                   >
                     <option value="" />
-                    {countries.map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
-                    ))}
+                    {officerSection.sub &&
+                      officerSection.sub.map((option) => (
+                        <option key={option.code} value={option.label}>
+                          {option.label}
+                        </option>
+                      ))}
                   </TextField>
                   <TextField
                     select

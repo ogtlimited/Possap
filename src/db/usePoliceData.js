@@ -1,5 +1,4 @@
 import { useQuery } from 'react-query';
-import { useEffect, useState } from 'react';
 import getPoliceData from '../_apis_/auth/getPoliceData';
 
 export default function usePoliceData() {

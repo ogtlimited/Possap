@@ -35,6 +35,7 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
+import useCharacterCertificates from '../../db/useCharacterCertificates';
 
 // ----------------------------------------------------------------------
 
@@ -170,6 +171,10 @@ export default function CharacterCert() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const { data, isFetching, error } = useCharacterCertificates();
+
+  console.log({ data });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';

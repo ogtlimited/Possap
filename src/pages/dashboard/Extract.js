@@ -169,7 +169,7 @@ export default function Extract() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const { data } = usePoliceExtract();
+  const { data, error, isFetching } = usePoliceExtract();
   console.log({ data });
 
   const handleRequestSort = (event, property) => {

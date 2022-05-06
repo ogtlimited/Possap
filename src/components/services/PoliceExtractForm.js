@@ -47,7 +47,7 @@ const MenuProps = {
 };
 // ----------------------------------------------------------------------
 
-export default function PoliceExtractForm() {
+export default function PoliceExtractForm({ parentValues }) {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
@@ -76,8 +76,8 @@ export default function PoliceExtractForm() {
   };
   const PoliceSchema = Yup.object().shape({
     extractCategory: Yup.string().required('Extract Category is required'),
-    extractReason: Yup.string().required('Extract Reason No is required'),
-    dateReported: Yup.string().required('Report date is required'),
+    // extractReason: Yup.string().required('Extract Reason No is required'),
+    // dateReported: Yup.string().required('Report date is required'),
     wasReported: Yup.string().required('This field is required'),
     extractLga: Yup.string().required('LGA is required'),
     extractPoliceDivision: Yup.string().required('Division is required'),
@@ -103,7 +103,12 @@ export default function PoliceExtractForm() {
     validationSchema: PoliceSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        console.log(values);
+        const allValues = {
+          ...parentValues,
+          ...values
+        };
+
+        console.log(allValues);
         // await login(values.email, values.password);
         // enqueueSnackbar('Login success', {
         //   variant: 'success',
@@ -143,6 +148,7 @@ export default function PoliceExtractForm() {
             labelId="demo-multiple-name-label"
             id="demo-multiple-name"
             multiple
+            // name="extractCategory"
             value={extractCategory}
             onChange={(evt) => handleChange(evt, setextractCategory)}
             input={<OutlinedInput label="Extract Category" />}
@@ -164,6 +170,7 @@ export default function PoliceExtractForm() {
                 id="doc-loss-checkbox"
                 multiple
                 value={documentLoss}
+                // name="documentLoss"
                 onChange={(evt) => handleChange(evt, setdocumentLoss)}
                 input={<OutlinedInput label="Document Loss" />}
                 renderValue={(selected) => selected.join(', ')}
@@ -186,6 +193,7 @@ export default function PoliceExtractForm() {
                 id="prop-loss-checkbox"
                 multiple
                 value={propertyLoss}
+                // name="propertyLoss"
                 onChange={(evt) => handleChange(evt, setpropertyLoss)}
                 input={<OutlinedInput label="Property Loss" />}
                 renderValue={(selected) => selected.join(', ')}
@@ -312,7 +320,14 @@ export default function PoliceExtractForm() {
             <MIconButton variant="contained" color="primary" size="large">
               <Icon icon={arrowBackFill} width={20} height={20} />
             </MIconButton>
-            <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+            <LoadingButton
+              onClick={() => console.log(values)}
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+              loading={isSubmitting}
+            >
               Proceed
             </LoadingButton>
           </Stack>

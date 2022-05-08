@@ -18,6 +18,7 @@ import EXTRACT from '../json-form/police-extract.json';
 import CHARACTERCERT from '../json-form/policeCharacterCertificate.json';
 import GUARDSERVICES from '../json-form/escortAndGuardServices.json';
 import { PoliceExtractForm, CharacterCertForm, EGForm } from '../components/services';
+import useAuth from '../hooks/useAuth';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -31,8 +32,10 @@ const RootStyle = styled(Page)(({ theme }) => ({
 export default function Payment() {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
+  const { user } = useAuth();
   const [step, setStep] = useState('one');
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  const [firstValue, setfirstValue] = useState({});
   const sTypes = ['police-extract', 'character-certificate', 'escort-and-guard-services'];
   const PaymentSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -43,20 +46,20 @@ export default function Payment() {
 
   const formik = useFormik({
     initialValues: {
-      name: '',
-      phone: '',
-      email: '',
-      address: '',
+      name: user.fullName,
+      phone: user.phone,
+      email: user.email,
+      address: user.address,
       serviceType: '',
       serviceCategory: '',
       serviceSubCategory: ''
     },
     validationSchema: PaymentSchema,
     onSubmit: async (values, { resetForm }) => {
-      // console.log(values);
-      await fakeRequest(500);
+      setfirstValue(values);
+      // await fakeRequest(500);
 
-      resetForm();
+      // resetForm();
       enqueueSnackbar('Payment success', { variant: 'success' });
     }
   });
@@ -80,7 +83,9 @@ export default function Payment() {
                 <SelectService formik={formik} />
                 <Button
                   disabled={values.serviceType === ''}
-                  onClick={() => setStep('two')}
+                  onClick={() => {
+                    setStep('two')
+                  }}
                   fullWidth
                   size="large"
                   type="submit"
@@ -94,28 +99,29 @@ export default function Payment() {
           </Card>
         ) : (
           <Card>
-            <FormikProvider value={formik}>
-              <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
-                <Grid p={3} container spacing={upMd ? 5 : 2}>
-                  <Grid item xs={12} md={7}>
-                        {values.serviceType === sTypes[0]
-                          ? <PoliceExtractForm />
-                          : values.serviceType === sTypes[1]
-                          ? <CharacterCertForm />
-                          : values.serviceType === sTypes[2]
-                          ? <EGForm />
-                          : []
-                        }
-                  </Grid>
-                  {/* <Grid item xs={12} md={4}>
+            {/* <FormikProvider value={formik}>
+              <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}> */}
+            <Grid p={3} container spacing={upMd ? 5 : 2}>
+              <Grid item xs={12} md={7}>
+                {values.serviceType === sTypes[0] ? (
+                  <PoliceExtractForm parentValues={values} />
+                ) : values.serviceType === sTypes[1] ? (
+                  <CharacterCertForm parentValues={values} />
+                ) : values.serviceType === sTypes[2] ? (
+                  <EGForm parentValues={values} />
+                ) : (
+                  []
+                )}
+              </Grid>
+              {/* <Grid item xs={12} md={4}>
                     <PaymentMethods formik={formik} />
                   </Grid> */}
-                  <Grid item xs={12} md={5}>
-                    <PaymentSummary formik={formik} />
-                  </Grid>
-                </Grid>
-              </Form>
-            </FormikProvider>
+              <Grid item xs={12} md={5}>
+                <PaymentSummary formik={formik} />
+              </Grid>
+            </Grid>
+            {/* </Form>
+            </FormikProvider> */}
           </Card>
         )}
       </Container>

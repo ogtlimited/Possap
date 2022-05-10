@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
 import getPoliceData from '../_apis_/auth/getPoliceData';
 
 export default function usePoliceData() {
@@ -6,6 +7,5 @@ export default function usePoliceData() {
     refetchInterval: 5 * 60 * 1000,
     refetchOnWindowFocus: false
   });
-
   return { data, isFetching, error };
 }

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-nested-ternary */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack5';
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -18,8 +18,10 @@ import EXTRACT from '../json-form/police-extract.json';
 import CHARACTERCERT from '../json-form/policeCharacterCertificate.json';
 import GUARDSERVICES from '../json-form/escortAndGuardServices.json';
 import { PoliceExtractForm, CharacterCertForm, EGForm } from '../components/services';
+import useAuth from '../hooks/useAuth';
+import useServiceForm from '../hooks/useServiceForm';
+import FormSummary from '../components/_external-pages/services/FormSummary';
 // ----------------------------------------------------------------------
-
 const RootStyle = styled(Page)(({ theme }) => ({
   minHeight: '100%',
   paddingTop: theme.spacing(15),
@@ -31,8 +33,24 @@ const RootStyle = styled(Page)(({ theme }) => ({
 export default function Payment() {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
+  const { user, isAuthenticated } = useAuth();
+  const { handleFormChange } = useServiceForm();
+  const [initialValues, setinitialValues] = useState({
+    name: user.fullName,
+    phone: user.phone,
+    email: user.email,
+    address: user.address,
+    serviceType: '',
+    serviceCategory: '',
+    serviceSubCategory: ''
+  })
+  useEffect(() => {
+    handleFormChange(initialValues)
+  }, [user])
+
   const [step, setStep] = useState('one');
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  const [firstValue, setfirstValue] = useState({});
   const sTypes = ['police-extract', 'character-certificate', 'escort-and-guard-services'];
   const PaymentSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -40,23 +58,13 @@ export default function Payment() {
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     address: Yup.string().required('Address is required')
   });
-
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      phone: '',
-      email: '',
-      address: '',
-      serviceType: '',
-      serviceCategory: '',
-      serviceSubCategory: ''
-    },
+    initialValues,
     validationSchema: PaymentSchema,
     onSubmit: async (values, { resetForm }) => {
-      // console.log(values);
-      await fakeRequest(500);
-
-      resetForm();
+      setfirstValue(values);
+      // await fakeRequest(500);
+      // resetForm();
       enqueueSnackbar('Payment success', { variant: 'success' });
     }
   });
@@ -80,7 +88,10 @@ export default function Payment() {
                 <SelectService formik={formik} />
                 <Button
                   disabled={values.serviceType === ''}
-                  onClick={() => setStep('two')}
+                  onClick={() => {
+                    handleFormChange(values)
+                    setStep('two');
+                  }}
                   fullWidth
                   size="large"
                   type="submit"
@@ -94,28 +105,30 @@ export default function Payment() {
           </Card>
         ) : (
           <Card>
-            <FormikProvider value={formik}>
-              <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}>
-                <Grid p={3} container spacing={upMd ? 5 : 2}>
-                  <Grid item xs={12} md={7}>
-                        {values.serviceType === sTypes[0]
-                          ? <PoliceExtractForm />
-                          : values.serviceType === sTypes[1]
-                          ? <CharacterCertForm />
-                          : values.serviceType === sTypes[2]
-                          ? <EGForm />
-                          : []
-                        }
-                  </Grid>
-                  {/* <Grid item xs={12} md={4}>
+            {/* <FormikProvider value={formik}>
+              <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}> */}
+            <Grid p={3} container spacing={upMd ? 5 : 2}>
+              <Grid item xs={12} md={7}>
+                {values.serviceType === sTypes[0] ? (
+                  <PoliceExtractForm parentValues={values} />
+                ) : values.serviceType === sTypes[1] ? (
+                  <CharacterCertForm parentValues={values} />
+                ) : values.serviceType === sTypes[2] ? (
+                  <EGForm parentValues={values} />
+                ) : (
+                  []
+                )}
+              </Grid>
+              {/* <Grid item xs={12} md={4}>
                     <PaymentMethods formik={formik} />
                   </Grid> */}
-                  <Grid item xs={12} md={5}>
-                    <PaymentSummary formik={formik} />
-                  </Grid>
-                </Grid>
-              </Form>
-            </FormikProvider>
+              <Grid item xs={12} md={5}>
+                {/* <FormSummary /> */}
+                <PaymentSummary formik={formik} />
+              </Grid>
+            </Grid>
+            {/* </Form>
+            </FormikProvider> */}
           </Card>
         )}
       </Container>

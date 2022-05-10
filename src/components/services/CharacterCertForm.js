@@ -41,7 +41,7 @@ import { CCERTREQUEST, INQUIRYREASON } from './form-contants';
 import { countries } from './countries';
 // ----------------------------------------------------------------------
 
-export default function CharacterCertForm() {
+export default function CharacterCertForm({ parentValues }) {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
@@ -81,16 +81,19 @@ export default function CharacterCertForm() {
     validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        console.log(values);
-        mutation.mutate(values);
-        enqueueSnackbar('Form submitted success', {
-          variant: 'success',
-          action: (key) => (
-            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-              <Icon icon={closeFill} />
-            </MIconButton>
-          )
-        });
+        const allValues = {
+          ...parentValues,
+          ...values
+        };
+        mutation.mutate(allValues);
+        // enqueueSnackbar('Form submitted success', {
+        //   variant: 'success',
+        //   action: (key) => (
+        //     <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+        //       <Icon icon={closeFill} />
+        //     </MIconButton>
+        //   )
+        // });
         if (isMountedRef.current) {
           setSubmitting(false);
         }

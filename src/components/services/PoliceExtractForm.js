@@ -26,6 +26,8 @@ import {
   InputLabel
 } from '@material-ui/core';
 import { LoadingButton, MobileDatePicker } from '@material-ui/lab';
+import PoliceExtractMutation from '../../mutations/policeExtract.mutation';
+import useAuth from '../../hooks/useAuth';
 
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
@@ -34,7 +36,6 @@ import { MIconButton } from '../@material-extend';
 import { DOCUMENTLOSS, EXTRACTCATEGORYLIST, PROPERTYLOSS } from './form-contants';
 import { MotionInView, varFadeInUp } from '../animate';
 import { UploadSingleFile } from '../upload';
-import PoliceExtractMutation from '../../mutations/policeExtract.mutation';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -50,6 +51,7 @@ const MenuProps = {
 
 export default function PoliceExtractForm() {
   const isMountedRef = useIsMountedRef();
+  const { user } = useAuth();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
   const [lgaList, setlgaList] = useState([]);
@@ -66,48 +68,50 @@ export default function PoliceExtractForm() {
       });
     }
   }, []);
-  const handleChange = (event, action) => {
+  const handleChange = (event, setFieldValue, field) => {
     const {
       target: { value }
     } = event;
-    action(
-      // On autofill we get a stringified value.
-      typeof value === 'string' ? value.split(', ') : value
-    );
+    setFieldValue(field, typeof value === 'string' ? value.split(', ') : value);
   };
   const PoliceSchema = Yup.object().shape({
-    extractCategory: Yup.string().required('Extract Category is required'),
-    extractReason: Yup.string().required('Extract Reason No is required'),
-    dateReported: Yup.string().required('Report date is required'),
-    wasReported: Yup.string().required('This field is required'),
-    extractLga: Yup.string().required('LGA is required'),
-    extractPoliceDivision: Yup.string().required('Division is required'),
-    extractPoliceState: Yup.string().required('State is required')
+    // extractCategory: Yup.array().required('Extract Category is required'),
+    // // extractReason: Yup.string().required('Extract Reason No is required'),
+    // dateReported: Yup.date().required('Report date is required'),
+    // wasReported: Yup.string().required('This field is required'),
+    // extractLga: Yup.string().required('LGA is required'),
+    // extractPoliceDivision: Yup.string().required('Division is required'),
+    // extractState: Yup.string().required('State is required')
   });
 
   const mutation = PoliceExtractMutation();
-
   const formik = useFormik({
     initialValues: {
-      extractCategory: '',
-      documentLost: '',
-      propertyLost: '',
-      extractReason: '',
+      user_type: user?.userType,
+      extractCategory: [],
+      // sub_category: [],
       wasReported: true,
+      documentLost: [],
+      propertyLost: [],
       dateReported: '',
       courtAffidavit: '',
       affidavitNumber: '',
       affidavitIssuanceDate: '',
       extractState: '',
       extractLga: '',
-      extractPoliceDivision: '',
-      status: ''
+      extractPoliceDivision: ''
+      // status: ''
     },
     validationSchema: PoliceSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        console.log(values);
+        const allValues = {
+          ...values
+        };
+
         mutation.mutate(values);
+
+        console.log(allValues);
         // await login(values.email, values.password);
         // enqueueSnackbar('Login success', {
         //   variant: 'success',
@@ -133,10 +137,6 @@ export default function PoliceExtractForm() {
 
   const { errors, touched, values, setFieldValue, isSubmitting, handleSubmit, getFieldProps } = formik;
 
-  const handleShowPassword = () => {
-    setShowPassword((show) => !show);
-  };
-
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -147,64 +147,68 @@ export default function PoliceExtractForm() {
             labelId="demo-multiple-name-label"
             id="demo-multiple-name"
             multiple
-            value={extractCategory}
-            onChange={(evt) => handleChange(evt, setextractCategory)}
+            name="extractCategory"
+            {...getFieldProps('extractCategory')}
+            value={values.extractCategory}
+            onChange={(evt) => handleChange(evt, setFieldValue, 'extractCategory')}
             input={<OutlinedInput label="Extract Category" />}
             renderValue={(selected) => selected.join(', ')}
             MenuProps={MenuProps}
           >
             {EXTRACTCATEGORYLIST.map((name) => (
               <MenuItem key={name} value={name}>
-                <Checkbox checked={extractCategory.indexOf(name) > -1} />
+                <Checkbox checked={values.extractCategory.indexOf(name) > -1} />
                 <ListItemText primary={name} />
               </MenuItem>
             ))}
           </Select>
-          {extractCategory.includes(EXTRACTCATEGORYLIST[0]) && (
+          {values.extractCategory.includes(EXTRACTCATEGORYLIST[0]) && (
             <FormControl sx={{ width: '100%' }}>
               <InputLabel id="doc-loss">Document Loss</InputLabel>
               <Select
                 labelId="doc-loss"
                 id="doc-loss-checkbox"
                 multiple
-                value={documentLoss}
-                onChange={(evt) => handleChange(evt, setdocumentLoss)}
+                {...getFieldProps('documentLost')}
+                name="documentLost"
+                onChange={(evt) => handleChange(evt, setFieldValue, 'documentLost')}
                 input={<OutlinedInput label="Document Loss" />}
                 renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
                 {DOCUMENTLOSS.map((name) => (
                   <MenuItem key={name} value={name}>
-                    <Checkbox checked={documentLoss.indexOf(name) > -1} />
+                    <Checkbox checked={values.documentLost.indexOf(name) > -1} />
                     <ListItemText primary={name} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           )}
-          {extractCategory.includes(EXTRACTCATEGORYLIST[1]) && (
+          {values.extractCategory.includes(EXTRACTCATEGORYLIST[1]) && (
             <FormControl sx={{ width: '100%' }}>
               <InputLabel id="prop-loss">Property Loss</InputLabel>
               <Select
                 labelId="prop-loss"
                 id="prop-loss-checkbox"
                 multiple
-                value={propertyLoss}
-                onChange={(evt) => handleChange(evt, setpropertyLoss)}
+                // value={values.propertyLost}
+                {...getFieldProps('propertyLost')}
+                onChange={(evt) => handleChange(evt, setFieldValue, 'propertyLost')}
                 input={<OutlinedInput label="Property Loss" />}
                 renderValue={(selected) => selected.join(', ')}
                 MenuProps={MenuProps}
               >
                 {PROPERTYLOSS.map((name) => (
                   <MenuItem key={name} value={name}>
-                    <Checkbox checked={propertyLoss.indexOf(name) > -1} />
+                    <Checkbox checked={values.propertyLost.indexOf(name) > -1} />
                     <ListItemText primary={name} />
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
           )}
-          {extractCategory.includes(EXTRACTCATEGORYLIST[2]) && (
+          {values.extractCategory.includes(EXTRACTCATEGORYLIST[2]) && (
             <FormControl sx={{ width: '100%' }}>
               <TextField
                 fullWidth
@@ -266,19 +270,16 @@ export default function PoliceExtractForm() {
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <Autocomplete
               fullWidth
-              onChange={(event, newValue) => {
-                setFieldValue(newValue);
-              }}
               onInputChange={(event, newValue) => {
                 console.log(newValue);
-                setFieldValue('state', newValue);
+                setFieldValue('extractState', newValue);
                 setlgaList(NaijaStates.lgas(newValue).lgas);
               }}
               id="combo-box-demo"
               options={getFormOptions(NaijaStates.states())}
               // {...getFieldProps('state')}
-              error={Boolean(touched.state && errors.state)}
-              helperText={touched.state && errors.state}
+              error={Boolean(touched.extractState && errors.extractState)}
+              helperText={touched.extractState && errors.extractState}
               renderInput={(params) => <TextField {...params} label="State" />}
             />
 
@@ -288,27 +289,27 @@ export default function PoliceExtractForm() {
               label="LGA"
               placeholder="LGA"
               onInputChange={(event, newValue) => {
-                setFieldValue('lga', newValue);
+                setFieldValue('extractLga', newValue);
               }}
               SelectProps={{ native: true }}
               options={lgaList}
-              error={Boolean(touched.lga && errors.lga)}
-              helperText={touched.lga && errors.lga}
+              error={Boolean(touched.extractLga && errors.extractLga)}
+              helperText={touched.extractLga && errors.extractLga}
               renderInput={(params) => <TextField {...params} label="LGA" />}
             />
             <Autocomplete
               select
               fullWidth
-              label="LGA"
-              placeholder="LGA"
+              label="Select the Police Formation/Division"
+              placeholder="Division"
               onInputChange={(event, newValue) => {
-                setFieldValue('lga', newValue);
+                setFieldValue('extractPoliceDivision', newValue);
               }}
               SelectProps={{ native: true }}
               options={lgaList}
-              error={Boolean(touched.lga && errors.lga)}
-              helperText={touched.lga && errors.lga}
-              renderInput={(params) => <TextField {...params} label="LGA" />}
+              error={Boolean(touched.extractPoliceDivision && errors.extractPoliceDivision)}
+              helperText={touched.extractPoliceDivision && errors.extractPoliceDivision}
+              renderInput={(params) => <TextField {...params} label="Police Formation/Division" />}
             />
           </Stack>
 

@@ -15,10 +15,11 @@ import useIsMountedRef from '../../hooks/useIsMountedRef';
 import { EGCATEGORYTYPE, EGSERVICECATEGORY, EGUNIT, TACTICALSQUAD } from './form-contants';
 import { getFormOptions } from '../../utils/getFormOptions';
 import useTacticalSquad from '../../db/useTacticalSquad';
+import useAuth from '../../hooks/useAuth';
 
 // ----------------------------------------------------------------------
 
-export default function EGForm() {
+export default function EGForm({ parentValues }) {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +27,7 @@ export default function EGForm() {
   const [tacticalCMD, settacticalCMD] = useState([]);
   const [lgaList, setlgaList] = useState([]);
   const { data, error } = useTacticalSquad();
+  const { user } = useAuth();
   const LoginSchema = Yup.object().shape({
     serviceCategory: Yup.string().required('service Categorye is required'),
     categoryType: Yup.string().required('category Type is required'),
@@ -45,7 +47,12 @@ export default function EGForm() {
 
   const formik = useFormik({
     initialValues: {
-      serviceCategory: '',
+      userId: user?.id,
+      name: user?.fullName,
+      phone: user?.phone,
+      email: user?.email,
+      address: user?.address,
+      requestType: '',
       categoryType: '',
       unit: '',
       tacticalSquad: '',
@@ -55,14 +62,14 @@ export default function EGForm() {
       escortAddress: '',
       escortStartDate: new Date(),
       escortEndDate: new Date(),
-      escortOfficersRequired: '',
-      invoicePaymentMethod: ''
+      escortOfficersRequired: false
+      // invoicePaymentMethod: ''
     },
-    validationSchema: LoginSchema,
+    // validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         console.log(values);
-        mutation.mutate(values);
+        mutation.mutate({ ...parentValues, ...values });
 
         if (isMountedRef.current) {
           setSubmitting(false);
@@ -95,15 +102,15 @@ export default function EGForm() {
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
-              {...getFieldProps('serviceCategory')}
+              {...getFieldProps('requestType')}
               onChange={(evt) => {
                 console.log(evt.target.value);
                 const obj = EGSERVICECATEGORY[evt.target.value];
                 setCategoryType(EGCATEGORYTYPE[obj.key]);
-                setFieldValue('serviceCategory', obj.id);
+                setFieldValue('requestType', obj.id);
               }}
-              error={Boolean(touched.serviceCategory && errors.serviceCategory)}
-              helperText={touched.serviceCategory && errors.serviceCategory}
+              error={Boolean(touched.requestType && errors.requestType)}
+              helperText={touched.requestType && errors.requestType}
               label="Select a request type"
             >
               {EGSERVICECATEGORY.map((val) => (
@@ -189,7 +196,7 @@ export default function EGForm() {
               // }}
               onInputChange={(event, newValue) => {
                 console.log(newValue);
-                setFieldValue('state', newValue);
+                setFieldValue('originState', newValue);
                 setlgaList(NaijaStates.lgas(newValue).lgas);
               }}
               id="combo-box-demo"
@@ -206,7 +213,7 @@ export default function EGForm() {
               label="LGA"
               placeholder="LGA"
               onInputChange={(event, newValue) => {
-                setFieldValue('lga', newValue);
+                setFieldValue('originLga', newValue);
               }}
               SelectProps={{ native: true }}
               options={lgaList}

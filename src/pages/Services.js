@@ -32,7 +32,6 @@ const RootStyle = styled(Page)(({ theme }) => ({
 export default function Payment() {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const { user } = useAuth();
   const [step, setStep] = useState('one');
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
   const [firstValue, setfirstValue] = useState({});
@@ -46,10 +45,6 @@ export default function Payment() {
 
   const formik = useFormik({
     initialValues: {
-      name: user.fullName,
-      phone: user.phone,
-      email: user.email,
-      address: user.address,
       serviceType: '',
       serviceCategory: '',
       serviceSubCategory: ''

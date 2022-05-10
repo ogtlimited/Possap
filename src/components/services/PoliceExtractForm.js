@@ -36,6 +36,7 @@ import { MIconButton } from '../@material-extend';
 import { DOCUMENTLOSS, EXTRACTCATEGORYLIST, PROPERTYLOSS } from './form-contants';
 import { MotionInView, varFadeInUp } from '../animate';
 import { UploadSingleFile } from '../upload';
+import useServiceForm from '../../hooks/useServiceForm';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -53,12 +54,10 @@ export default function PoliceExtractForm() {
   const isMountedRef = useIsMountedRef();
   const { user } = useAuth();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const [showPassword, setShowPassword] = useState(false);
   const [lgaList, setlgaList] = useState([]);
-  const [extractCategory, setextractCategory] = useState([]);
-  const [documentLoss, setdocumentLoss] = useState([]);
-  const [propertyLoss, setpropertyLoss] = useState([]);
+  const { handleFormChange } = useServiceForm();
   const [file, setFile] = useState(null);
+
   const handleDropSingleFile = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file) {
@@ -139,7 +138,7 @@ export default function PoliceExtractForm() {
 
   return (
     <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <Form autoComplete="off" noValidate onSubmit={handleSubmit} onChange={(val) => handleFormChange(values)}>
         <Stack spacing={3}>
           {errors.afterSubmit && <Alert severity="error">{errors.afterSubmit}</Alert>}
           <InputLabel id="demo-multiple-name-label">Select Category of Extract*</InputLabel>

@@ -10,6 +10,8 @@ import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import ServiceGuard from '../guards/ServiceGuard';
+import { ServiceFormProvider } from '../contexts/FormContext';
 
 // ----------------------------------------------------------------------
 
@@ -125,7 +127,16 @@ export default function Router() {
         { path: '/', element: <LandingPage /> },
         { path: 'about-us', element: <About /> },
         { path: 'contact-us', element: <Contact /> },
-        { path: 'services', element: <Services /> }
+        {
+          path: 'services',
+          element: (
+            <ServiceGuard>
+              <ServiceFormProvider>
+                <Services />
+              </ServiceFormProvider>
+            </ServiceGuard>
+          )
+        }
       ]
     },
     { path: '*', element: <Navigate to="/404" replace /> }

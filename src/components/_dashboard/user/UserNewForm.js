@@ -401,12 +401,12 @@ export default function UserNewForm({ isEdit, currentUser }) {
                   </FormControl>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }}>
-                  <OfficerWorkFlow services={values.service} />
+                  {values.accessType === 'Approver' && <OfficerWorkFlow services={values.service} />}
                 </Stack>
               </Stack>
             </Card>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={12}>
             <Card sx={{ p: 3, pb: 10 }}>
               <Stack spacing={3}>
                 <Box sx={{ pb: 3 }}>

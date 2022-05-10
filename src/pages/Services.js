@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-nested-ternary */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { useSnackbar } from 'notistack5';
 import { useFormik, Form, FormikProvider } from 'formik';
@@ -19,8 +19,9 @@ import CHARACTERCERT from '../json-form/policeCharacterCertificate.json';
 import GUARDSERVICES from '../json-form/escortAndGuardServices.json';
 import { PoliceExtractForm, CharacterCertForm, EGForm } from '../components/services';
 import useAuth from '../hooks/useAuth';
+import useServiceForm from '../hooks/useServiceForm';
+import FormSummary from '../components/_external-pages/services/FormSummary';
 // ----------------------------------------------------------------------
-
 const RootStyle = styled(Page)(({ theme }) => ({
   minHeight: '100%',
   paddingTop: theme.spacing(15),
@@ -32,7 +33,21 @@ const RootStyle = styled(Page)(({ theme }) => ({
 export default function Payment() {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const { handleFormChange } = useServiceForm();
+  const [initialValues, setinitialValues] = useState({
+    name: user.fullName,
+    phone: user.phone,
+    email: user.email,
+    address: user.address,
+    serviceType: '',
+    serviceCategory: '',
+    serviceSubCategory: ''
+  })
+  useEffect(() => {
+    handleFormChange(initialValues)
+  }, [user])
+
   const [step, setStep] = useState('one');
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
   const [firstValue, setfirstValue] = useState({});
@@ -43,22 +58,12 @@ export default function Payment() {
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     address: Yup.string().required('Address is required')
   });
-
   const formik = useFormik({
-    initialValues: {
-      name: user.fullName,
-      phone: user.phone,
-      email: user.email,
-      address: user.address,
-      serviceType: '',
-      serviceCategory: '',
-      serviceSubCategory: ''
-    },
+    initialValues,
     validationSchema: PaymentSchema,
     onSubmit: async (values, { resetForm }) => {
       setfirstValue(values);
       // await fakeRequest(500);
-
       // resetForm();
       enqueueSnackbar('Payment success', { variant: 'success' });
     }
@@ -84,7 +89,8 @@ export default function Payment() {
                 <Button
                   disabled={values.serviceType === ''}
                   onClick={() => {
-                    setStep('two')
+                    handleFormChange(values)
+                    setStep('two');
                   }}
                   fullWidth
                   size="large"
@@ -117,6 +123,7 @@ export default function Payment() {
                     <PaymentMethods formik={formik} />
                   </Grid> */}
               <Grid item xs={12} md={5}>
+                {/* <FormSummary /> */}
                 <PaymentSummary formik={formik} />
               </Grid>
             </Grid>

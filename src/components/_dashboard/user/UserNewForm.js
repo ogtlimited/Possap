@@ -14,8 +14,14 @@ import {
   Switch,
   TextField,
   Typography,
-  FormHelperText,
-  FormControlLabel
+  Autocomplete,
+  FormControlLabel,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  ListItemText,
+  Checkbox
 } from '@material-ui/core';
 // utils
 import fakeRequest from '../../../utils/fakeRequest';
@@ -24,6 +30,8 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 //
 import countries from './countries';
 import usePoliceData from '../../../db/usePoliceData';
+import { AccessType, Role, ServicesList } from './constants';
+import OfficerWorkFlow from './officerWorkflow';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +50,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
   const handleChange = (event, setFieldValue, fieldName, data, next) => {
     const val = event.target.value;
-    console.log(data, fieldName);
+    // console.log(data, fieldName);
     let fValues = [];
     if (data.sub) {
       fValues = data.sub.map((v) => v.Name);
@@ -50,19 +58,33 @@ export default function UserNewForm({ isEdit, currentUser }) {
       fValues = data.map((v) => v.name);
     }
     const index = fValues.indexOf(val);
-    console.log(val, data, data.Name, data.name);
+    console.log(val, index);
+    console.log(data);
+    if (!Array.isArray(data)) {
+      console.log(val, data?.sub[index]);
+      if (val === data?.sub[index].Name) {
+        console.log(data.sub[index], 'FOUND');
+        next(data.sub[index]);
+      }
+    }
+    // console.log(val, data, data.Name, data.name);
     // console.log(fValues.indexOf(val));
     setFieldValue(fieldName, val);
-    if (val === data[index]?.name || val === data[index]?.Name) {
+    if (val === data[index]?.name) {
       console.log(data[index].sub);
       next(data[index]);
       // setofficerSection(policeData[index].sub);
-    }
-    if (val === data.name || val === data.Name) {
+    } else if (val === data[index]?.Name) {
       console.log(data[index].sub);
-      next(data[index]);
+      // next(data[index]);
       // setofficerSection(policeData[index].sub);
     }
+  };
+  const handleMultiChange = (event, setFieldValue) => {
+    const {
+      target: { value }
+    } = event;
+    setFieldValue('service', typeof value === 'string' ? value.split(',') : value);
   };
   if (error) {
     console.log(error);
@@ -121,7 +143,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       accessType: currentUser?.accessType || '',
       approvalLevel: currentUser?.approvalLevel || '',
       avatarUrl: currentUser?.avatarUrl || null,
-      service: currentUser?.service || '',
+      service: currentUser?.service || [],
       status: currentUser?.status
     },
     validationSchema: NewUserSchema,
@@ -160,7 +182,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
-            <Card sx={{ p: 3, pb: 10 }}>
+            <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
@@ -227,9 +249,12 @@ export default function UserNewForm({ isEdit, currentUser }) {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Card sx={{ p: 3 }}>
+            <Card sx={{ p: 3, pb: 10 }}>
               <Stack spacing={3}>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                <Box sx={{ pb: 3 }}>
+                  Command Details (<small>This is the command of the user</small>)
+                </Box>
+                <Stack sx={{ pb: 3 }} direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField
                     select
                     fullWidth
@@ -237,15 +262,15 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     placeholder="officerFormation"
                     {...getFieldProps('officerFormation')}
                     onChange={(evt) => handleChange(evt, setFieldValue, 'officerFormation', policeData, setdepartment)}
-                    SelectProps={{ native: true }}
+                    SelectProps={{ native: false }}
                     error={Boolean(touched.officerFormation && errors.officerFormation)}
                     helperText={touched.officerFormation && errors.officerFormation}
                   >
                     <option value="" />
                     {policeData.map((option) => (
-                      <option key={option.name} value={option.name}>
+                      <MenuItem key={option.name} value={option.name}>
                         {option.name}
-                      </option>
+                      </MenuItem>
                     ))}
                   </TextField>
                   <TextField
@@ -254,19 +279,19 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     label="Officer Department"
                     placeholder="officerDeptartment"
                     {...getFieldProps('officerDeptartment')}
-                    SelectProps={{ native: true }}
-                    onChange={(evt) =>
-                      handleChange(evt, setFieldValue, 'officerDeptartment', department, setofficerSection)
-                    }
+                    SelectProps={{ native: false }}
+                    onChange={(evt) => {
+                      handleChange(evt, setFieldValue, 'officerDeptartment', department, setofficerSection);
+                    }}
                     error={Boolean(touched.officerDeptartment && errors.officerDeptartment)}
                     helperText={touched.officerDeptartment && errors.officerDeptartment}
                   >
-                    <option value="" />
+                    <MenuItem value="" />
                     {department.sub &&
                       department?.sub?.map((option) => (
-                        <option key={option.code} value={option.Name}>
+                        <MenuItem key={option.code} value={option.Name}>
                           {`${option.Name} ${option.Address}`}
-                        </option>
+                        </MenuItem>
                       ))}
                   </TextField>
                 </Stack>
@@ -278,19 +303,19 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     label="Officer Section"
                     placeholder="Officer Section"
                     {...getFieldProps('officerSection')}
-                    SelectProps={{ native: true }}
-                    onChange={(evt) =>
-                      handleChange(evt, setFieldValue, 'officerSection', officerSection, officerSubSection)
-                    }
+                    SelectProps={{ native: false }}
+                    onChange={(evt) => {
+                      handleChange(evt, setFieldValue, 'officerSection', officerSection, setofficerSubSection);
+                    }}
                     error={Boolean(touched.officerSection && errors.officerSection)}
                     helperText={touched.officerSection && errors.officerSection}
                   >
-                    <option value="" />
+                    <MenuItem value="" />
                     {officerSection.sub &&
-                      officerSection.sub.map((option) => (
-                        <option key={option.code} value={option.label}>
-                          {option.label}
-                        </option>
+                      officerSection?.sub?.map((option) => (
+                        <MenuItem key={option.Code} value={option.Name}>
+                          {option.Name} {option.Address}
+                        </MenuItem>
                       ))}
                   </TextField>
                   <TextField
@@ -299,27 +324,95 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     label="Officer Sub Section"
                     placeholder="Officer Sub Section"
                     {...getFieldProps('officerSubSection')}
-                    SelectProps={{ native: true }}
+                    SelectProps={{ native: false }}
                     error={Boolean(touched.officerSubSection && errors.officerSubSection)}
                     helperText={touched.officerSubSection && errors.officerSubSection}
                   >
-                    <option value="" />
-                    {countries.map((option) => (
-                      <option key={option.code} value={option.label}>
-                        {option.label}
-                      </option>
+                    <MenuItem value="" />
+                    {officerSubSection?.sub?.map((option) => (
+                      <MenuItem key={option.code} value={option.Name}>
+                        {option.Name}
+                      </MenuItem>
                     ))}
                   </TextField>
                 </Stack>
+              </Stack>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3, pb: 10 }}>
+              <Stack spacing={3}>
+                <Box sx={{ pb: 3 }}>
+                  User Access (<small>This defines the user's access level</small>)
+                </Box>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
+                  <Autocomplete
+                    select
                     fullWidth
-                    label="approvalLevel"
-                    {...getFieldProps('approvalLevel')}
-                    error={Boolean(touched.approvalLevel && errors.approvalLevel)}
-                    helperText={touched.approvalLevel && errors.approvalLevel}
+                    label="Role"
+                    placeholder="Role"
+                    onInputChange={(event, newValue) => {
+                      setFieldValue('role', newValue);
+                    }}
+                    SelectProps={{ native: true }}
+                    options={Role}
+                    {...getFieldProps('role')}
+                    error={Boolean(touched.role && errors.role)}
+                    helperText={touched.role && errors.role}
+                    renderInput={(params) => <TextField {...params} label="Role" />}
                   />
+                  <TextField
+                    select
+                    fullWidth
+                    label="Access Type"
+                    {...getFieldProps('accessType')}
+                    error={Boolean(touched.accessType && errors.accessType)}
+                    helperText={touched.accessType && errors.accessType}
+                    SelectProps={{ native: false }}
+                  >
+                    {AccessType.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                  <FormControl sx={{ m: 1, width: '100%' }}>
+                    <InputLabel id="demo-multiple-checkbox-label">Service</InputLabel>
+                    <Select
+                      labelId="demo-multiple-checkbox-label"
+                      id="demo-multiple-checkbox"
+                      multiple
+                      onChange={(evt) => handleMultiChange(evt, setFieldValue)}
+                      {...getFieldProps('service')}
+                      error={Boolean(touched.service && errors.service)}
+                      helperText={touched.service && errors.service}
+                      renderValue={(selected) => selected.join(', ')}
+                    >
+                      {ServicesList.map((name) => (
+                        <MenuItem key={name} value={name}>
+                          <Checkbox checked={values.service.indexOf(name) > -1} />
+                          <ListItemText primary={name} />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Stack>
+                <Stack direction={{ xs: 'column', sm: 'row' }}>
+                  {values.accessType === 'Approver' && <OfficerWorkFlow services={values.service} />}
+                </Stack>
+              </Stack>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3, pb: 10 }}>
+              <Stack spacing={3}>
+                <Box sx={{ pb: 3 }}>
+                  Command Access Details (<small>These are the commands that the user has access to</small>)
+                </Box>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <TextField fullWidth label="Zip/Code" {...getFieldProps('officerSubSection')} />
                 </Stack>
 

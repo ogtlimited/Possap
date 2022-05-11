@@ -26,6 +26,7 @@ import {
   InputLabel
 } from '@material-ui/core';
 import { LoadingButton, MobileDatePicker } from '@material-ui/lab';
+import closeFill from '@iconify/icons-eva/close-fill';
 import PoliceExtractMutation from '../../mutations/policeExtract.mutation';
 import useAuth from '../../hooks/useAuth';
 
@@ -111,15 +112,14 @@ export default function PoliceExtractForm() {
         mutation.mutate(values);
 
         console.log(allValues);
-        // await login(values.email, values.password);
-        // enqueueSnackbar('Login success', {
-        //   variant: 'success',
-        //   action: (key) => (
-        //     <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-        //       <Icon icon={closeFill} />
-        //     </MIconButton>
-        //   )
-        // });
+        enqueueSnackbar('Police extract created successfully', {
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
         if (isMountedRef.current) {
           setSubmitting(false);
         }

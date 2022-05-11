@@ -12,7 +12,7 @@ import ServiceForm from '../components/services/services-form';
 import fakeRequest from '../utils/fakeRequest';
 // components
 import Page from '../components/Page';
-import { PaymentSummary, PaymentMethods, PaymentBillingAddress } from '../components/_external-pages/payment';
+import { PaymentSummary, PaymentMethods, PaymentBillingAddress, Notice } from '../components/_external-pages/payment';
 import { SelectService } from '../components/_external-pages/services';
 import EXTRACT from '../json-form/police-extract.json';
 import CHARACTERCERT from '../json-form/policeCharacterCertificate.json';
@@ -107,7 +107,7 @@ export default function Payment() {
           <Card>
             {/* <FormikProvider value={formik}>
               <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}> */}
-            <Grid p={3} container spacing={upMd ? 5 : 2}>
+            <Grid p={2} container spacing={upMd ? 5 : 2}>
               <Grid item xs={12} md={7}>
                 {values.serviceType === sTypes[0] ? (
                   <PoliceExtractForm parentValues={values} />
@@ -124,7 +124,8 @@ export default function Payment() {
                   </Grid> */}
               <Grid item xs={12} md={5}>
                 {/* <FormSummary /> */}
-                <PaymentSummary formik={formik} />
+                {/* <PaymentSummary formik={formik} /> */}
+                <Notice />
               </Grid>
             </Grid>
             {/* </Form>

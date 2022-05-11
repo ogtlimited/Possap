@@ -45,8 +45,8 @@ export const WORKFLOW = [
     approvals: ['Extract First Approval', 'Extract Second Approval']
   },
   {
-    heading: '',
-    title: 'Extract Request Flow',
+    heading: 'ESCORT AND GUARD SERVICES',
+    title: ['Extract Request Flow'],
     approvals: ['Extract First Approval', 'Extract Second Approval']
   },
   {

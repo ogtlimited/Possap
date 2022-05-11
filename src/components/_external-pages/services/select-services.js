@@ -18,6 +18,7 @@ import {
   FormControlLabel
 } from '@material-ui/core';
 //
+import ScrollToTop from "../../ScrollToTop";
 import { MHidden } from '../../@material-extend';
 import PaymentNewCardForm from '../payment/PaymentNewCardForm';
 
@@ -158,7 +159,6 @@ export default function SelectService({ formik }) {
                         ))}
                       </TextField>
                     )}
-
                   </Collapse>
                 )}
               </OptionStyle>
@@ -166,6 +166,7 @@ export default function SelectService({ formik }) {
           })}
         </Stack>
       </RadioGroup>
+      <ScrollToTop />
     </RootStyle>
   );
 }

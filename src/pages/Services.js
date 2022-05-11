@@ -110,11 +110,11 @@ export default function Payment() {
             <Grid p={3} container spacing={upMd ? 5 : 2}>
               <Grid item xs={12} md={7}>
                 {values.serviceType === sTypes[0] ? (
-                  <PoliceExtractForm parentValues={values} />
+                  <PoliceExtractForm setStep={setStep} parentValues={values} />
                 ) : values.serviceType === sTypes[1] ? (
-                  <CharacterCertForm parentValues={values} />
+                  <CharacterCertForm setStep={setStep} parentValues={values} />
                 ) : values.serviceType === sTypes[2] ? (
-                  <EGForm parentValues={values} />
+                  <EGForm setStep={setStep} parentValues={values} />
                 ) : (
                   []
                 )}

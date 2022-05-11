@@ -71,6 +71,7 @@ export default function OfficerWorkFlow({ services }) {
 
   const customList = (title, items) => (
     <Card>
+      {JSON.stringify(items)}
       <CardHeader
         sx={{ px: 2, py: 1 }}
         avatar={

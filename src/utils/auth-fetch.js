@@ -3,7 +3,7 @@ import tokenService from './token.service';
 import config from '../config.json';
 
 const headers = {};
-const token = localStorage.getItem('token');
+const token = localStorage.getItem('accessToken');
 
 if (token) {
   headers.Authorization = `Bearer ${token}`;
@@ -13,7 +13,7 @@ const axiosInstance = axios.create({
   // baseURL: config.ApiUrl
 });
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (!token) {
     throw new axios.Cancel('Token is not available. Do login, please.');
   } else {

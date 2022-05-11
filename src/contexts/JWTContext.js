@@ -64,7 +64,6 @@ AuthProvider.propTypes = {
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
   const initialize = async () => {
     try {
       const accessToken = window.localStorage.getItem('accessToken');

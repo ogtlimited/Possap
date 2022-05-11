@@ -48,10 +48,6 @@ export default function EGForm({ parentValues }) {
   const formik = useFormik({
     initialValues: {
       userId: user?.id,
-      name: user?.fullName,
-      phone: user?.phone,
-      email: user?.email,
-      address: user?.address,
       requestType: '',
       categoryType: '',
       unit: '',

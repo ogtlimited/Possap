@@ -27,14 +27,20 @@ export default function FormSummary({ urlObj }) {
   const [data, setdata] = useState({});
   console.log(urlObj);
   useEffect(() => {
-    // switch (key) {
-    //   case value:
+    switch (urlObj?.query) {
+      case '1':
+        // work Margaret
+        break;
+      case '2':
+        // work Margaret
+        break;
+      case '3':
+        // work Kay
+        break;
 
-    //     break;
-
-    //   default:
-    //     break;
-    // }
+      default:
+        break;
+    }
     console.log(urlObj);
   }, [urlObj]);
 

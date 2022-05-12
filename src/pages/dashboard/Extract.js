@@ -1,9 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import { filter } from 'lodash';
-import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import plusFill from '@iconify/icons-eva/plus-fill';
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { useTheme } from '@material-ui/core/styles';
@@ -12,7 +10,6 @@ import {
   Table,
   Stack,
   Avatar,
-  Button,
   Checkbox,
   TableRow,
   TableBody,
@@ -65,7 +62,7 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
+  const stabilizedThis = array?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -80,88 +77,6 @@ function applySortFilter(array, comparator, query) {
 export default function Extract() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const userList = [
-    {
-      id: 1,
-      name: 'Wilmar Josselson',
-      extractCategory: 'Drywall & Acoustical (MOB)',
-      affidavitNumber: '9838672211',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 2,
-      name: 'Gray Biasini',
-      extractCategory: 'Ornamental Railings',
-      affidavitNumber: '5701448835',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 3,
-      name: 'Wyatt Quilleash',
-      extractCategory: 'Elevator',
-      affidavitNumber: '0568294270',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 4,
-      name: 'Diannne Peret',
-      extractCategory: 'Framing (Steel)',
-      affidavitNumber: '7874707168',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 5,
-      name: 'Freda Passfield',
-      extractCategory: 'Marlite Panels (FED)',
-      affidavitNumber: '8214532507',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 6,
-      name: 'Brigitte Denkel',
-      extractCategory: 'Exterior Signage',
-      affidavitNumber: '8959313254',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 7,
-      name: 'Hebert Galbreth',
-      extractCategory: 'Retaining Wall and Brick Pavers',
-      affidavitNumber: '0568479351',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 8,
-      name: 'Chas Southcott',
-      extractCategory: 'Curb & Gutter',
-      affidavitNumber: '0228194393',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 9,
-      name: 'Jefferey Cleave',
-      extractCategory: 'Painting & Vinyl Wall Covering',
-      affidavitNumber: '6843650198',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 10,
-      name: 'Lexie Gwatkins',
-      extractCategory: 'Doors, Frames & Hardware',
-      affidavitNumber: '2676903543',
-      state: 'Abruzzi',
-      status: 'pending'
-    }
-  ];
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -170,7 +85,10 @@ export default function Extract() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const { data, error, isFetching } = usePoliceExtract();
-  console.log({ data });
+
+  if (isFetching) {
+    return 'Loading...';
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -180,7 +98,7 @@ export default function Extract() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.name);
+      const newSelecteds = data?.data?.data.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -219,11 +137,11 @@ export default function Extract() {
     console.log(userId);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.data?.data.length) : 0;
 
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
+  const filteredExtracts = applySortFilter(data?.data?.data, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = filteredUsers.length === 0;
+  const isUserNotFound = filteredExtracts.length === 0;
 
   return (
     <Page title="Police Extract | Possap">
@@ -235,16 +153,6 @@ export default function Extract() {
             { name: 'Request', href: PATH_DASHBOARD.services.root },
             { name: 'Extract' }
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.newUser}
-              startIcon={<Icon icon={plusFill} />}
-            >
-              New User
-            </Button>
-          }
         />
 
         <Card>
@@ -257,14 +165,22 @@ export default function Extract() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
+                  rowCount={data?.data?.data.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, extractCategory, status, state, affidavitNumber, email } = row;
+                  {filteredExtracts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                    const {
+                      id,
+                      name = 'Amir Dbt',
+                      extractCategory,
+                      status,
+                      extractState,
+                      affidavitNumber,
+                      email
+                    } = row;
                     const isItemSelected = selected.indexOf(name) !== -1;
 
                     return (
@@ -289,7 +205,7 @@ export default function Extract() {
                         </TableCell>
                         <TableCell align="left">{extractCategory}</TableCell>
                         <TableCell align="left">{affidavitNumber}</TableCell>
-                        <TableCell align="left">{state}</TableCell>
+                        <TableCell align="left">{extractState}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -327,7 +243,7 @@ export default function Extract() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={userList.length}
+            count={data?.data?.data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

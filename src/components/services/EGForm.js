@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import NaijaStates from 'naija-state-local-government';
 import { indexOf } from 'lodash';
@@ -16,7 +16,8 @@ import {
   Select,
   FormControl,
   InputLabel,
-  Icon
+  Icon,
+  Typography
 } from '@material-ui/core';
 import { DesktopDatePicker, LoadingButton } from '@material-ui/lab';
 
@@ -78,8 +79,9 @@ export default function EGForm({ parentValues, setStep }) {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         console.log(values);
-        mutation.mutate({ ...parentValues, ...values });
-
+        const response = mutation.mutate({ ...parentValues, ...values });
+        const redirectPath = 'services/invoice/3?requestID=1';
+        <Navigate to={redirectPath} />;
         if (isMountedRef.current) {
           setSubmitting(false);
         }
@@ -271,12 +273,15 @@ export default function EGForm({ parentValues, setStep }) {
               {/* s */}
             </Stack>
           </Stack>
-          <MIconButton onClick={() => setStep('one')} variant="contained" color="primary" size="large">
-            <Icon icon={arrowBackFill} width={20} height={20} />
-          </MIconButton>
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-            Proceed
-          </LoadingButton>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <MIconButton onClick={() => setStep('one')} variant="contained" color="primary" size="large">
+              {/* <Icon icon={arrowBackFill} width={20} height={20} /> */}
+              <Typography variant="h6">Prev</Typography>
+            </MIconButton>
+            <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+              Proceed
+            </LoadingButton>
+          </Stack>
         </Form>
       </FormikProvider>
       <ScrollToTop />

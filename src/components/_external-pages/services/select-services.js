@@ -51,6 +51,37 @@ const GUARD_OPTIONS = [
     label: 'Politically Exposed Persons (PEP)'
   }
 ];
+const SUBCATEGORY_OPTIONS = [
+  {
+    value: 'Diplomat',
+    label: 'Diplomat'
+  },
+  {
+    value: 'State Government Principal Officer',
+    label: 'State Government Principal Officer'
+  },
+  {
+    value: 'Federal Government Principal Officer',
+    label: 'Federal Government Principal Officer'
+  },
+  {
+    value: 'Federal Judiciary',
+    label: 'Federal Judiciary'
+  },
+  {
+    value: 'State Judiciary',
+    label: 'State Judiciary'
+  },
+  {
+    value: 'Federal Legislature',
+    label: 'Federal Legislature'
+  },
+  {
+    value: 'Traditional Rulers',
+    label: 'Traditional Rulers'
+  },
+  
+];
 
 const RootStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(3),
@@ -152,7 +183,7 @@ export default function SelectService({ formik }) {
                         {...getFieldProps('card')}
                         SelectProps={{ native: true }}
                       >
-                        {GUARD_OPTIONS.map((option) => (
+                        {SUBCATEGORY_OPTIONS.map((option) => (
                           <option key={option.value} value={option.value}>
                             {option.label}
                           </option>

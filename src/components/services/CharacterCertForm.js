@@ -1,10 +1,11 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import NaijaStates from 'naija-state-local-government';
+
 // material
 import {
   Stack,
@@ -32,6 +33,7 @@ import { LoadingButton } from '@material-ui/lab';
 // hooks
 import arrowBackFill from '@iconify/icons-eva/arrow-back-fill';
 import closeFill from '@iconify/icons-eva/close-fill';
+import CharacterCertificateMutation from '../../mutations/characterCertificate.mutation';
 import { getFormOptions } from '../../utils/getFormOptions';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import { MIconButton } from '../@material-extend';
@@ -40,7 +42,7 @@ import { countries } from './countries';
 import ScrollToTop from '../ScrollToTop';
 // ----------------------------------------------------------------------
 
-export default function CharacterCertForm({ setStep }) {
+export default function CharacterCertForm({ setStep, parentValues }) {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
@@ -57,6 +59,8 @@ export default function CharacterCertForm({ setStep }) {
     extractPoliceDivision: Yup.string().required('ID No is required'),
     status: Yup.string().required('ID No is required')
   });
+
+  const mutation = CharacterCertificateMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -78,8 +82,13 @@ export default function CharacterCertForm({ setStep }) {
     validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        console.log(values);
-        // await mutation.mutate(values);
+        const allValues = {
+          ...parentValues,
+          ...values
+        };
+        const response = mutation.mutate(allValues);
+        const redirectPath = 'services/invoice/2?requestID=1';
+        <Navigate to={redirectPath} />;
         enqueueSnackbar('Form submitted success', {
           variant: 'success',
           action: (key) => (

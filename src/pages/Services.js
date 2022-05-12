@@ -12,7 +12,7 @@ import ServiceForm from '../components/services/services-form';
 import fakeRequest from '../utils/fakeRequest';
 // components
 import Page from '../components/Page';
-import { PaymentSummary, PaymentMethods, PaymentBillingAddress } from '../components/_external-pages/payment';
+import { PaymentSummary, PaymentMethods, PaymentBillingAddress, Notice } from '../components/_external-pages/payment';
 import { SelectService } from '../components/_external-pages/services';
 import EXTRACT from '../json-form/police-extract.json';
 import CHARACTERCERT from '../json-form/policeCharacterCertificate.json';
@@ -43,10 +43,10 @@ export default function Payment() {
     serviceType: '',
     serviceCategory: '',
     serviceSubCategory: ''
-  })
+  });
   useEffect(() => {
-    handleFormChange(initialValues)
-  }, [user])
+    handleFormChange(initialValues);
+  }, [user]);
 
   const [step, setStep] = useState('one');
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
@@ -74,7 +74,7 @@ export default function Payment() {
     <RootStyle title="Request Service ">
       <Container maxWidth="lg">
         <Box sx={{ mb: 5 }}>
-          <Typography variant="h3" align="center" paragraph>
+          <Typography variant="h4" align="center" paragraph>
             Select a service to continue
           </Typography>
           {/* <Typography align="center" sx={{ color: 'text.secondary' }}>
@@ -89,7 +89,7 @@ export default function Payment() {
                 <Button
                   disabled={values.serviceType === ''}
                   onClick={() => {
-                    handleFormChange(values)
+                    handleFormChange(values);
                     setStep('two');
                   }}
                   fullWidth
@@ -107,7 +107,7 @@ export default function Payment() {
           <Card>
             {/* <FormikProvider value={formik}>
               <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}> */}
-            <Grid p={3} container spacing={upMd ? 5 : 2}>
+            <Grid p={2} container spacing={upMd ? 5 : 2}>
               <Grid item xs={12} md={7}>
                 {values.serviceType === sTypes[0] ? (
                   <PoliceExtractForm setStep={setStep} parentValues={values} />
@@ -124,7 +124,8 @@ export default function Payment() {
                   </Grid> */}
               <Grid item xs={12} md={5}>
                 {/* <FormSummary /> */}
-                <PaymentSummary formik={formik} />
+                {/* <PaymentSummary formik={formik} /> */}
+                <Notice />
               </Grid>
             </Grid>
             {/* </Form>

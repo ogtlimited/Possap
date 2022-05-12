@@ -136,6 +136,16 @@ export default function Router() {
               </ServiceFormProvider>
             </ServiceGuard>
           )
+        },
+        {
+          path: 'services/invoice/:id',
+          element: (
+            <ServiceGuard>
+              <ServiceFormProvider>
+                <Invoice />
+              </ServiceFormProvider>
+            </ServiceGuard>
+          )
         }
       ]
     },
@@ -153,6 +163,7 @@ const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCod
 
 // Dashboard
 const Services = Loadable(lazy(() => import('../pages/Services')));
+const Invoice = Loadable(lazy(() => import('../pages/Invoice')));
 
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));

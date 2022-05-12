@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useState, useCallback } from 'react';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import NaijaStates from 'naija-state-local-government';
@@ -26,6 +26,9 @@ import {
   InputLabel
 } from '@material-ui/core';
 import { LoadingButton, MobileDatePicker } from '@material-ui/lab';
+import closeFill from '@iconify/icons-eva/close-fill';
+import PoliceExtractMutation from '../../mutations/policeExtract.mutation';
+import useAuth from '../../hooks/useAuth';
 
 // hooks
 import useIsMountedRef from '../../hooks/useIsMountedRef';
@@ -51,6 +54,7 @@ const MenuProps = {
 
 export default function PoliceExtractForm({ parentValues, setStep }) {
   const isMountedRef = useIsMountedRef();
+  const { user } = useAuth();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [lgaList, setlgaList] = useState([]);
   const { handleFormChange } = useServiceForm();
@@ -81,40 +85,44 @@ export default function PoliceExtractForm({ parentValues, setStep }) {
     // extractState: Yup.string().required('State is required')
   });
 
+  const mutation = PoliceExtractMutation();
   const formik = useFormik({
     initialValues: {
+      user_type: user?.userType,
       extractCategory: [],
+      // sub_category: [],
+      wasReported: true,
       documentLost: [],
       propertyLost: [],
-      extractReason: '',
-      wasReported: true,
       dateReported: '',
       courtAffidavit: '',
       affidavitNumber: '',
       affidavitIssuanceDate: '',
       extractState: '',
       extractLga: '',
-      extractPoliceDivision: '',
-      status: ''
+      extractPoliceDivision: ''
+      // status: ''
     },
     validationSchema: PoliceSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         const allValues = {
-          ...parentValues,
           ...values
         };
 
+        const response = mutation.mutate(values);
+        // REDIREECT TO services/invoice/1?requestID=1
+        const redirectPath = 'services/invoice/1?requestID=1';
+        <Navigate to={redirectPath} />;
         console.log(allValues);
-        // await login(values.email, values.password);
-        // enqueueSnackbar('Login success', {
-        //   variant: 'success',
-        //   action: (key) => (
-        //     <MIconButton size="small" onClick={() => closeSnackbar(key)}>
-        //       <Icon icon={closeFill} />
-        //     </MIconButton>
-        //   )
-        // });
+        enqueueSnackbar('Police extract created successfully', {
+          variant: 'success',
+          action: (key) => (
+            <MIconButton size="small" onClick={() => closeSnackbar(key)}>
+              <Icon icon={closeFill} />
+            </MIconButton>
+          )
+        });
         if (isMountedRef.current) {
           setSubmitting(false);
         }

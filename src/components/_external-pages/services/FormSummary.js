@@ -1,7 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Table, Paper, TableContainer, TableHead, TableRow, TableCell, TableBody, Typography } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
+import { useParams } from 'react-router';
 import useServiceForm from '../../../hooks/useServiceForm';
+import useServiceTable from '../../../hooks/useServiceTable';
 import splitCamelCase from '../../../utils/splitCamelCase';
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -13,22 +15,31 @@ const RootStyle = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.neutral
   },
   [theme.breakpoints.up('lg')]: {
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5)
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   }
 }));
 
-export default function FormSummary() {
+export default function FormSummary({ urlObj }) {
   const { serviceFormvalues } = useServiceForm();
+  const [value] = useServiceTable(3);
+
+  const [data, setdata] = useState({});
+  console.log(urlObj);
   useEffect(() => {
-    console.log(serviceFormvalues);
-  }, [serviceFormvalues]);
+    // switch (key) {
+    //   case value:
+
+    //     break;
+
+    //   default:
+    //     break;
+    // }
+    console.log(urlObj);
+  }, [urlObj]);
 
   return (
     <RootStyle>
-      <Typography variant="subtitle1" sx={{ mb: 5 }}>
-        Summary
-      </Typography>
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
@@ -38,12 +49,12 @@ export default function FormSummary() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {Object.keys(serviceFormvalues).map((key) => (
+            {value.map((key) => (
               <TableRow key={key} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell component="th" scope="row">
-                  {splitCamelCase(key)}
+                  {key.title}
                 </TableCell>
-                <TableCell>{serviceFormvalues[key]}</TableCell>
+                <TableCell>{key.value === '' ? 'No Value' : key.value}</TableCell>
               </TableRow>
             ))}
           </TableBody>

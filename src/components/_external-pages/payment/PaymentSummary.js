@@ -6,7 +6,8 @@ import { styled } from '@material-ui/core/styles';
 import { Box, Switch, Divider, Typography, Stack } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 //
-import Label from '../../Label';
+import rand from '../../../utils/rand';
+import axiosInstance from '../../../utils/auth-fetch';
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +31,51 @@ const RootStyle = styled('div')(({ theme }) => ({
 PaymentSummary.propTypes = {
   formik: PropTypes.object
 };
-
+const { Bank3D } = window;
 export default function PaymentSummary({ formik }) {
   const { getFieldProps, isSubmitting } = formik;
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+
+    const payment = Bank3D.createPayment({
+      reference: rand(10), // generates a pseudo-unique reference. Please replace with a reference you generated.
+      currencyCode: 'NGN',
+      merchantKey: 'PayzoneAPP', // use your test or live merchant key
+      amount: 3000,
+      email: 'test@gmail.com',
+      phone: '0801234567889',
+      color: '#2f4cb0',
+      mode: 'test',
+      onReady() {
+        // The popup's iframe has loaded and it's preloader is visible
+        // Use this to stop you own custom preloader
+      },
+      onClose() {
+        // The user closed the popup or transaction was not completed
+      },
+      callback(res) {
+        console.log(res);
+        const values = {
+          amount: res.amount,
+          transactionType: 'debit',
+          channel: 'Bank3D',
+          channelReferenceNumber: res.reference
+        };
+        console.log(values);
+        axiosInstance
+          .post(``, values)
+          .then((resp) => {
+            console.log(resp);
+          })
+          .catch((err) => {
+            console.log(err.error);
+          });
+        // Transaction was completed and it was successfull.
+        // This is the stage where it's necessary to verify the payment using "reference" argument
+      }
+    });
+    payment.open();
+  };
 
   return (
     <RootStyle>
@@ -75,6 +118,7 @@ export default function PaymentSummary({ formik }) {
       <LoadingButton
         fullWidth
         size="large"
+        onClick={handleOnSubmit}
         type="submit"
         variant="contained"
         loading={isSubmitting}

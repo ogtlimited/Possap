@@ -9,9 +9,7 @@ if (token) {
   headers.Authorization = `Bearer ${token}`;
 }
 
-const axiosInstance = axios.create({
-  // baseURL: config.ApiUrl
-});
+const axiosInstance = axios.create();
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (!token) {

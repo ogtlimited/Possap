@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-nested-ternary */
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
@@ -36,8 +37,8 @@ import usePoliceExtract from '../../db/usePoliceExtracts';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  { id: 'extractCategory', label: 'Extract Category', alignRight: false },
-  { id: 'affidavitNumber', label: 'Affidavit', alignRight: false },
+  { id: 'extract_category', label: 'Extract Category', alignRight: false },
+  { id: 'affidavit_number', label: 'Affidavit', alignRight: false },
   { id: 'state', label: 'state', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
@@ -174,14 +175,13 @@ export default function Extract() {
                   {filteredExtracts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {
                       id,
-                      name = 'Amir Dbt',
-                      extractCategory,
+                      extract_category,
                       status,
-                      extractState,
-                      affidavitNumber,
-                      email
+                      extract_police_division_state,
+                      affidavit_number,
+                      user: { fullName }
                     } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                    const isItemSelected = selected.indexOf(fullName) !== -1;
 
                     return (
                       <TableRow
@@ -193,19 +193,19 @@ export default function Extract() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, fullName)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src="" />
+                            <Avatar alt={fullName} src="" />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {fullName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{extractCategory}</TableCell>
-                        <TableCell align="left">{affidavitNumber}</TableCell>
-                        <TableCell align="left">{extractState}</TableCell>
+                        <TableCell align="left">{extract_category}</TableCell>
+                        <TableCell align="left">{affidavit_number}</TableCell>
+                        <TableCell align="left">{extract_police_division_state}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -216,7 +216,7 @@ export default function Extract() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={fullName} />
                         </TableCell>
                       </TableRow>
                     );

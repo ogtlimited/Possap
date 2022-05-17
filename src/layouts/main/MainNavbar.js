@@ -7,11 +7,13 @@ import useOffSetTop from '../../hooks/useOffSetTop';
 // components
 import Logo from '../../components/Logo';
 import Label from '../../components/Label';
-import { MHidden } from '../../components/@material-extend';
+import { MHidden, MIconButton } from '../../components/@material-extend';
 //
 import MenuDesktop from './MenuDesktop';
 import MenuMobile from './MenuMobile';
 import navConfig from './MenuConfig';
+import useAuth from '../../hooks/useAuth';
+import MyAvatar from '../../components/MyAvatar';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +50,7 @@ export default function MainNavbar() {
   const isOffset = useOffSetTop(100);
   const { pathname } = useLocation();
   const isHome = pathname === '/';
+  const { user } = useAuth();
 
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
@@ -77,9 +80,22 @@ export default function MainNavbar() {
             <MenuDesktop isOffset={isOffset} isHome={isHome} navConfig={navConfig} />
           </MHidden>
 
-          <Button variant="contained" href="/auth/register">
-            Login | Signup
-          </Button>
+          {!user ? (
+            <Button variant="contained" href="/auth/register">
+              Login | Signup
+            </Button>
+          ) : (
+            <MIconButton
+              href="/auth/register"
+              sx={{
+                padding: 0,
+                width: 44,
+                height: 44
+              }}
+            >
+              <MyAvatar />
+            </MIconButton>
+          )}
 
           <MHidden width="mdUp">
             <MenuMobile isOffset={isOffset} isHome={isHome} navConfig={navConfig} />

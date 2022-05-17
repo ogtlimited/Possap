@@ -74,7 +74,7 @@ export default function Payment() {
     <RootStyle title="Request Service ">
       <Container maxWidth="lg">
         <Box sx={{ mb: 5 }}>
-          <Typography variant="h3" align="center" paragraph>
+          <Typography variant="h4" align="center" paragraph>
             Select a service to continue
           </Typography>
           {/* <Typography align="center" sx={{ color: 'text.secondary' }}>
@@ -110,11 +110,11 @@ export default function Payment() {
             <Grid p={2} container spacing={upMd ? 5 : 2}>
               <Grid item xs={12} md={7}>
                 {values.serviceType === sTypes[0] ? (
-                  <PoliceExtractForm parentValues={values} />
+                  <PoliceExtractForm setStep={setStep} parentValues={values} />
                 ) : values.serviceType === sTypes[1] ? (
-                  <CharacterCertForm parentValues={values} />
+                  <CharacterCertForm setStep={setStep} parentValues={values} />
                 ) : values.serviceType === sTypes[2] ? (
-                  <EGForm parentValues={values} />
+                  <EGForm setStep={setStep} parentValues={values} />
                 ) : (
                   []
                 )}

@@ -6,7 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@material-ui/core/styles';
 import { Button, Box, Link, Container, Typography, Stack } from '@material-ui/core';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_PAGE } from '../../../routes/paths';
 //
 import { varFadeIn, varFadeInUp, varWrapEnter, varFadeInRight } from '../../animate';
 
@@ -96,7 +96,7 @@ export default function Hero() {
                 size="large"
                 variant="contained"
                 component={RouterLink}
-                to={PATH_DASHBOARD.root}
+                to={PATH_PAGE.requestService}
                 startIcon={<Icon icon={flashFill} width={20} height={20} />}
               >
                 Request Service

@@ -10,7 +10,6 @@ if (token) {
 }
 
 const axiosInstance = axios.create();
-console.log(axiosInstance);
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (!token) {

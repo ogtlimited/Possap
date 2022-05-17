@@ -22,6 +22,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function FormSummary({ urlObj }) {
   const { serviceFormvalues } = useServiceForm();
+  const [table, settable] = useState([]);
   const [value] = useServiceTable(3);
 
   const [data, setdata] = useState({});

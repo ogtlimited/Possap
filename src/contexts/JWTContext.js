@@ -123,7 +123,7 @@ function AuthProvider({ children }) {
         user: data
       }
     });
-    initialize();
+    // initialize();
   };
 
   const register = async (data) => {

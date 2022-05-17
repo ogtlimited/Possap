@@ -7,7 +7,7 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import ServiceGuard from '../guards/ServiceGuard';
@@ -74,7 +74,9 @@ export default function Router() {
       path: 'dashboard',
       element: (
         <AuthGuard>
-          <DashboardLayout />
+          <RoleBasedGuard>
+            <DashboardLayout />
+          </RoleBasedGuard>
         </AuthGuard>
       ),
       children: [
@@ -107,6 +109,18 @@ export default function Router() {
             { path: 'guard-services', element: <EGServices /> }
           ]
         }
+      ]
+    },
+    {
+      path: 'user-dashboard',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { path: '/', element: <Navigate to="/user-dashboard/app" replace /> },
+        { path: 'app', element: <UserApp /> }
       ]
     },
 
@@ -167,6 +181,7 @@ const Invoice = Loadable(lazy(() => import('../pages/Invoice')));
 
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
+const UserApp = Loadable(lazy(() => import('../pages/dashboard/UserApp')));
 const Reports = Loadable(lazy(() => import('../pages/dashboard/Reports')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const CreateUser = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));

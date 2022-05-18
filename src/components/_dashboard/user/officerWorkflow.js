@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   CardHeader,
@@ -12,6 +12,7 @@ import {
   ListItemText,
   Checkbox
 } from '@material-ui/core';
+import { WORKFLOW } from './constants';
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -26,15 +27,19 @@ function union(a, b) {
 }
 
 export default function OfficerWorkFlow({ services }) {
-  console.log(services);
-  const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([0, 1, 2, 12]);
+  const [approvals, setapprovals] = useState(null);
+  const [checked, setChecked] = useState([]);
+  const [left, setLeft] = useState([0, 1, 2, 12]);
   const [right, setRight] = React.useState([4, 5, 6, 7]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
+  useEffect(() => {
+    setapprovals(WORKFLOW.filter((e) => services.includes(e.heading)));
+  }, [services]);
 
   const handleToggle = (value) => () => {
+    console.log(value);
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
 
@@ -71,62 +76,66 @@ export default function OfficerWorkFlow({ services }) {
 
   const customList = (title, items) => (
     <Card>
-      {JSON.stringify(items)}
-      <CardHeader
-        sx={{ px: 2, py: 1 }}
-        avatar={
-          <Checkbox
-            onClick={handleToggleAll(items)}
-            checked={numberOfChecked(items) === items.length && items.length !== 0}
-            indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-            disabled={items.length === 0}
-            inputProps={{
-              'aria-label': 'all items selected'
-            }}
-          />
-        }
-        title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
-      />
-      <Divider />
-      <List
-        sx={{
-          width: 300,
-          height: 230,
-          bgcolor: 'background.paper',
-          overflow: 'auto'
-        }}
-        dense
-        component="div"
-        role="list"
-      >
-        {items.map((value) => {
-          const labelId = `transfer-list-all-item-${value}-label`;
-
-          return (
-            <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
-              <ListItemIcon>
+      {items &&
+        items.map((flow) => (
+          <>
+            <CardHeader
+              sx={{ px: 2, py: 1 }}
+              avatar={
                 <Checkbox
-                  checked={checked.indexOf(value) !== -1}
-                  tabIndex={-1}
-                  disableRipple
+                  onClick={handleToggleAll(items)}
+                  checked={numberOfChecked(items) === items.length && items.length !== 0}
+                  indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
+                  disabled={items.length === 0}
                   inputProps={{
-                    'aria-labelledby': labelId
+                    'aria-label': 'all items selected'
                   }}
                 />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
-            </ListItem>
-          );
-        })}
-        <ListItem />
-      </List>
+              }
+              title={flow.heading}
+              subheader={`${numberOfChecked(items)}/${items.length} selected`}
+            />
+            <Divider />
+            <List
+              sx={{
+                width: 300,
+                height: 'auto',
+                bgcolor: 'background.paper',
+                overflow: 'auto'
+              }}
+              dense
+              component="div"
+              role="list"
+            >
+              {flow?.workflow?.map((value) => {
+                const labelId = `transfer-list-all-item-${value}-label`;
+
+                return (
+                  <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+                    <ListItemIcon>
+                      <Checkbox
+                        checked={checked.indexOf(value) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                        inputProps={{
+                          'aria-labelledby': labelId
+                        }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText id={labelId} primary={value} />
+                  </ListItem>
+                );
+              })}
+              <ListItem />
+            </List>
+          </>
+        ))}
     </Card>
   );
 
   return (
     <Grid container spacing={2} justifyContent="space-around" alignItems="center">
-      <Grid item>{customList('Work Flow', left)}</Grid>
+      <Grid item>{customList('Work Flow', approvals)}</Grid>
       <Grid item>
         <Grid container direction="column" alignItems="center">
           <Button

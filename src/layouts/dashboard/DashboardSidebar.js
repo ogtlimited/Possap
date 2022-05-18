@@ -104,7 +104,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     }
   }, [user]);
 
-  console.log(user);
   const { isCollapse, collapseClick, collapseHover, onToggleCollapse, onHoverEnter, onHoverLeave } =
     useCollapseDrawer();
 

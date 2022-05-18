@@ -12,6 +12,7 @@ RoleBasedGuard.propTypes = {
 const useCurrentRole = () => {
   // Logic here to get current user role
   const { user } = useAuth();
+  console.log(user);
   const role = user.userType;
   return role;
 };

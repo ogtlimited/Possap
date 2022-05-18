@@ -38,7 +38,7 @@ import usePoliceExtract from '../../db/usePoliceExtracts';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'extract_category', label: 'Extract Category', alignRight: false },
-  { id: 'affidavit_number', label: 'Affidavit', alignRight: false },
+  { id: 'id', label: 'File Number', alignRight: false },
   { id: 'state', label: 'state', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
@@ -174,11 +174,10 @@ export default function Extract() {
                 <TableBody>
                   {filteredExtracts.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {
-                      id,
                       extract_category,
                       status,
                       extract_police_division_state,
-                      affidavit_number,
+                      id,
                       user: { fullName }
                     } = row;
                     const isItemSelected = selected.indexOf(fullName) !== -1;
@@ -204,7 +203,7 @@ export default function Extract() {
                           </Stack>
                         </TableCell>
                         <TableCell align="left">{extract_category}</TableCell>
-                        <TableCell align="left">{affidavit_number}</TableCell>
+                        <TableCell align="left">{id}</TableCell>
                         <TableCell align="left">{extract_police_division_state}</TableCell>
                         <TableCell align="left">
                           <Label

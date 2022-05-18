@@ -48,16 +48,16 @@ export default function CharacterCertForm({ setStep, parentValues }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    extractCategory: Yup.string().required('User type is required'),
-    documentLost: Yup.string().required('ID type is required'),
-    extractReason: Yup.string().required('ID No is required'),
-    dateReported: Yup.string().required('ID No is required'),
-    wasReported: Yup.string().required('ID No is required'),
-    courtAffidavit: Yup.string().required('ID No is required'),
-    affidavitNumber: Yup.string().required('ID No is required'),
-    extractLga: Yup.string().required('ID No is required'),
-    extractPoliceDivision: Yup.string().required('ID No is required'),
-    status: Yup.string().required('ID No is required')
+    // extractCategory: Yup.string().required('User type is required'),
+    // documentLost: Yup.string().required('ID type is required'),
+    // extractReason: Yup.string().required('ID No is required'),
+    // dateReported: Yup.string().required('ID No is required'),
+    // wasReported: Yup.string().required('ID No is required'),
+    // courtAffidavit: Yup.string().required('ID No is required'),
+    // affidavitNumber: Yup.string().required('ID No is required'),
+    // extractLga: Yup.string().required('ID No is required'),
+    // extractPoliceDivision: Yup.string().required('ID No is required'),
+    // status: Yup.string().required('ID No is required')
   });
 
   const mutation = CharacterCertificateMutation();

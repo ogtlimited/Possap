@@ -90,7 +90,6 @@ export default function PoliceExtractForm({ parentValues, setStep }) {
     initialValues: {
       user_type: user?.userType,
       extractCategory: [],
-      // sub_category: [],
       wasReported: true,
       documentLost: [],
       propertyLost: [],
@@ -110,7 +109,13 @@ export default function PoliceExtractForm({ parentValues, setStep }) {
           ...values
         };
 
-        const response = mutation.mutate(values);
+        const response = await mutation.mutateAsync(values);
+        console.log(response);
+        // mutation.mutateAsync(values, {
+        //   onSuccess: async (data) => {
+        //     console.log(data);
+        //   }
+        // });
         // REDIREECT TO services/invoice/1?requestID=1
         const redirectPath = 'services/invoice/1?requestID=1';
         <Navigate to={redirectPath} />;

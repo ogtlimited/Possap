@@ -40,6 +40,8 @@ export default function Payment() {
     phone: user.phone,
     email: user.email,
     address: user.address,
+    originState: user?.state,
+    originLga: user?.lga,
     serviceType: '',
     serviceCategory: '',
     serviceSubCategory: ''

@@ -78,8 +78,14 @@ export default function EGForm({ parentValues, setStep }) {
     // validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        console.log(values);
-        const response = mutation.mutate({ ...parentValues, ...values });
+        mutation.mutate(
+          { ...parentValues, ...values },
+          {
+            onSuccess: (data) => {
+              console.log(data);
+            }
+          }
+        );
         const redirectPath = 'services/invoice/3?requestID=1';
         <Navigate to={redirectPath} />;
         if (isMountedRef.current) {
@@ -208,7 +214,7 @@ export default function EGForm({ parentValues, setStep }) {
                 // }}
                 onInputChange={(event, newValue) => {
                   console.log(newValue);
-                  setFieldValue('originState', newValue);
+                  setFieldValue('serviceDeliveryState', newValue);
                   setlgaList(NaijaStates.lgas(newValue).lgas);
                 }}
                 id="combo-box-demo"
@@ -225,7 +231,7 @@ export default function EGForm({ parentValues, setStep }) {
                 label="LGA"
                 placeholder="LGA"
                 onInputChange={(event, newValue) => {
-                  setFieldValue('originLga', newValue);
+                  setFieldValue('serviceDeliveryLga', newValue);
                 }}
                 SelectProps={{ native: true }}
                 options={lgaList}
@@ -272,6 +278,9 @@ export default function EGForm({ parentValues, setStep }) {
 
               {/* s */}
             </Stack>
+            <FormControl fullWidth>
+              <TextField fullWidth multiline type="text" label="Number of Officers Required" />
+            </FormControl>
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <MIconButton onClick={() => setStep('one')} variant="contained" color="primary" size="large">

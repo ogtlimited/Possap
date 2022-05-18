@@ -7,11 +7,9 @@ import useSettings from '../../hooks/useSettings';
 import Page from '../../components/Page';
 import {
   UserRequestTable,
-  TotalOfficerCard,
-  ServiceCardTwo,
-  ServicesCardThree,
-  PoliceExtractCard,
-  ServicesCard,
+  UserCharacterCertifcateCard,
+  UserEGCard,
+  UserPoliceExtractCard,
   UserWelcome
 } from '../../components/_dashboard/general-app';
 
@@ -29,15 +27,15 @@ export default function GeneralApp() {
             <UserWelcome displayName={user.fullName} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <ServicesCard />
+            <UserPoliceExtractCard />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <ServiceCardTwo />
+            <UserCharacterCertifcateCard />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <ServicesCardThree />
+            <UserEGCard />
           </Grid>
 
           <Grid item xs={12} lg={12}>

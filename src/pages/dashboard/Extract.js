@@ -99,7 +99,7 @@ export default function Extract() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = data?.data?.data.map((n) => n.name);
+      const newSelecteds = data?.data?.data.map((n) => n.user.fullName);
       setSelected(newSelecteds);
       return;
     }

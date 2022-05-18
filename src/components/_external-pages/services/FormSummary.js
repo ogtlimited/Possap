@@ -5,6 +5,8 @@ import { useParams } from 'react-router';
 import useServiceForm from '../../../hooks/useServiceForm';
 import useServiceTable from '../../../hooks/useServiceTable';
 import splitCamelCase from '../../../utils/splitCamelCase';
+import SelectService from './select-services';
+import { CharacterCertificateTable, EGTable, PoliceExtractTable } from './constants';
 
 const RootStyle = styled('div')(({ theme }) => ({
   padding: theme.spacing(3),
@@ -22,26 +24,27 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 export default function FormSummary({ urlObj }) {
   const { serviceFormvalues } = useServiceForm();
-  const [value] = useServiceTable(3);
+  const [value, setValue] = useState([]);
 
   const [data, setdata] = useState({});
-  console.log(urlObj);
   useEffect(() => {
     switch (urlObj?.query) {
       case '1':
         // work Margaret
+        setValue(PoliceExtractTable);
         break;
       case '2':
         // work Margaret
+        setValue(CharacterCertificateTable);
         break;
       case '3':
         // work Kay
+        setValue(EGTable);
         break;
 
       default:
         break;
     }
-    console.log(urlObj);
   }, [urlObj]);
 
   return (

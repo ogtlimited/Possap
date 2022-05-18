@@ -115,6 +115,7 @@ function AuthProvider({ children }) {
     const { data, token } = response.data;
     console.log(data);
     console.log(token);
+    // data.userType = 'Officer';
     localStorage.setItem('possap-user', JSON.stringify(data));
     setSession(token.token);
     dispatch({
@@ -123,7 +124,7 @@ function AuthProvider({ children }) {
         user: data
       }
     });
-    initialize();
+    // initialize();
   };
 
   const register = async (data) => {

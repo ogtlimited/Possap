@@ -90,6 +90,7 @@ export default function EGService() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { data, isFetching, error } = useEscortAndGuards();
+  console.log({ data });
   if (isFetching) {
     return 'Loading...';
   }
@@ -172,7 +173,7 @@ export default function EGService() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, categoryType, status = 'approved', serviceDeliveryState } = row;
+                    const { id, name, categoryType, status = 'approved', fileNumber, serviceDeliveryState } = row;
                     const isItemSelected = selected.indexOf(name) !== -1;
 
                     return (
@@ -196,7 +197,7 @@ export default function EGService() {
                           </Stack>
                         </TableCell>
                         <TableCell align="left">{categoryType}</TableCell>
-                        <TableCell align="left">{id}</TableCell>
+                        <TableCell align="left">{fileNumber}</TableCell>
                         <TableCell align="left">{serviceDeliveryState}</TableCell>
                         <TableCell align="left">
                           <Label

@@ -239,16 +239,6 @@ export default function CharacterCert() {
             { name: 'Request', href: PATH_DASHBOARD.services.root },
             { name: 'Character Certificate' }
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.newUser}
-              startIcon={<Icon icon={plusFill} />}
-            >
-              New User
-            </Button>
-          }
         />
 
         <Card>

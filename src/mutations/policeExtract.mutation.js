@@ -9,9 +9,7 @@ const { useMutation } = require('react-query');
 
 const PoliceExtractMutation = () => {
   const url = getUrlString('/api/v1/police-extracts');
-  const policeExtractMutation = useMutation((newPoliceExtract) => {
-    axiosInstance.post(url, newPoliceExtract);
-  });
+  const policeExtractMutation = useMutation((newPoliceExtract) => axiosInstance.post(url, newPoliceExtract));
   return policeExtractMutation;
 };
 export default PoliceExtractMutation;

@@ -90,7 +90,6 @@ export default function PoliceExtractForm({ parentValues, setStep }) {
     initialValues: {
       user_type: user?.userType,
       extractCategory: [],
-      // sub_category: [],
       wasReported: true,
       documentLost: [],
       propertyLost: [],
@@ -106,15 +105,12 @@ export default function PoliceExtractForm({ parentValues, setStep }) {
     validationSchema: PoliceSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        const allValues = {
-          ...values
-        };
+        const response = await mutation.mutateAsync(values);
 
-        const response = mutation.mutate(values);
         // REDIREECT TO services/invoice/1?requestID=1
-        const redirectPath = 'services/invoice/1?requestID=1';
+        const redirectPath = `services/invoice/1?requestID=${response.data.data.createPoliceExtract.id}`;
         <Navigate to={redirectPath} />;
-        console.log(allValues);
+
         enqueueSnackbar('Police extract created successfully', {
           variant: 'success',
           action: (key) => (

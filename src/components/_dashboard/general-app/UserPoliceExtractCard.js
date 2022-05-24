@@ -7,9 +7,7 @@ import { fNumber } from '../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
-const TOTAL_EXT = 18765;
-
-export default function UserPoliceExtractCard() {
+export default function UserPoliceExtractCard({ TOTAL_EXT }) {
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
       <Box sx={{ flexGrow: 1 }}>

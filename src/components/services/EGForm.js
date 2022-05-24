@@ -83,12 +83,11 @@ export default function EGForm({ parentValues, setStep }) {
           { ...parentValues, ...values },
           {
             onSuccess: (data) => {
-              console.log(data);
+              const redirectPath = `/services/invoice/3?requestID=${data.data.data.id}`;
+              navigate(redirectPath);
             }
           }
         );
-        const redirectPath = '/services/invoice/3?requestID=1';
-        // navigate(redirectPath);
         if (isMountedRef.current) {
           setSubmitting(false);
         }
@@ -280,7 +279,14 @@ export default function EGForm({ parentValues, setStep }) {
               {/* s */}
             </Stack>
             <FormControl fullWidth>
-              <TextField fullWidth multiline type="text" label="Number of Officers Required" />
+              <TextField
+                fullWidth
+                multiline
+                type="text"
+                label="Number of Officers Required"
+                error={Boolean(touched.numberOfEscortOfficers && errors.numberOfEscortOfficers)}
+                helperText={touched.numberOfEscortOfficers && errors.numberOfEscortOfficers}
+              />
             </FormControl>
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>

@@ -120,8 +120,8 @@ export const EGTable = [
     value: ''
   },
   {
-    title: 'categoryType',
-    field: 'Category Type',
+    title: 'category Type',
+    field: 'categoryType',
     value: ''
   },
   {
@@ -161,7 +161,7 @@ export const EGTable = [
   },
   {
     title: 'End Date',
-    field: 'endStartDate',
+    field: 'escortEndDate',
     value: ''
   },
   {

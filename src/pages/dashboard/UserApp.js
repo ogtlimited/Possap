@@ -3,6 +3,7 @@ import { Container, Grid, Stack } from '@material-ui/core';
 // hooks
 import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
+import useAllService from '../../queries/getAllServices';
 // components
 import Page from '../../components/Page';
 import {
@@ -18,6 +19,7 @@ import {
 export default function GeneralApp() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
+  const { data } = useAllService();
 
   return (
     <Page title="General: App | Possap">
@@ -27,15 +29,15 @@ export default function GeneralApp() {
             <UserWelcome displayName={user.fullName} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <UserPoliceExtractCard />
+            <UserPoliceExtractCard TOTAL_EXT={data?.userEGSRecords.length} />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <UserCharacterCertifcateCard />
+            <UserCharacterCertifcateCard TOTAL_CC={data?.userPCCRecords.length} />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <UserEGCard />
+            <UserEGCard TOTAL_EG={data?.userExtractRecords.length} />
           </Grid>
 
           <Grid item xs={12} lg={12}>

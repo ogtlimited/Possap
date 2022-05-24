@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink, Navigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import NaijaStates from 'naija-state-local-government';
 import { indexOf } from 'lodash';
@@ -55,6 +55,7 @@ export default function EGForm({ parentValues, setStep }) {
     status: Yup.string().required('ID No is required')
   });
   const mutation = CreateEGService();
+  const navigate = useNavigate();
   useEffect(() => {
     console.log(data);
   }, [data]);
@@ -86,8 +87,8 @@ export default function EGForm({ parentValues, setStep }) {
             }
           }
         );
-        const redirectPath = 'services/invoice/3?requestID=1';
-        <Navigate to={redirectPath} />;
+        const redirectPath = '/services/invoice/3?requestID=1';
+        // navigate(redirectPath);
         if (isMountedRef.current) {
           setSubmitting(false);
         }

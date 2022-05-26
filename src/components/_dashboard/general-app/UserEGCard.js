@@ -3,9 +3,7 @@ import { Box, Card, Typography } from '@material-ui/core';
 // utils
 import { fNumber } from '../../../utils/formatNumber';
 
-const TOTAL_EG = 4876;
-
-export default function UserEGCard() {
+export default function UserEGCard({ TOTAL_EG }) {
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
       <Box sx={{ flexGrow: 1 }}>

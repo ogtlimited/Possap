@@ -36,10 +36,6 @@ export default function Payment() {
   const { user, isAuthenticated } = useAuth();
   const { handleFormChange } = useServiceForm();
   const [initialValues, setinitialValues] = useState({
-    name: user.fullName,
-    phone: user.phone,
-    email: user.email,
-    address: user.address,
     originState: user?.state,
     originLga: user?.lga,
     serviceType: '',

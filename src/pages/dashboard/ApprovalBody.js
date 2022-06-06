@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, Grid, Stack, Box, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 
-export default function ApprovalBody() {
+export default function ApprovalBody({ data }) {
+  console.log({ data });
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={12}>

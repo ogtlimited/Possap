@@ -35,6 +35,7 @@ import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
 import useEscortAndGuards from '../../db/useEscortAndGuards';
+import ServicesMoreMenu from '../../components/_dashboard/requests/list/ServicesMenu';
 
 // ----------------------------------------------------------------------
 
@@ -209,7 +210,7 @@ export default function EGService() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => alert(id)} userName={name} />
+                          <ServicesMoreMenu serviceData={row} context="eag" />
                         </TableCell>
                       </TableRow>
                     );

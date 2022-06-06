@@ -32,6 +32,7 @@ import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
 import usePoliceExtract from '../../db/usePoliceExtracts';
+import ServicesMoreMenu from '../../components/_dashboard/requests/list/ServicesMenu';
 
 // ----------------------------------------------------------------------
 
@@ -215,7 +216,7 @@ export default function Extract() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={fullName} />
+                          <ServicesMoreMenu serviceData={row} context="extract" />
                         </TableCell>
                       </TableRow>
                     );

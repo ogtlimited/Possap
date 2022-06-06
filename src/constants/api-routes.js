@@ -7,5 +7,7 @@ export const POLICEDATA = '/api/v1/eag/police-data';
 export const TACTICALPATH = '/api/v1/eag/tactical-squad';
 
 export const ALLESCORTSANDSERVICES = '/api/v1/eag';
-export const ALLPOLICEEXTRACTS = '/api/v1/police-extracts';
-export const ALLCHARACTERCERTIFICATES = '/api/v1/police-character-certificate';
+export const ALLPOLICEEXTRACTS = '/api/v1/police-extracts/officers-extracts';
+export const ALLCHARACTERCERTIFICATES = '/api/v1/police-character-certificate/officers-pcc';
+
+export const PCC = '/api/v1/police-character-certificate/';

@@ -107,7 +107,8 @@ export default function Router() {
             { path: 'police-extract', element: <Extract /> },
             { path: 'character-certificate', element: <CharacterCert /> },
             { path: 'guard-services', element: <EGServices /> },
-            { path: 'approval/:id', element: <Approval /> }
+            { path: 'approval/:id', element: <Approval /> },
+            { path: 'view-details/:id', element: <ViewDetails /> }
           ]
         }
       ]
@@ -190,6 +191,7 @@ const Extract = Loadable(lazy(() => import('../pages/dashboard/Extract')));
 const CharacterCert = Loadable(lazy(() => import('../pages/dashboard/CharacterCert')));
 const EGServices = Loadable(lazy(() => import('../pages/dashboard/EGServices')));
 const Approval = Loadable(lazy(() => import('../pages/dashboard/Approval')));
+const ViewDetails = Loadable(lazy(() => import('../pages/dashboard/ViewDetails')));
 
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));

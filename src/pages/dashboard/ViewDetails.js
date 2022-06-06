@@ -5,24 +5,25 @@ import Page from '../../components/Page';
 import useSettings from '../../hooks/useSettings';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { PATH_DASHBOARD } from '../../routes/paths';
-import ApprovalBody from './ApprovalBody';
+import ViewDetailsBody from './ViewDetailsBody';
 
-export default function Approval() {
+export default function ViewDetails() {
   const { themeStretch } = useSettings();
   const location = useLocation();
-  const data = location.state;
+  const data = location.state[0];
+  const context = location.state[1];
 
   return (
-    <Page title="Approval Log | Possap">
+    <Page title="Details | Possap">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading="Approval Log"
+          heading="Details"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Services', href: PATH_DASHBOARD.services.root }
           ]}
         />
-        <ApprovalBody data={data} />
+        <ViewDetailsBody data={data} context={context} />
       </Container>
     </Page>
   );

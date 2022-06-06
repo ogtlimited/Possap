@@ -34,8 +34,9 @@ import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
+import { UserListHead, UserListToolbar } from '../../components/_dashboard/user/list';
 import useCharacterCertificates from '../../db/useCharacterCertificates';
+import ServicesMoreMenu from '../../components/_dashboard/requests/list/ServicesMenu';
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +46,7 @@ const TABLE_HEAD = [
   { id: 'fileNumber', label: 'File Number', alignRight: false },
   { id: 'state', label: 'State', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
+  { id: 'requestType', label: 'Request Type', alignRight: false },
   { id: '' }
 ];
 
@@ -173,6 +175,9 @@ export default function CharacterCert() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { data, isFetching, error } = useCharacterCertificates();
+  if (isFetching) {
+    return 'Loading...';
+  }
 
   console.log({ data });
 
@@ -184,7 +189,7 @@ export default function CharacterCert() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.name);
+      const newSelecteds = data?.data?.data.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -223,9 +228,9 @@ export default function CharacterCert() {
     console.log(userId);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.data?.data.length) : 0;
 
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(data?.data?.data, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
 
@@ -251,15 +256,22 @@ export default function CharacterCert() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
+                  rowCount={data?.data?.data.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, destination, status, state, fileNumber, email } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                    const {
+                      id,
+                      user: { fullName },
+                      destinationCountry,
+                      status,
+                      state,
+                      requestType
+                    } = row;
+                    const isItemSelected = selected.indexOf(fullName) !== -1;
 
                     return (
                       <TableRow
@@ -271,18 +283,18 @@ export default function CharacterCert() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, fullName)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src="" />
+                            <Avatar alt={fullName} src="" />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {fullName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{destination}</TableCell>
-                        <TableCell align="left">{fileNumber}</TableCell>
+                        <TableCell align="left">{destinationCountry}</TableCell>
+                        <TableCell align="left">{id}</TableCell>
                         <TableCell align="left">{state}</TableCell>
                         <TableCell align="left">
                           <Label
@@ -292,9 +304,10 @@ export default function CharacterCert() {
                             {sentenceCase(status)}
                           </Label>
                         </TableCell>
+                        <TableCell align="left">{requestType}</TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <ServicesMoreMenu serviceData={row} context="pcc" />
                         </TableCell>
                       </TableRow>
                     );
@@ -321,7 +334,7 @@ export default function CharacterCert() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={userList.length}
+            count={data?.data?.data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -84,88 +84,6 @@ function applySortFilter(array, comparator, query) {
 export default function CharacterCert() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const userList = [
-    {
-      id: 1,
-      name: 'Wilmar Josselson',
-      destination: 'UK',
-      fileNumber: '9838672211',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 2,
-      name: 'Gray Biasini',
-      destination: 'Germany',
-      fileNumber: '5701448835',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 3,
-      name: 'Wyatt Quilleash',
-      destination: 'UAE',
-      fileNumber: '0568294270',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 4,
-      name: 'Diannne Peret',
-      destination: 'South Africa',
-      fileNumber: '7874707168',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 5,
-      name: 'Freda Passfield',
-      destination: 'US',
-      fileNumber: '8214532507',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 6,
-      name: 'Brigitte Denkel',
-      destination: 'France',
-      fileNumber: '8959313254',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 7,
-      name: 'Hebert Galbreth',
-      destination: 'UK',
-      fileNumber: '0568479351',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 8,
-      name: 'Chas Southcott',
-      destination: 'US',
-      fileNumber: '0228194393',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 9,
-      name: 'Jefferey Cleave',
-      destination: 'Norway',
-      fileNumber: '6843650198',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 10,
-      name: 'Lexie Gwatkins',
-      destination: 'Germany',
-      fileNumber: '2676903543',
-      state: 'Abruzzi',
-      status: 'pending'
-    }
-  ];
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -178,8 +96,6 @@ export default function CharacterCert() {
   if (isFetching) {
     return 'Loading...';
   }
-
-  console.log({ data });
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';

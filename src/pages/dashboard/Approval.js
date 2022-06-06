@@ -10,7 +10,8 @@ import ApprovalBody from './ApprovalBody';
 export default function Approval() {
   const { themeStretch } = useSettings();
   const location = useLocation();
-  const data = location.state;
+  const data = location.state[0];
+  const context = location.state[1];
 
   return (
     <Page title="Approval Log | Possap">
@@ -22,7 +23,7 @@ export default function Approval() {
             { name: 'Services', href: PATH_DASHBOARD.services.root }
           ]}
         />
-        <ApprovalBody data={data} />
+        <ApprovalBody data={data} context={context} />
       </Container>
     </Page>
   );

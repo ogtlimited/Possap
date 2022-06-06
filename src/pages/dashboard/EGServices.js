@@ -91,7 +91,6 @@ export default function EGService() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { data, isFetching, error } = useEscortAndGuards();
-  console.log({ data });
   if (isFetching) {
     return 'Loading...';
   }

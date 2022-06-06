@@ -1,8 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { Card, Grid, Stack, Box, Table, TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
 
-export default function ApprovalBody({ data }) {
-  console.log({ data });
+ApprovalBody.propTypes = {
+  data: PropTypes.object,
+  context: PropTypes.string
+};
+
+export default function ApprovalBody({ data, context }) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} md={12}>

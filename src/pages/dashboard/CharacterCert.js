@@ -34,7 +34,9 @@ import Label from '../../components/Label';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
+import { UserListHead, UserListToolbar } from '../../components/_dashboard/user/list';
+import useCharacterCertificates from '../../db/useCharacterCertificates';
+import ServicesMoreMenu from '../../components/_dashboard/requests/list/ServicesMenu';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +46,7 @@ const TABLE_HEAD = [
   { id: 'fileNumber', label: 'File Number', alignRight: false },
   { id: 'state', label: 'State', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
+  { id: 'requestType', label: 'Request Type', alignRight: false },
   { id: '' }
 ];
 
@@ -81,88 +84,6 @@ function applySortFilter(array, comparator, query) {
 export default function CharacterCert() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const userList = [
-    {
-      id: 1,
-      name: 'Wilmar Josselson',
-      destination: 'UK',
-      fileNumber: '9838672211',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 2,
-      name: 'Gray Biasini',
-      destination: 'Germany',
-      fileNumber: '5701448835',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 3,
-      name: 'Wyatt Quilleash',
-      destination: 'UAE',
-      fileNumber: '0568294270',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 4,
-      name: 'Diannne Peret',
-      destination: 'South Africa',
-      fileNumber: '7874707168',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 5,
-      name: 'Freda Passfield',
-      destination: 'US',
-      fileNumber: '8214532507',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 6,
-      name: 'Brigitte Denkel',
-      destination: 'France',
-      fileNumber: '8959313254',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 7,
-      name: 'Hebert Galbreth',
-      destination: 'UK',
-      fileNumber: '0568479351',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 8,
-      name: 'Chas Southcott',
-      destination: 'US',
-      fileNumber: '0228194393',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 9,
-      name: 'Jefferey Cleave',
-      destination: 'Norway',
-      fileNumber: '6843650198',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 10,
-      name: 'Lexie Gwatkins',
-      destination: 'Germany',
-      fileNumber: '2676903543',
-      state: 'Abruzzi',
-      status: 'pending'
-    }
-  ];
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -170,6 +91,11 @@ export default function CharacterCert() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const { data, isFetching, error } = useCharacterCertificates();
+  if (isFetching) {
+    return 'Loading...';
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -179,7 +105,7 @@ export default function CharacterCert() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.name);
+      const newSelecteds = data?.data?.data.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -218,9 +144,9 @@ export default function CharacterCert() {
     console.log(userId);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.data?.data.length) : 0;
 
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(data?.data?.data, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
 
@@ -234,16 +160,6 @@ export default function CharacterCert() {
             { name: 'Request', href: PATH_DASHBOARD.services.root },
             { name: 'Character Certificate' }
           ]}
-          action={
-            <Button
-              variant="contained"
-              component={RouterLink}
-              to={PATH_DASHBOARD.user.newUser}
-              startIcon={<Icon icon={plusFill} />}
-            >
-              New User
-            </Button>
-          }
         />
 
         <Card>
@@ -256,15 +172,22 @@ export default function CharacterCert() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
+                  rowCount={data?.data?.data.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, destination, status, state, fileNumber, email } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
+                    const {
+                      id,
+                      user: { fullName },
+                      destinationCountry,
+                      status,
+                      state,
+                      requestType
+                    } = row;
+                    const isItemSelected = selected.indexOf(fullName) !== -1;
 
                     return (
                       <TableRow
@@ -276,18 +199,18 @@ export default function CharacterCert() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, fullName)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src="" />
+                            <Avatar alt={fullName} src="" />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {fullName}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{destination}</TableCell>
-                        <TableCell align="left">{fileNumber}</TableCell>
+                        <TableCell align="left">{destinationCountry}</TableCell>
+                        <TableCell align="left">{id}</TableCell>
                         <TableCell align="left">{state}</TableCell>
                         <TableCell align="left">
                           <Label
@@ -297,9 +220,10 @@ export default function CharacterCert() {
                             {sentenceCase(status)}
                           </Label>
                         </TableCell>
+                        <TableCell align="left">{requestType}</TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={name} />
+                          <ServicesMoreMenu serviceData={row} context="pcc" />
                         </TableCell>
                       </TableRow>
                     );
@@ -326,7 +250,7 @@ export default function CharacterCert() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={userList.length}
+            count={data?.data?.data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

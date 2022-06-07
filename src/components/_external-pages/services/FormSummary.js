@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Table, Paper, TableContainer, TableHead, TableRow, TableCell, TableBody, Typography } from '@material-ui/core';
 import { styled } from '@material-ui/core/styles';
 import { useParams } from 'react-router';
+import { fDate } from '../../../utils/formatTime';
+import useEGServiceById from '../../../queries/getEGRequests';
 import useServiceForm from '../../../hooks/useServiceForm';
 import useServiceTable from '../../../hooks/useServiceTable';
 import splitCamelCase from '../../../utils/splitCamelCase';
@@ -25,9 +27,11 @@ const RootStyle = styled('div')(({ theme }) => ({
 export default function FormSummary({ urlObj }) {
   const { serviceFormvalues } = useServiceForm();
   const [value, setValue] = useState([]);
+  const EGService = useEGServiceById(urlObj.requestID);
 
   const [data, setdata] = useState({});
   useEffect(() => {
+    let workingData;
     switch (urlObj?.query) {
       case '1':
         // work Margaret
@@ -39,13 +43,29 @@ export default function FormSummary({ urlObj }) {
         break;
       case '3':
         // work Kay
-        setValue(EGTable);
+        workingData = EGTable;
+        if (EGService.data) {
+          workingData.forEach((item) => {
+            item.value = EGService?.data.data[item.field];
+          });
+          setValue(workingData);
+        }
         break;
 
       default:
         break;
     }
-  }, [urlObj]);
+  }, [urlObj, EGService]);
+
+  const formatValue = (key) => {
+    if (key.value === '') {
+      return 'No Value';
+    }
+    if (key.title.toLowerCase().includes('date')) {
+      return fDate(key.value);
+    }
+    return key.value;
+  };
 
   return (
     <RootStyle>
@@ -63,7 +83,8 @@ export default function FormSummary({ urlObj }) {
                 <TableCell component="th" scope="row">
                   {key.title}
                 </TableCell>
-                <TableCell>{key.value === '' ? 'No Value' : key.value}</TableCell>
+                {/* <TableCell>{key.value === '' ? 'No Value' : key.value}</TableCell> */}
+                <TableCell>{formatValue(key)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

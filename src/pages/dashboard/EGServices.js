@@ -34,6 +34,8 @@ import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import { UserListHead, UserListToolbar, UserMoreMenu } from '../../components/_dashboard/user/list';
+import useEscortAndGuards from '../../db/useEscortAndGuards';
+import ServicesMoreMenu from '../../components/_dashboard/requests/list/ServicesMenu';
 
 // ----------------------------------------------------------------------
 
@@ -80,98 +82,6 @@ function applySortFilter(array, comparator, query) {
 export default function EGService() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const userList = [
-    {
-      id: 1,
-      numOfficers: 4,
-      name: 'Wilmar Josselson',
-      category: 'Escort Service',
-      fileNumber: '9838672211',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 2,
-      numOfficers: 2,
-      name: 'Gray Biasini',
-      category: 'Guard Service',
-      fileNumber: '5701448835',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 3,
-      numOfficers: 3,
-      name: 'Wyatt Quilleash',
-      category: 'Escort Service',
-      fileNumber: '0568294270',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 4,
-      numOfficers: 14,
-      name: 'Diannne Peret',
-      category: 'Guard Service',
-      fileNumber: '7874707168',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 5,
-      numOfficers: 5,
-      name: 'Freda Passfield',
-      category: 'Escort Service',
-      fileNumber: '8214532507',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 6,
-      numOfficers: 8,
-      name: 'Brigitte Denkel',
-      category: 'Escort Service',
-      fileNumber: '8959313254',
-      state: 'Abruzzi',
-      status: 'rejected'
-    },
-    {
-      id: 7,
-      numOfficers: 9,
-      name: 'Hebert Galbreth',
-      category: 'Escort Service',
-      fileNumber: '0568479351',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 8,
-      numOfficers: 1,
-      name: 'Chas Southcott',
-      category: 'Escort Service',
-      fileNumber: '0228194393',
-      state: 'Abruzzi',
-      status: 'pending'
-    },
-    {
-      id: 9,
-      numOfficers: 4,
-      name: 'Jefferey Cleave',
-      category: 'Escort Service',
-      fileNumber: '6843650198',
-      state: 'Abruzzi',
-      status: 'approved'
-    },
-    {
-      id: 10,
-      numOfficers: 7,
-      name: 'Lexie Gwatkins',
-      category: 'Guard Service',
-      fileNumber: '2676903543',
-      state: 'Abruzzi',
-      status: 'pending'
-    }
-  ];
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -179,6 +89,11 @@ export default function EGService() {
   const [orderBy, setOrderBy] = useState('name');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const { data, isFetching, error } = useEscortAndGuards();
+  if (isFetching) {
+    return 'Loading...';
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -188,7 +103,7 @@ export default function EGService() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userList.map((n) => n.name);
+      const newSelecteds = data?.data?.data.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -223,9 +138,9 @@ export default function EGService() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data?.data?.data.length) : 0;
 
-  const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(data?.data?.data, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = filteredUsers.length === 0;
 
@@ -251,14 +166,14 @@ export default function EGService() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={userList.length}
+                  rowCount={data?.data?.data.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, category, status, state, fileNumber, email } = row;
+                    const { id, name, categoryType, status = 'approved', fileNumber, serviceDeliveryState } = row;
                     const isItemSelected = selected.indexOf(name) !== -1;
 
                     return (
@@ -281,9 +196,9 @@ export default function EGService() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{category}</TableCell>
+                        <TableCell align="left">{categoryType}</TableCell>
                         <TableCell align="left">{fileNumber}</TableCell>
-                        <TableCell align="left">{state}</TableCell>
+                        <TableCell align="left">{serviceDeliveryState}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -294,7 +209,7 @@ export default function EGService() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <UserMoreMenu onDelete={() => alert(id)} userName={name} />
+                          <ServicesMoreMenu serviceData={row} context="eag" />
                         </TableCell>
                       </TableRow>
                     );
@@ -321,7 +236,7 @@ export default function EGService() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={userList.length}
+            count={data?.data?.data.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useState, useEffect } from 'react';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink, Navigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import NaijaStates from 'naija-state-local-government';
 import { indexOf } from 'lodash';
@@ -55,6 +55,7 @@ export default function EGForm({ parentValues, setStep }) {
     status: Yup.string().required('ID No is required')
   });
   const mutation = CreateEGService();
+  const navigate = useNavigate();
   useEffect(() => {
     console.log(data);
   }, [data]);
@@ -82,12 +83,11 @@ export default function EGForm({ parentValues, setStep }) {
           { ...parentValues, ...values },
           {
             onSuccess: (data) => {
-              console.log(data);
+              const redirectPath = `/services/invoice/3?requestID=${data.data.data.id}`;
+              navigate(redirectPath);
             }
           }
         );
-        const redirectPath = 'services/invoice/3?requestID=1';
-        <Navigate to={redirectPath} />;
         if (isMountedRef.current) {
           setSubmitting(false);
         }
@@ -279,7 +279,14 @@ export default function EGForm({ parentValues, setStep }) {
               {/* s */}
             </Stack>
             <FormControl fullWidth>
-              <TextField fullWidth multiline type="text" label="Number of Officers Required" />
+              <TextField
+                fullWidth
+                multiline
+                type="text"
+                label="Number of Officers Required"
+                error={Boolean(touched.numberOfEscortOfficers && errors.numberOfEscortOfficers)}
+                helperText={touched.numberOfEscortOfficers && errors.numberOfEscortOfficers}
+              />
             </FormControl>
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>

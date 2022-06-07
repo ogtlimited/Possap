@@ -231,7 +231,7 @@ export default function RegisterOneForm({ setcurrentStep, formSubmit, setverfied
                           </Typography>
                         </Typography>
                       </div>
-                      <img style={{width: '80px'}} src={`data:image/jpeg;base64,${ninData.photo}`} alt="User" />
+                      <img style={{ width: '80px' }} src={`data:image/jpeg;base64,${ninData.photo}`} alt="User" />
                     </Stack>
                   </motion.div>
                   <Stack direction={{ xs: 'row', sm: 'row' }} spacing={6}>

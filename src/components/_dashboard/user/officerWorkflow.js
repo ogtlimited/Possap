@@ -2,18 +2,35 @@ import React, { useState, useEffect } from 'react';
 
 import {
   CardHeader,
-  Card,
+  Box,
   Grid,
-  List,
+  FormControlLabel,
   ListItem,
   ListItemIcon,
   Button,
   Divider,
   ListItemText,
-  Checkbox
+  Checkbox,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  ListSubheader,
+  OutlinedInput
 } from '@material-ui/core';
-import { WORKFLOW } from './constants';
+import { WORKFLOW, POLICEEXTRACTAPPROVALS, CCAPPROVALS } from './constants';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+      minWidth: 250
+    }
+  }
+};
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
@@ -27,140 +44,103 @@ function union(a, b) {
 }
 
 export default function OfficerWorkFlow({ services }) {
-  const [approvals, setapprovals] = useState(null);
-  const [checked, setChecked] = useState([]);
-  const [left, setLeft] = useState([0, 1, 2, 12]);
-  const [right, setRight] = React.useState([4, 5, 6, 7]);
-
-  const leftChecked = intersection(checked, left);
-  const rightChecked = intersection(checked, right);
+  const [checked, setChecked] = React.useState([]);
+  const [extractChecked, setextractChecked] = useState(Array(POLICEEXTRACTAPPROVALS.length).fill(false));
+  const [ccertChecked, setccertChecked] = useState(Array(CCAPPROVALS.length).fill(false));
+  const [eGSChecked, seteGSChecked] = useState(Array(POLICEEXTRACTAPPROVALS.length).fill(false));
   useEffect(() => {
-    setapprovals(WORKFLOW.filter((e) => services.includes(e.heading)));
+    console.log(services);
+    // setapprovals(WORKFLOW.filter((e) => services.includes(e.heading)));
+    // services.forEach((el) => {
+    //   if (el === 'POLICE EXTRACT') {
+    //     const sets = new Set([...left, ...POLICEEXTRACTAPPROVALS]);
+    //     setLeft(Array.from(sets));
+    //   } else if (el === 'POLICE CHARACTER CERTIFICATE') {
+    //     const sets = new Set([...left, ...CCAPPROVALS]);
+    //     setLeft(Array.from(sets));
+    //   }
+    // });
   }, [services]);
 
-  const handleToggle = (value) => () => {
-    console.log(value);
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const handleAllChecked = (value) => (value.length > 0 ? value.every((e) => e === true) : false);
+  const handleIndeterminate = (value) => (value.length > 0 ? value.every((e) => e !== true) : false);
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+  const handleChange1 = (event, record, setCheck) => {
+    console.log(event.target.checked);
+    const allCheck = record[0] === true ? Array(record.length).fill(true) : Array(record.length).fill(false);
+    console.log(allCheck);
+    setCheck(allCheck);
   };
 
-  const numberOfChecked = (items) => intersection(checked, items).length;
-
-  const handleToggleAll = (items) => () => {
-    if (numberOfChecked(items) === items.length) {
-      setChecked(not(checked, items));
-    } else {
-      setChecked(union(checked, items));
-    }
+  const handleChildChange = (event, record, index, setCheck) => {
+    record[index] = event.target.checked;
+    console.log(event.target.checked, record, index);
+    setCheck(record);
   };
 
-  const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
-    setLeft(not(left, leftChecked));
-    setChecked(not(checked, leftChecked));
-  };
-
-  const handleCheckedLeft = () => {
-    setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
-    setChecked(not(checked, rightChecked));
-  };
-
-  const customList = (title, items) => (
-    <Card>
-      {items &&
-        items.map((flow) => (
-          <>
-            <CardHeader
-              sx={{ px: 2, py: 1 }}
-              avatar={
-                <Checkbox
-                  onClick={handleToggleAll(items)}
-                  checked={numberOfChecked(items) === items.length && items.length !== 0}
-                  indeterminate={numberOfChecked(items) !== items.length && numberOfChecked(items) !== 0}
-                  disabled={items.length === 0}
-                  inputProps={{
-                    'aria-label': 'all items selected'
-                  }}
-                />
-              }
-              title={flow.heading}
-              subheader={`${numberOfChecked(items)}/${items.length} selected`}
-            />
-            <Divider />
-            <List
-              sx={{
-                width: 300,
-                height: 'auto',
-                bgcolor: 'background.paper',
-                overflow: 'auto'
-              }}
-              dense
-              component="div"
-              role="list"
-            >
-              {flow?.workflow?.map((value) => {
-                const labelId = `transfer-list-all-item-${value}-label`;
-
-                return (
-                  <ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
-                    <ListItemIcon>
-                      <Checkbox
-                        checked={checked.indexOf(value) !== -1}
-                        tabIndex={-1}
-                        disableRipple
-                        inputProps={{
-                          'aria-labelledby': labelId
-                        }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText id={labelId} primary={value} />
-                  </ListItem>
-                );
-              })}
-              <ListItem />
-            </List>
-          </>
-        ))}
-    </Card>
+  const children = (lists, record, setCheck) => (
+    <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
+      {lists.map((ls, i) => (
+        <FormControlLabel
+          label={ls}
+          control={<Checkbox checked={record[i]} onChange={(evt) => handleChildChange(evt, record, i, setCheck)} />}
+        />
+      ))}
+    </Box>
   );
 
   return (
-    <Grid container spacing={2} justifyContent="space-around" alignItems="center">
-      <Grid item>{customList('Work Flow', approvals)}</Grid>
-      <Grid item>
-        <Grid container direction="column" alignItems="center">
-          <Button
-            sx={{ my: 0.5 }}
-            variant="outlined"
-            size="small"
-            onClick={handleCheckedRight}
-            disabled={leftChecked.length === 0}
-            aria-label="move selected right"
-          >
-            &gt;
-          </Button>
-          <Button
-            sx={{ my: 0.5 }}
-            variant="outlined"
-            size="small"
-            onClick={handleCheckedLeft}
-            disabled={rightChecked.length === 0}
-            aria-label="move selected left"
-          >
-            &lt;
-          </Button>
-        </Grid>
-      </Grid>
-      <Grid item>{customList('Work Flow Approval Level', right)}</Grid>
-    </Grid>
+    <div>
+      {services &&
+        services.map((s, i) => (
+          <>
+            {s === 'POLICE EXTRACT' && (
+              <>
+                <FormControlLabel
+                  label="Extract Request Flow"
+                  control={
+                    <Checkbox
+                      checked={handleAllChecked(extractChecked)}
+                      indeterminate={handleIndeterminate(extractChecked)}
+                      onChange={(evt) => handleChange1(evt, extractChecked, setextractChecked)}
+                    />
+                  }
+                />
+                {children(POLICEEXTRACTAPPROVALS, extractChecked, setextractChecked)}
+              </>
+            )}
+            {s === 'POLICE CHARACTER CERTIFICATE' && (
+              <>
+                <FormControlLabel
+                  label="Police Character Certificate"
+                  control={
+                    <Checkbox
+                      checked={handleAllChecked(ccertChecked)}
+                      indeterminate={handleIndeterminate(ccertChecked)}
+                      onChange={(evt) => handleChange1(evt, ccertChecked, setccertChecked)}
+                    />
+                  }
+                />
+                {children(CCAPPROVALS, ccertChecked, setccertChecked)}
+              </>
+            )}
+            {s === 'ESCORT AND GUARD SERVICES' && (
+              <>
+                <FormControlLabel
+                  label="Escort & Guard Request Flow"
+                  control={
+                    <Checkbox
+                      checked={handleAllChecked(eGSChecked)}
+                      indeterminate={handleIndeterminate(eGSChecked)}
+                      onChange={(evt) => handleChange1(evt, eGSChecked, seteGSChecked)}
+                    />
+                  }
+                />
+                {children(POLICEEXTRACTAPPROVALS, eGSChecked, seteGSChecked)}
+              </>
+            )}
+          </>
+        ))}
+    </div>
   );
 }

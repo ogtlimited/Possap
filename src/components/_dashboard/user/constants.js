@@ -38,6 +38,18 @@ export const ESCORTGUARDSERVICES = [
   'Escort Tactical Request Flow',
   'Escort Conventional Request Flow'
 ];
+
+export const POLICEEXTRACTAPPROVALS = ['Extract First Approval', 'Extract Second Approval'];
+export const EGSAPPROVALS = ['Extract First Approval', 'Extract Second Approval'];
+export const CCAPPROVALS = [
+  'First character certificate approval (DIG)',
+  ' Second character certificate approval (CP CCR)',
+  'Third character certificate approval - Biometric Capture (SCID)',
+  'Fourth character certificate approval (DA CCR)',
+  'Fifth character certificate approval (CP CCR)',
+  'Secretariat Routing'
+];
+
 export const WORKFLOW = [
   {
     heading: 'POLICE EXTRACT',

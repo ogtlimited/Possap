@@ -101,6 +101,14 @@ export default function Router() {
           ]
         },
         {
+          path: 'service',
+          children: [
+            { path: '/', element: <Navigate to="/dashboard/service" replace /> },
+            { path: 'list', element: <ServiceList /> },
+            { path: 'new', element: <ServiceCreate /> }
+          ]
+        },
+        {
           path: 'requests',
           children: [
             { path: '/', element: <Navigate to="/dashboard/requests/police-extract" replace /> },
@@ -192,6 +200,8 @@ const CharacterCert = Loadable(lazy(() => import('../pages/dashboard/CharacterCe
 const EGServices = Loadable(lazy(() => import('../pages/dashboard/EGServices')));
 const Approval = Loadable(lazy(() => import('../pages/dashboard/Approval')));
 const ViewDetails = Loadable(lazy(() => import('../pages/dashboard/ViewDetails')));
+const ServiceList = Loadable(lazy(() => import('../pages/dashboard/ServiceList')));
+const ServiceCreate = Loadable(lazy(() => import('../pages/dashboard/ServiceCreate')));
 
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));

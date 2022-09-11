@@ -17,7 +17,8 @@ const ICONS = {
   reports: getIcon('ic_analytics'),
   finances: getIcon('ic_finances'),
   settings: getIcon('ic_settings'),
-  exit: getIcon('ic_exit')
+  exit: getIcon('ic_exit'),
+  services: getIcon('ic_settings')
 };
 
 const sidebarConfig = [
@@ -76,6 +77,16 @@ const sidebarConfig = [
         children: [
           { title: 'User List', path: PATH_DASHBOARD.user.list },
           { title: 'Create User', path: PATH_DASHBOARD.user.newUser }
+        ]
+      },
+      {
+        title: 'Service',
+
+        path: PATH_DASHBOARD.service.root,
+        icon: ICONS.services,
+        children: [
+          { title: 'Service List', path: PATH_DASHBOARD.service.list },
+          { title: 'Create Service', path: PATH_DASHBOARD.service.newService }
         ]
       }
     ]

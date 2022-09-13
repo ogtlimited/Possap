@@ -7,7 +7,7 @@ import LogoOnlyLayout from '../layouts/LogoOnlyLayout';
 // guards
 import GuestGuard from '../guards/GuestGuard';
 import AuthGuard from '../guards/AuthGuard';
-// import RoleBasedGuard from '../guards/RoleBasedGuard';
+import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import ServiceGuard from '../guards/ServiceGuard';
@@ -74,7 +74,9 @@ export default function Router() {
       path: 'dashboard',
       element: (
         <AuthGuard>
-          <DashboardLayout />
+          <RoleBasedGuard>
+            <DashboardLayout />
+          </RoleBasedGuard>
         </AuthGuard>
       ),
       children: [
@@ -104,9 +106,23 @@ export default function Router() {
             { path: '/', element: <Navigate to="/dashboard/requests/police-extract" replace /> },
             { path: 'police-extract', element: <Extract /> },
             { path: 'character-certificate', element: <CharacterCert /> },
-            { path: 'guard-services', element: <EGServices /> }
+            { path: 'guard-services', element: <EGServices /> },
+            { path: 'approval/:id', element: <Approval /> },
+            { path: 'view-details/:id', element: <ViewDetails /> }
           ]
         }
+      ]
+    },
+    {
+      path: 'user-dashboard',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { path: '/', element: <Navigate to="/user-dashboard/app" replace /> },
+        { path: 'app', element: <UserApp /> }
       ]
     },
 
@@ -136,6 +152,16 @@ export default function Router() {
               </ServiceFormProvider>
             </ServiceGuard>
           )
+        },
+        {
+          path: 'services/invoice/:id',
+          element: (
+            <ServiceGuard>
+              <ServiceFormProvider>
+                <Invoice />
+              </ServiceFormProvider>
+            </ServiceGuard>
+          )
         }
       ]
     },
@@ -153,15 +179,19 @@ const VerifyCode = Loadable(lazy(() => import('../pages/authentication/VerifyCod
 
 // Dashboard
 const Services = Loadable(lazy(() => import('../pages/Services')));
+const Invoice = Loadable(lazy(() => import('../pages/Invoice')));
 
 // Dashboard
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
+const UserApp = Loadable(lazy(() => import('../pages/dashboard/UserApp')));
 const Reports = Loadable(lazy(() => import('../pages/dashboard/Reports')));
 const UserList = Loadable(lazy(() => import('../pages/dashboard/UserList')));
 const CreateUser = Loadable(lazy(() => import('../pages/dashboard/UserCreate')));
 const Extract = Loadable(lazy(() => import('../pages/dashboard/Extract')));
 const CharacterCert = Loadable(lazy(() => import('../pages/dashboard/CharacterCert')));
 const EGServices = Loadable(lazy(() => import('../pages/dashboard/EGServices')));
+const Approval = Loadable(lazy(() => import('../pages/dashboard/Approval')));
+const ViewDetails = Loadable(lazy(() => import('../pages/dashboard/ViewDetails')));
 
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));

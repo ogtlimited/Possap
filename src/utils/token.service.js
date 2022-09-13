@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 class TokenService {
   getToken() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
 
     return token;
   }
@@ -15,11 +15,11 @@ class TokenService {
   }
 
   setToken(token) {
-    localStorage.setItem('token', token);
+    localStorage.setItem('accessToken', token);
   }
 
   removeToken() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
   }
 
   removeUser() {

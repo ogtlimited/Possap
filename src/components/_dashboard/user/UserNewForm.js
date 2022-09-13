@@ -32,6 +32,7 @@ import countries from './countries';
 import usePoliceData from '../../../db/usePoliceData';
 import { AccessType, Role, ServicesList } from './constants';
 import OfficerWorkFlow from './officerWorkflow';
+import CommandAccess from './commandAccess';
 
 // ----------------------------------------------------------------------
 
@@ -144,6 +145,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       approvalLevel: currentUser?.approvalLevel || '',
       avatarUrl: currentUser?.avatarUrl || null,
       service: currentUser?.service || [],
+      commandAccess: currentUser?.commandAccess || [],
       status: currentUser?.status
     },
     validationSchema: NewUserSchema,
@@ -400,46 +402,15 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     </Select>
                   </FormControl>
                 </Stack>
-                <Stack direction={{ xs: 'column', sm: 'row' }}>
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   {values.accessType === 'Approver' && <OfficerWorkFlow services={values.service} />}
                 </Stack>
               </Stack>
             </Card>
           </Grid>
           <Grid item xs={12} md={12}>
-            <Card sx={{ p: 3, pb: 10 }}>
-              <Stack spacing={3}>
-                <Box sx={{ pb: 3 }}>
-                  Command Access Details (<small>These are the commands that the user has access to</small>)
-                </Box>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField fullWidth label="Zip/Code" {...getFieldProps('officerSubSection')} />
-                </Stack>
-
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="accessType"
-                    {...getFieldProps('accessType')}
-                    error={Boolean(touched.accessType && errors.accessType)}
-                    helperText={touched.accessType && errors.accessType}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Role"
-                    {...getFieldProps('role')}
-                    error={Boolean(touched.role && errors.role)}
-                    helperText={touched.role && errors.role}
-                  />
-                </Stack>
-
-                <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                  <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                    {!isEdit ? 'Create User' : 'Save Changes'}
-                  </LoadingButton>
-                </Box>
-              </Stack>
-            </Card>
+            <CommandAccess commandAccess={values.commandAccess} setCommandAccess={setFieldValue} />
           </Grid>
         </Grid>
       </Form>

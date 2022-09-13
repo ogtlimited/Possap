@@ -10,7 +10,6 @@ if (token) {
 }
 
 const axiosInstance = axios.create();
-console.log(axiosInstance);
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (!token) {
@@ -33,8 +32,8 @@ axiosInstance.interceptors.response.use(
     }
     if (error.response.status === 401) {
       tokenService.removeToken();
-
-      window.location = '/auth';
+      const path = window.location.pathname;
+      window.location = `/auth?redirectUrl=${path}`;
     } else {
       return new Promise((resolve, reject) => {
         reject(error);

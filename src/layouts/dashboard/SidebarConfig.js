@@ -28,22 +28,25 @@ const sidebarConfig = [
     items: [
       {
         title: 'app',
+
         path: PATH_DASHBOARD.general.app,
         icon: ICONS.dashboard
       },
       {
         title: 'finance',
+
         path: PATH_DASHBOARD.general.finances,
         icon: ICONS.finances
       },
       {
         title: 'Reports',
+
         path: PATH_DASHBOARD.general.reports,
         icon: ICONS.reports,
         children: [
-          { title: 'Extract Report', path: PATH_DASHBOARD.reports.extract },
-          { title: 'Character Certificate Report', path: PATH_DASHBOARD.reports.clearance },
-          { title: 'E & G Services Reports', path: PATH_DASHBOARD.reports.guard }
+          { title: 'Extract Report', path: PATH_DASHBOARD.reports.extract, canView: 'officer' },
+          { title: 'Character Certificate Report', path: PATH_DASHBOARD.reports.clearance, canView: 'officer' },
+          { title: 'E & G Services Reports', path: PATH_DASHBOARD.reports.guard, canView: 'officer' }
         ]
       }
     ]
@@ -56,16 +59,18 @@ const sidebarConfig = [
     items: [
       {
         title: 'Police Requests',
+
         path: PATH_DASHBOARD.services.root,
         icon: ICONS.booking,
         children: [
-          { title: 'Extract', path: PATH_DASHBOARD.services.extract },
-          { title: 'Character Certificate', path: PATH_DASHBOARD.services.clearance },
-          { title: 'E & G Services', path: PATH_DASHBOARD.services.guard }
+          { title: 'Extract', path: PATH_DASHBOARD.services.extract, canView: 'officer' },
+          { title: 'Character Certificate', path: PATH_DASHBOARD.services.clearance, canView: 'officer' },
+          { title: 'E & G Services', path: PATH_DASHBOARD.services.guard, canView: 'officer' }
         ]
       },
       {
         title: 'user',
+
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
@@ -83,10 +88,24 @@ const sidebarConfig = [
     items: [
       {
         title: 'Settings',
+
         path: PATH_DASHBOARD.settings.root,
         icon: ICONS.settings
       },
       { title: 'Log Out', path: PATH_DASHBOARD.services.root, icon: ICONS.exit }
+    ]
+  }
+];
+export const userSidebarConfig = [
+  {
+    subheader: 'general',
+    items: [
+      {
+        title: 'app',
+
+        path: PATH_DASHBOARD.general.userApp,
+        icon: ICONS.dashboard
+      }
     ]
   }
 ];

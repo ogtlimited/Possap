@@ -22,9 +22,11 @@ import {
   Button,
   IconButton,
   FormControl,
-  InputLabel
+  InputLabel,
+  Select,
+  OutlinedInput
 } from '@material-ui/core';
-import { AddCircle, RemoveCircle } from '@material-ui/icons';
+import { AddCircle, RemoveCircle, Send } from '@material-ui/icons';
 // utils
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -41,7 +43,8 @@ const defaultValues = {
   require: '',
   foreign: '',
 
-  foreign_table: ''
+  foreign_table: '',
+  fieldType: []
 };
 
 const NewServiceSchema = Yup.object().shape({
@@ -51,8 +54,11 @@ const NewServiceSchema = Yup.object().shape({
   foreign_table: Yup.string().when('foreign', {
     is: true,
     then: Yup.string().required('Foreign Table is required')
-  })
+  }),
+  fieldType: Yup.array()
 });
+
+const dataTypes = ['String', 'Number', 'Boolean', 'Enum', 'Date'];
 export default function ServiceNewForm({ isEdit, currentService }) {
   const navigate = useNavigate();
   const {
@@ -76,11 +82,21 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       title: '',
       require: '',
       foreign: '',
-
-      foreign_table: ''
+      foreign_table: '',
+      fieldType: []
     }
   ]);
+  const [fieldType, setFieldType] = useState([]);
 
+  const handleChange = (event) => {
+    const {
+      target: { value }
+    } = event;
+    setFieldType(
+      // On autofill we get a stringified value.
+      typeof value === 'string' ? value.split(',') : value
+    );
+  };
   const { enqueueSnackbar } = useSnackbar();
   const handleRemoveFields = (index) => {
     const values = [...serviceOptions];
@@ -97,7 +113,8 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       require: '',
       foreign: '',
 
-      foreign_table: ''
+      foreign_table: '',
+      fieldType: []
     });
     setServiceOptions(values);
   };
@@ -143,29 +160,33 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                         helperText={errors?.title?.message}
                       />
                     </FormControl>
-                    <FormControl variant="outlined" fullWidth>
+                    <FormControl variant="outlined" fullWidth sx={{ display: 'flex', textAlign: 'center' }}>
                       <Typography variant="caption" sx={{ mb: 0.5, textAlign: 'center' }}>
                         Required?
                       </Typography>
-                      <Checkbox
-                        label="Required"
-                        name="require"
-                        {...register('require')}
-                        error={Boolean(errors.foreign)}
-                        helperText={errors?.foreign?.message}
-                      />
+                      <div>
+                        <Checkbox
+                          label="Required"
+                          name="require"
+                          {...register('require')}
+                          error={Boolean(errors.foreign)}
+                          helperText={errors?.foreign?.message}
+                        />
+                      </div>
                     </FormControl>
-                    <FormControl variant="outlined" fullWidth>
+                    <FormControl variant="outlined" fullWidth sx={{ display: 'flex', textAlign: 'center' }}>
                       <Typography variant="caption" sx={{ mb: 0.5, textAlign: 'center' }}>
                         Foreign?
                       </Typography>
-                      <Checkbox
-                        label="Foreign"
-                        name="foreign"
-                        {...register('foreign')}
-                        error={Boolean(errors.foreign)}
-                        helperText={errors?.foreign?.message}
-                      />
+                      <div>
+                        <Checkbox
+                          label="Foreign"
+                          name="foreign"
+                          {...register('foreign')}
+                          error={Boolean(errors.foreign)}
+                          helperText={errors?.foreign?.message}
+                        />
+                      </div>
                     </FormControl>
                     <FormControl variant="outlined" fullWidth>
                       <Typography variant="caption" sx={{ mb: 0.5 }}>
@@ -184,10 +205,35 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                         <MenuItem value="Escort And Guard Services">Escort And Guard Services</MenuItem>
                       </TextField>
                     </FormControl>
+                    <FormControl variant="outlined" fullWidth>
+                      <Typography variant="caption" sx={{ mb: 0.5 }}>
+                        Field Type?
+                      </Typography>
+                      <Select
+                        fullWidth
+                        // name="fieldType"
+                        value={fieldType}
+                        multiple
+                        label="Field Type"
+                        onChange={handleChange}
+                        input={<OutlinedInput label="fieldType" />}
+                        // {...register('fieldType')}
+                        // error={Boolean(errors.fieldType)}
+                        // helperText={errors?.fieldType?.message}
+                      >
+                        {dataTypes.map((data) => (
+                          <MenuItem key={data} value={data}>
+                            {data}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
 
-                    <IconButton variant="contained" onClick={() => handleRemoveFields(index)}>
-                      <RemoveCircle />
-                    </IconButton>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <IconButton variant="contained" onClick={() => handleRemoveFields(index)}>
+                        <RemoveCircle />
+                      </IconButton>
+                    </div>
                   </Stack>
                 </Stack>
               </Card>
@@ -196,6 +242,11 @@ export default function ServiceNewForm({ isEdit, currentService }) {
         <Grid item xs={12} md={6}>
           <Button variant="contained" startIcon={<AddCircle />} onClick={handleAddFields}>
             Add Field
+          </Button>
+        </Grid>
+        <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button variant="contained" startIcon={<Send />} type="submit">
+            Submit
           </Button>
         </Grid>
       </Grid>

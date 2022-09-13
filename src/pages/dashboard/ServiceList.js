@@ -41,6 +41,7 @@ const TABLE_HEAD = [
   { id: 'require', label: 'Is Required?', alignRight: false },
   { id: 'foreign', label: 'Is Foreign?', alignRight: false },
   { id: 'foreignTable', label: 'Foreign Table', alignRight: false },
+  { id: 'fieldType', label: 'Field Type', alignRight: false },
 
   { id: '' }
 ];
@@ -85,21 +86,24 @@ export default function ServiceList() {
       title: 'Character Certificate',
       require: true,
       foreign: true,
-      foreignTable: 'Escort and Guard Services'
+      foreignTable: 'Escort and Guard Services',
+      fieldType: 'string'
     },
     {
       id: 2,
       title: 'Escort and Guard Services',
       require: true,
       foreign: false,
-      foreignTable: ''
+      foreignTable: '',
+      fieldType: 'number'
     },
     {
       id: 3,
       title: 'Police Extract',
       require: true,
       foreign: true,
-      foreignTable: 'Escort and Guard Services'
+      foreignTable: 'Escort and Guard Services',
+      fieldType: 'boolean'
     }
   ];
 
@@ -198,7 +202,7 @@ export default function ServiceList() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, title, require, foreign, foreignTable } = row;
+                    const { id, title, require, foreign, foreignTable, fieldType } = row;
                     const isItemSelected = selected.indexOf(title) !== -1;
 
                     return (
@@ -223,6 +227,7 @@ export default function ServiceList() {
                         <TableCell align="left">{require ? 'Required' : 'Not Required'}</TableCell>
                         <TableCell align="left">{foreign ? 'Foreign' : 'None'}</TableCell>
                         <TableCell align="left">{foreignTable}</TableCell>
+                        <TableCell align="left">{fieldType}</TableCell>
                       </TableRow>
                     );
                   })}

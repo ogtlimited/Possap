@@ -5,6 +5,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 
 // routes
+import NewFormService from '../../components/_dashboard/service/NewFormService';
 import ServiceNewForm from '../../components/_dashboard/service/ServiceNewForm';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks

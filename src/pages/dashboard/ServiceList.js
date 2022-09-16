@@ -1,7 +1,7 @@
+import React, { useState, useEffect } from 'react';
 import { filter } from 'lodash';
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
-import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import { Link as RouterLink } from 'react-router-dom';
 // material
@@ -19,10 +19,13 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination
+  TablePagination,
+  TableHead
 } from '@material-ui/core';
 
 // routes
+import ServceMoreMenu from '../../components/_dashboard/service/ServiceMoreMenu';
+import useServicesData from '../../db/useGetService';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
@@ -37,12 +40,9 @@ import { UserListHead } from '../../components/_dashboard/user/list';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'title', label: 'Title', alignRight: false },
-  { id: 'require', label: 'Is Required?', alignRight: false },
-  { id: 'foreign', label: 'Is Foreign?', alignRight: false },
-  { id: 'foreignTable', label: 'Foreign Table', alignRight: false },
-  { id: 'fieldType', label: 'Field Type', alignRight: false },
-
+  { id: 'name', label: 'Name of service', alignRight: false },
+  { id: 'approvalWorkFlow', label: 'Approval Workflow', alignRight: false },
+  // { id: 'formSchema', label: 'Form Schema', alignRight: false },
   { id: '' }
 ];
 
@@ -80,32 +80,6 @@ function applySortFilter(array, comparator, query) {
 export default function ServiceList() {
   const { themeStretch } = useSettings();
   const theme = useTheme();
-  const serviceList = [
-    {
-      id: 1,
-      title: 'Character Certificate',
-      require: true,
-      foreign: true,
-      foreignTable: 'Escort and Guard Services',
-      fieldType: 'string'
-    },
-    {
-      id: 2,
-      title: 'Escort and Guard Services',
-      require: true,
-      foreign: false,
-      foreignTable: '',
-      fieldType: 'number'
-    },
-    {
-      id: 3,
-      title: 'Police Extract',
-      require: true,
-      foreign: true,
-      foreignTable: 'Escort and Guard Services',
-      fieldType: 'boolean'
-    }
-  ];
 
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -114,6 +88,11 @@ export default function ServiceList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const { data, isFetching, error } = useServicesData();
+  if (isFetching) {
+    return 'Loading...';
+  }
+  const serviceList = [...data.data.data];
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -202,8 +181,8 @@ export default function ServiceList() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, title, require, foreign, foreignTable, fieldType } = row;
-                    const isItemSelected = selected.indexOf(title) !== -1;
+                    const { id, name, approvalWorkFlow, formSchema } = row;
+                    const isItemSelected = selected.indexOf(name) !== -1;
 
                     return (
                       <TableRow
@@ -215,19 +194,23 @@ export default function ServiceList() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, title)} />
+                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, name)} />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
                             <Typography variant="subtitle2" noWrap>
-                              {title}
+                              {name}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{require ? 'Required' : 'Not Required'}</TableCell>
-                        <TableCell align="left">{foreign ? 'Foreign' : 'None'}</TableCell>
-                        <TableCell align="left">{foreignTable}</TableCell>
-                        <TableCell align="left">{fieldType}</TableCell>
+                        <TableCell align="left">
+                          {approvalWorkFlow?.map((workflow, index) => (
+                            <Typography key={index}>{workflow}</Typography>
+                          ))}
+                        </TableCell>
+                        <TableCell align="right">
+                          <ServceMoreMenu serviceName={name} formSchema={formSchema} />
+                        </TableCell>
                       </TableRow>
                     );
                   })}

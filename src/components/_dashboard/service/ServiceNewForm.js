@@ -135,7 +135,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     const values = [...selectOptions];
     const { name, value } = editorState.target;
     values[i].value = value;
-    const newValue = values.map((val) => val.value);
+    const newValue = values.map((val) => ({ key: val.value, value: val.value }));
     const newObject = [...serviceOptions];
     newObject[index].options = newValue;
     setServiceOptions(newObject);

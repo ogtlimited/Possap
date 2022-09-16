@@ -13,3 +13,9 @@ export default async function CreateService(data) {
 
   return response;
 }
+
+export async function GetServices() {
+  const url = getUrlString(SERVICEPATH);
+  const response = await axios.get(url);
+  return response;
+}

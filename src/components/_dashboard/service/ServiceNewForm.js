@@ -1,24 +1,11 @@
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+
 // material
 import { LoadingButton } from '@material-ui/lab';
-import {
-  Box,
-  Card,
-  Grid,
-  Stack,
-  TextField,
-  Typography,
-  MenuItem,
-  Button,
-  IconButton,
-  FormControl
-} from '@material-ui/core';
+import { Box, Card, Grid, Stack, TextField, MenuItem, Button, IconButton, FormControl } from '@material-ui/core';
 import { AddCircle, RemoveCircle, Send } from '@material-ui/icons';
 // utils
 // routes
@@ -33,22 +20,11 @@ ServiceNewForm.propTypes = {
   currentService: PropTypes.object
 };
 
-const NewServiceSchema = Yup.object().shape({
-  name: Yup.string().required('Name of service is required')
-});
-
 export default function ServiceNewForm({ isEdit, currentService }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, reset, setValue } = useForm({
-    mode: 'onTouched',
-    criteriaMode: 'firstError',
-    shouldFocusError: true,
-    shouldUnregister: false,
-    shouldUseNativeValidation: false,
-    delayError: undefined,
-    resolver: yupResolver(NewServiceSchema)
-  });
+  const [name, setName] = useState('');
+
   const [serviceOptions, setServiceOptions] = useState([
     {
       id: '',
@@ -150,9 +126,9 @@ export default function ServiceNewForm({ isEdit, currentService }) {
 
     setServiceOptions(values);
   };
-  const onSubmit = async (data) => {
+  const onSubmit = async () => {
     const newValue = {
-      ...data,
+      name,
       approvalWorkFlow,
       formSchema: serviceOptions
     };
@@ -169,7 +145,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={onSubmit}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
@@ -181,7 +157,8 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                 <TextField
                   fullWidth
                   label="Name of service"
-                  {...register('name')}
+                  name="name"
+                  onChange={(e) => setName(e.target.value)}
                   required
                   // error={Boolean(touched.apNumber && errors.apNumber)}
                   // helperText={touched.apNumber && errors.apNumber}

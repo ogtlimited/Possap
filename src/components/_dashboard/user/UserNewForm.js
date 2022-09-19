@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
+import axios from 'axios';
 // material
 import { LoadingButton } from '@material-ui/lab';
 import {
@@ -97,6 +98,20 @@ export default function UserNewForm({ isEdit, currentUser }) {
     }
   }, [response]);
 
+  const createUser = (data) => {
+    axios({
+      method: 'post',
+      url: '/login',
+      data
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const NewUserSchema = Yup.object().shape({
     apNumber: Yup.string().optional('AP Number is optional'),
     useServiceNum: Yup.boolean(),
@@ -151,7 +166,8 @@ export default function UserNewForm({ isEdit, currentUser }) {
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        await fakeRequest(500);
+        // await fakeRequest(500);
+        createUser(values);
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
@@ -413,6 +429,17 @@ export default function UserNewForm({ isEdit, currentUser }) {
             <CommandAccess commandAccess={values.commandAccess} setCommandAccess={setFieldValue} />
           </Grid>
         </Grid>
+
+        <LoadingButton
+          size="large"
+          // onClick={() => handleOnSubmit(values)}
+          type="submit"
+          variant="contained"
+          loading={isSubmitting}
+          sx={{ mt: 5, mb: 3 }}
+        >
+          Create User
+        </LoadingButton>
       </Form>
     </FormikProvider>
   );

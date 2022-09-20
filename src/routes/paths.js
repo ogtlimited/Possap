@@ -62,6 +62,12 @@ export const PATH_DASHBOARD = {
     newUser: path(ROOTS_DASHBOARD, '/user/new'),
 
     account: path(ROOTS_DASHBOARD, '/user/account')
+  },
+  service: {
+    root: path(ROOTS_DASHBOARD, '/service'),
+
+    list: path(ROOTS_DASHBOARD, '/service/list'),
+    newService: path(ROOTS_DASHBOARD, '/service/new')
   }
 };
 

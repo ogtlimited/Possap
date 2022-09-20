@@ -25,6 +25,7 @@ import {
   Checkbox
 } from '@material-ui/core';
 // utils
+import getUrlString from '../../../utils/get-url-string';
 import fakeRequest from '../../../utils/fakeRequest';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -50,8 +51,33 @@ export default function UserNewForm({ isEdit, currentUser }) {
   const [officerSection, setofficerSection] = useState([]);
   const [officerSubSection, setofficerSubSection] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
+
+  const [commandCodes, setCommandCodes] = useState([]);
+
+  const officerFormation = [
+    { name: 'Force HeadQuaters', code: 1 },
+    { name: 'Zonal Command', code: 2 },
+    { name: 'State Command', code: 3 }
+  ];
+
+  const getCommandDetails = (codes) => {
+    const url = getUrlString(`api/v1/helper/police-hr`);
+    axios({
+      method: 'post',
+      url,
+      body: { data: [codes] }
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const handleChange = (event, setFieldValue, fieldName, data, next) => {
     const val = event.target.value;
+    getCommandDetails([val]);
     // console.log(data, fieldName);
     let fValues = [];
     if (data.sub) {
@@ -99,9 +125,10 @@ export default function UserNewForm({ isEdit, currentUser }) {
   }, [response]);
 
   const createUser = (data) => {
+    const url = getUrlString(`/`);
     axios({
       method: 'post',
-      url: '/login',
+      url,
       data
     })
       .then((response) => {
@@ -285,8 +312,8 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     helperText={touched.officerFormation && errors.officerFormation}
                   >
                     <option value="" />
-                    {policeData.map((option) => (
-                      <MenuItem key={option.name} value={option.name}>
+                    {officerFormation.map((option) => (
+                      <MenuItem key={option.name} value={option.code}>
                         {option.name}
                       </MenuItem>
                     ))}

@@ -11,3 +11,5 @@ export const ALLPOLICEEXTRACTS = '/api/v1/police-extracts/officers-extracts';
 export const ALLCHARACTERCERTIFICATES = '/api/v1/police-character-certificate/officers-pcc';
 
 export const PCC = '/api/v1/police-character-certificate/';
+
+export const SERVICEPATH = '/api/v1/possap-services';

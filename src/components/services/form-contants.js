@@ -15,7 +15,7 @@ export const PROPERTYLOSS = [
   'Others'
 ];
 export const CCERTREQUEST = ['Domestic', 'International'];
-export const INQUIRYREASON = ['Education', 'Employeement', 'Travelling', 'Others'];
+export const INQUIRYREASON = ['Education', 'Employment', 'Travelling', 'Others'];
 export const EGSERVICECATEGORY = [
   { id: 0, title: 'Escort Service', key: 'ES' },
   { id: 1, title: 'Guard Service', key: 'GS' },

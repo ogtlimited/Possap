@@ -45,7 +45,7 @@ export default function AppWelcome({ displayName }) {
           You can view your all your request and create new ones
         </Typography>
 
-        <Button variant="contained" to="#" component={RouterLink}>
+        <Button variant="contained" to="/services" component={RouterLink}>
           Go Now
         </Button>
       </CardContent>

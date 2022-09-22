@@ -45,7 +45,7 @@ export default function ViewMoreService({ open, handleClose, formSchema }) {
                   <TableCell>{form.placeholder}</TableCell>
                   <TableCell>{form.type}</TableCell>
                   <Typography>
-                    {form.options.map((option, index) => (
+                    {form?.options?.map((option, index) => (
                       <Typography key={index}>{option?.value}</Typography>
                     ))}
                   </Typography>

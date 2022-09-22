@@ -6,7 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Table, TableHead, TableCell, TableBody, Typography } from '@material-ui/core';
+import { Table, TableHead, TableCell, TableBody, Typography, TableRow } from '@material-ui/core';
 
 ViewMoreService.propTypes = {
   open: PropTypes.bool,
@@ -38,18 +38,18 @@ export default function ViewMoreService({ open, handleClose, formSchema }) {
             </TableHead>
             <TableBody>
               {formSchema?.map((form, index) => (
-                <React.Fragment key={index}>
+                <TableRow key={index}>
                   <TableCell>{form.id}</TableCell>
                   <TableCell>{form.label}</TableCell>
                   <TableCell>{form.mandatory}</TableCell>
                   <TableCell>{form.placeholder}</TableCell>
                   <TableCell>{form.type}</TableCell>
                   <Typography>
-                    {form.options.map((option, index) => (
+                    {form?.options?.map((option, index) => (
                       <Typography key={index}>{option?.value}</Typography>
                     ))}
                   </Typography>
-                </React.Fragment>
+                </TableRow>
               ))}
             </TableBody>
           </Table>

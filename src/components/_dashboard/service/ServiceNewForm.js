@@ -5,7 +5,21 @@ import { useNavigate } from 'react-router-dom';
 
 // material
 import { LoadingButton } from '@material-ui/lab';
-import { Box, Card, Grid, Stack, TextField, MenuItem, Button, IconButton, FormControl } from '@material-ui/core';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  TextField,
+  MenuItem,
+  Button,
+  IconButton,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio
+} from '@material-ui/core';
 import { AddCircle, RemoveCircle, Send } from '@material-ui/icons';
 // utils
 // routes
@@ -24,16 +38,33 @@ export default function ServiceNewForm({ isEdit, currentService }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
+  const [isResful, setIsResful] = useState('');
+
+  const handleChange = (event) => {
+    setIsResful(event.target.value);
+  };
 
   const [serviceOptions, setServiceOptions] = useState([
     {
       id: '',
       label: '',
-      mandatory: '',
+      validators: {
+        required: ''
+      },
+      config: {
+        multiple: ''
+      },
       placeholder: '',
       type: '',
       options: [],
-      value: ''
+      value: '',
+      api: {
+        path: '',
+        body: {
+          key: '',
+          value: ''
+        }
+      }
     }
   ]);
   const [workFlowOptions, setWorkFlowOptions] = useState([
@@ -62,11 +93,23 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     values.push({
       id: '',
       label: '',
-      mandatory: '',
+      validators: {
+        required: ''
+      },
+      config: {
+        multiple: ''
+      },
       placeholder: '',
       type: '',
       options: [],
-      value: ''
+      value: '',
+      api: {
+        path: '',
+        body: {
+          key: '',
+          value: ''
+        }
+      }
     });
     setServiceOptions(values);
   };
@@ -119,14 +162,27 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     setSelectOptions(values);
   };
 
-  const handleChangeFormSchema = (editorState, index) => {
+  const handleChangeFormSchema = (editorState, index, fieldName) => {
     const { name, value } = editorState.target;
     const values = [...serviceOptions];
-    values[index][name] = value;
+    if (name === 'validators') {
+      values[index][name].required = value;
+    } else if (name === 'config') {
+      values[index][name].multiple = value;
+    } else if (name === 'api' && fieldName === 'path') {
+      values[index][name].path = value;
+    } else if (name === 'api' && fieldName === 'key') {
+      values[index][name].body.key = value;
+    } else if (name === 'api' && fieldName === 'value') {
+      values[index][name].body.value = value;
+    } else {
+      values[index][name] = value;
+    }
 
     setServiceOptions(values);
   };
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
     const newValue = {
       name,
       approvalWorkFlow,
@@ -239,17 +295,17 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                         <FormControl variant="outlined" fullWidth>
                           <TextField
                             fullWidth
-                            name="mandatory"
+                            name="validators"
                             select
-                            label="Mandatory"
-                            value={service.mandatory}
+                            label="Validators"
+                            value={service.validators.required}
                             onChange={(e) => handleChangeFormSchema(e, index)}
-                            // {...register('mandatory')}
+                            // {...register('validators')}
                             // error={Boolean(errors.foreign_table)}
                             // helperText={errors?.foreign_table?.message}
                           >
-                            <MenuItem value="Yes">Yes</MenuItem>
-                            <MenuItem value="No">No</MenuItem>
+                            <MenuItem value>Yes</MenuItem>
+                            <MenuItem value={false}>No</MenuItem>
                           </TextField>
                         </FormControl>
                         <FormControl variant="outlined" fullWidth>
@@ -263,6 +319,24 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                             // error={Boolean(errors.foreign_table)}
                             // helperText={errors?.foreign_table?.message}
                           />
+                        </FormControl>
+                      </Stack>
+                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} sx={{ mb: 2 }}>
+                        <FormControl variant="outlined" fullWidth>
+                          <TextField
+                            fullWidth
+                            name="config"
+                            select
+                            label="Config"
+                            value={service.config.multiple}
+                            onChange={(e) => handleChangeFormSchema(e, index)}
+                            // {...register('validators')}
+                            // error={Boolean(errors.foreign_table)}
+                            // helperText={errors?.foreign_table?.message}
+                          >
+                            <MenuItem value>Yes</MenuItem>
+                            <MenuItem value={false}>No</MenuItem>
+                          </TextField>
                         </FormControl>
                       </Stack>
                       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
@@ -287,7 +361,26 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           </TextField>
                         </FormControl>
                       </Stack>
-                      {service.type === 'select' &&
+                      {service.type === 'select' && (
+                        <Stack sx={{ mt: 2 }}>
+                          <FormControl component="fieldset">
+                            <FormLabel component="legend">Is Restful?</FormLabel>
+                            <RadioGroup
+                              direction={{ xs: 'row', sm: 'row' }}
+                              aria-label="Is Restful"
+                              name="isResful"
+                              value={isResful}
+                              onChange={handleChange}
+                              sx={{ display: 'flex', flexDirection: 'row' }}
+                            >
+                              <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                              <FormControlLabel value="no" control={<Radio />} label="No" />
+                            </RadioGroup>
+                          </FormControl>
+                        </Stack>
+                      )}
+                      {isResful === 'no' &&
+                        service.type === 'select' &&
                         selectOptions &&
                         selectOptions.map((select, i) => (
                           <Stack key={i} direction={{ xs: 'column', sm: 'row' }} sx={{ mt: 2 }}>
@@ -312,12 +405,57 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                             </Stack>
                           </Stack>
                         ))}
-                      {service.type === 'select' && (
+                      {isResful === 'no' && service.type === 'select' && (
                         <Grid item xs={12} md={6} sx={{ marginTop: 2 }}>
                           <IconButton variant="contained" onClick={handleAddSelectOptionsFields}>
                             <AddCircle />
                           </IconButton>
                         </Grid>
+                      )}
+                      {isResful === 'yes' && service.type === 'select' && (
+                        <>
+                          <Stack direction={{ xs: 'column', sm: 'row' }} sx={{ mt: 2 }}>
+                            <FormControl variant="outlined" fullWidth>
+                              <TextField
+                                fullWidth
+                                label="Path"
+                                name="api"
+                                value={service.api.path}
+                                onChange={(e) => handleChangeFormSchema(e, index, 'path')}
+                                // {...register('value')}
+                                // error={Boolean(errors.title)}
+                                // helperText={errors?.title?.message}
+                              />
+                            </FormControl>
+                          </Stack>
+                          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} sx={{ mt: 2 }}>
+                            <FormControl variant="outlined" fullWidth>
+                              <TextField
+                                fullWidth
+                                label="Key"
+                                name="api"
+                                value={service.api.body.key}
+                                onChange={(e) => handleChangeFormSchema(e, index, 'key')}
+                                // {...register('value')}
+                                // error={Boolean(errors.title)}
+                                // helperText={errors?.title?.message}
+                              />
+                            </FormControl>
+
+                            <FormControl variant="outlined" fullWidth>
+                              <TextField
+                                fullWidth
+                                label="Value"
+                                name="api"
+                                value={service.api.body.value}
+                                onChange={(e) => handleChangeFormSchema(e, index, 'value')}
+                                // {...register('value')}
+                                // error={Boolean(errors.title)}
+                                // helperText={errors?.title?.message}
+                              />
+                            </FormControl>
+                          </Stack>
+                        </>
                       )}
                     </Grid>
                     <Grid md={2} sm={2}>

@@ -31,24 +31,31 @@ export default function ViewMoreService({ open, handleClose, formSchema }) {
             <TableHead>
               <TableCell>ID</TableCell>
               <TableCell>Label</TableCell>
-              <TableCell>Mandatory</TableCell>
+              <TableCell>Validators</TableCell>
+              <TableCell>Config</TableCell>
               <TableCell>Placeholder</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Options</TableCell>
+              <TableCell>Api</TableCell>
             </TableHead>
             <TableBody>
               {formSchema?.map((form, index) => (
                 <TableRow key={index}>
                   <TableCell>{form.id}</TableCell>
                   <TableCell>{form.label}</TableCell>
-                  <TableCell>{form.mandatory}</TableCell>
+                  <TableCell>{form.validators?.required}</TableCell>
+                  <TableCell>{form.config?.multiple}</TableCell>
                   <TableCell>{form.placeholder}</TableCell>
                   <TableCell>{form.type}</TableCell>
-                  <Typography>
+                  <TableCell>
                     {form?.options?.map((option, index) => (
                       <Typography key={index}>{option?.value}</Typography>
                     ))}
-                  </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>{form?.api?.path}</Typography>
+                    <Typography>{form?.api?.body?.key}</Typography> - <Typography>{form?.api?.body?.value}</Typography>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

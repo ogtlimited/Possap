@@ -71,6 +71,7 @@ export default function CommandAccess({ commandAccess, setCommandAccess }) {
   const handleOnSubmit = (val) => {
     console.log(val);
   };
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {

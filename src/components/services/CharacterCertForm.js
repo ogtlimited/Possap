@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink, Navigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import NaijaStates from 'naija-state-local-government';
@@ -45,6 +45,7 @@ import ScrollToTop from '../ScrollToTop';
 
 export default function CharacterCertForm({ setStep, parentValues }) {
   const isMountedRef = useIsMountedRef();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
@@ -66,8 +67,9 @@ export default function CharacterCertForm({ setStep, parentValues }) {
 
   const formik = useFormik({
     initialValues: {
-      user_type: user?.userType,
-      userId: user?.id,
+      userType: user?.userType,
+      address: user?.address || '',
+      lga: user?.lga || '',
       requestType: '',
       reasonForInquiry: '',
       stateOfOrigin: '',
@@ -87,8 +89,10 @@ export default function CharacterCertForm({ setStep, parentValues }) {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         const response = await mutation.mutateAsync(values);
-        const redirectPath = `services/invoice/2?requestID=${response.data.data.createPoliceCertificate.id}`;
-        <Navigate to={redirectPath} />;
+        console.log(response);
+        const redirectPath = `/services/invoice/2?requestID=${response.data.data.createPoliceCertificate.id}`;
+        console.log(redirectPath);
+        navigate(redirectPath);
         enqueueSnackbar('Form submitted success', {
           variant: 'success',
           action: (key) => (

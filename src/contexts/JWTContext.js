@@ -42,7 +42,7 @@ const handlers = {
 
     return {
       ...state,
-      isAuthenticated: true,
+      isAuthenticated: false,
       user
     };
   }
@@ -131,8 +131,7 @@ function AuthProvider({ children }) {
     console.log('JWT', data);
     const response = await RegisterUser(data);
     const { accessToken, user } = response.data;
-
-    window.localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem('possap-user', JSON.stringify(user));
     dispatch({
       type: 'REGISTER',
       payload: {

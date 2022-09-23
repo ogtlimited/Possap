@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { Container, Alert, AlertTitle } from '@material-ui/core';
+import { Navigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-
+import { PATH_AUTH, PATH_DASHBOARD } from '../routes/paths';
 // ----------------------------------------------------------------------
 
 RoleBasedGuard.propTypes = {
@@ -12,8 +13,11 @@ RoleBasedGuard.propTypes = {
 const useCurrentRole = () => {
   // Logic here to get current user role
   const { user } = useAuth();
-  console.log(user);
-  const role = user.userType;
+  console.log(typeof user === 'undefined');
+  if (typeof user === 'undefined') {
+    <Navigate to={PATH_AUTH.login} />;
+  }
+  const role = user?.userType;
   return role;
 };
 

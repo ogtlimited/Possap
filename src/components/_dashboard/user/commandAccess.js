@@ -101,6 +101,8 @@ export default function CommandAccess({
     officerSection: Yup.mixed().required('Officer Section is required')
   });
 
+  const [isAccessEdit, setAccessEdit] = useState(false);
+
   const addCommand = (val, resetForm) => {
     console.log(formationCode);
     const values = {
@@ -109,7 +111,15 @@ export default function CommandAccess({
       officerSection: sectionCode,
       officerSubSection: subSectionCode
     };
-    if (commandAccessArray.length > 0) {
+    if (isAccessEdit) {
+      const objIndex = commandAccessArray.findIndex((obj) => obj.officerFormation === formationCode);
+      commandAccessArray[objIndex].officerDepartment = departmentCode;
+      commandAccessArray[objIndex].officerSection = sectionCode;
+      commandAccessArray[objIndex].officerSubSection = subSectionCode;
+      setCommandAccessArray(commandAccessArray);
+      setCommandAccess('commandAccess', commandAccessArray);
+      setAccessEdit(false);
+    } else if (commandAccessArray.length > 0) {
       setCommandAccessArray([...commandAccessArray, values]);
       setCommandAccess('commandAccess', [...commandAccessArray, values]);
     } else {
@@ -122,11 +132,13 @@ export default function CommandAccess({
     setSubSectionCode({});
   };
   const editField = (field) => {
+    setAccessEdit(true);
     setFormationCode(field.officerFormation);
     setdepartmentCode(field.officerDepartment);
     setSectionCode(field.officerSection);
     setSubSectionCode(field.officerSubSection);
   };
+
   const deleteField = (index) => {
     const filter = commandAccessArray.filter((val, idx) => index !== idx);
     console.log(filter);
@@ -296,7 +308,7 @@ export default function CommandAccess({
                 loading={isSubmitting}
                 sx={{ mt: 5, mb: 3 }}
               >
-                Add Command Access
+                {isAccessEdit ? 'Update Command Access' : 'Add Command Access'}
               </Button>
             </Card>
           </Grid>
@@ -305,7 +317,7 @@ export default function CommandAccess({
       {commandAccessArray.length > 0 ? (
         <Grid container spacing={3}>
           <Grid item>
-            <Card sx={{ p: 2, pb: 5 }}>
+            <Card sx={{ p: 2, pb: 5, margin: '10px 0' }}>
               <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                   <TableHead>

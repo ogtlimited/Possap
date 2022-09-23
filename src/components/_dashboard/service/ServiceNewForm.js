@@ -38,11 +38,6 @@ export default function ServiceNewForm({ isEdit, currentService }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
-  const [isResful, setIsResful] = useState('');
-
-  const handleChange = (event) => {
-    setIsResful(event.target.value);
-  };
 
   const [serviceOptions, setServiceOptions] = useState([
     {
@@ -56,6 +51,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       },
       placeholder: '',
       type: '',
+      isResful: '',
       options: [],
       value: '',
       api: {
@@ -101,6 +97,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       },
       placeholder: '',
       type: '',
+      isResful: '',
       options: [],
       value: '',
       api: {
@@ -183,10 +180,19 @@ export default function ServiceNewForm({ isEdit, currentService }) {
   };
   const onSubmit = async (e) => {
     e.preventDefault();
+    const newServiceOptions = serviceOptions.map((service) => ({
+      id: service?.id,
+      label: service?.label,
+      validators: service?.validators,
+      placeholder: service?.placeholder,
+      config: service?.config,
+      type: service?.type,
+      ...(service?.isResful === 'yes' ? { api: service?.api } : { options: service?.options })
+    }));
     const newValue = {
       name,
       approvalWorkFlow,
-      formSchema: serviceOptions
+      formSchema: newServiceOptions
     };
     setLoading(true);
     try {
@@ -369,8 +375,8 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                               direction={{ xs: 'row', sm: 'row' }}
                               aria-label="Is Restful"
                               name="isResful"
-                              value={isResful}
-                              onChange={handleChange}
+                              value={service.isResful}
+                              onChange={(e) => handleChangeFormSchema(e, index)}
                               sx={{ display: 'flex', flexDirection: 'row' }}
                             >
                               <FormControlLabel value="yes" control={<Radio />} label="Yes" />
@@ -379,7 +385,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           </FormControl>
                         </Stack>
                       )}
-                      {isResful === 'no' &&
+                      {service.isResful === 'no' &&
                         service.type === 'select' &&
                         selectOptions &&
                         selectOptions.map((select, i) => (
@@ -405,14 +411,14 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                             </Stack>
                           </Stack>
                         ))}
-                      {isResful === 'no' && service.type === 'select' && (
+                      {service.isResful === 'no' && service.type === 'select' && (
                         <Grid item xs={12} md={6} sx={{ marginTop: 2 }}>
                           <IconButton variant="contained" onClick={handleAddSelectOptionsFields}>
                             <AddCircle />
                           </IconButton>
                         </Grid>
                       )}
-                      {isResful === 'yes' && service.type === 'select' && (
+                      {service.isResful === 'yes' && service.type === 'select' && (
                         <>
                           <Stack direction={{ xs: 'column', sm: 'row' }} sx={{ mt: 2 }}>
                             <FormControl variant="outlined" fullWidth>

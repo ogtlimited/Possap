@@ -22,6 +22,7 @@ import {
 } from '@material-ui/core';
 // utils
 import usePoliceData from '../../../db/usePoliceData';
+import CommandAccessMoreMenu from './list/CommandAccessMoreMenu';
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +33,14 @@ CommandAccess.propTypes = {
   getCommandDetails: PropTypes.func
 };
 
-export default function CommandAccess({ commandAccess, setCommandAccess, getCommandDetails, officerFormationOptions }) {
-  console.log('setCommandAccess', commandAccess);
+export default function CommandAccess({
+  commandAccess,
+  setCommandAccess,
+  getCommandDetails,
+  officerFormationOptions,
+  isEdit
+}) {
+  console.log('setCommandAccess', commandAccess, isEdit);
   const [policeData, setpoliceData] = useState([]);
   const [department, setdepartment] = useState([]);
   const [officerSection, setofficerSection] = useState([]);
@@ -94,8 +101,8 @@ export default function CommandAccess({ commandAccess, setCommandAccess, getComm
     officerSection: Yup.mixed().required('Officer Section is required')
   });
 
-  const addCommand = (evt, val) => {
-    evt.preventDefault();
+  const addCommand = (val, resetForm) => {
+    console.log(formationCode);
     const values = {
       officerFormation: formationCode,
       officerDepartment: departmentCode,
@@ -104,27 +111,43 @@ export default function CommandAccess({ commandAccess, setCommandAccess, getComm
     };
     if (commandAccessArray.length > 0) {
       setCommandAccessArray([...commandAccessArray, values]);
-      setCommandAccess([...commandAccessArray, values]);
+      setCommandAccess('commandAccess', [...commandAccessArray, values]);
     } else {
       setCommandAccessArray([values]);
-      setCommandAccess([values]);
+      setCommandAccess('commandAccess', [...commandAccessArray, values]);
     }
+    setFormationCode({});
+    setdepartmentCode({});
+    setSectionCode({});
+    setSubSectionCode({});
+  };
+  const editField = (field) => {
+    setFormationCode(field.officerFormation);
+    setdepartmentCode(field.officerDepartment);
+    setSectionCode(field.officerSection);
+    setSubSectionCode(field.officerSubSection);
+  };
+  const deleteField = (index) => {
+    const filter = commandAccessArray.filter((val, idx) => index !== idx);
+    console.log(filter);
+    setCommandAccessArray(filter);
+    setCommandAccess('commandAccess', filter);
   };
 
   const formik = useFormik({
-    enableReinitialize: false,
+    enableReinitialize: true,
     initialValues: {
-      officerFormation: commandAccess?.officerFormation || '',
-      officerDepartment: commandAccess?.officerDepartment || '',
-      officerSection: commandAccess?.officerSection || '',
-      officerSubSection: commandAccess?.officerSubSection || ''
+      officerFormation: '',
+      officerDepartment: '',
+      officerSection: '',
+      officerSubSection: ''
     },
     validationSchema: NewUserSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
         // setCommandAccess(values);
         console.log('values access', values);
-        // resetForm();
+        resetForm();
         setSubmitting(false);
       } catch (error) {
         console.error(error);
@@ -134,7 +157,7 @@ export default function CommandAccess({ commandAccess, setCommandAccess, getComm
     }
   });
 
-  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+  const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps, resetForm } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -268,7 +291,7 @@ export default function CommandAccess({ commandAccess, setCommandAccess, getComm
               <Button
                 size="large"
                 // type="button"
-                onClick={(event) => addCommand(event, values)}
+                onClick={() => addCommand(values, resetForm)}
                 variant="contained"
                 loading={isSubmitting}
                 sx={{ mt: 5, mb: 3 }}
@@ -291,6 +314,7 @@ export default function CommandAccess({ commandAccess, setCommandAccess, getComm
                       <TableCell>Officer Department</TableCell>
                       <TableCell>Officer Section</TableCell>
                       <TableCell>Officer SubSection</TableCell>
+                      <TableCell>Action</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -300,6 +324,9 @@ export default function CommandAccess({ commandAccess, setCommandAccess, getComm
                         <TableCell>{row.officerDepartment.name}</TableCell>
                         <TableCell>{row.officerSection.name}</TableCell>
                         <TableCell>{row.officerSubSection.name}</TableCell>
+                        <TableCell>
+                          <CommandAccessMoreMenu onDelete={() => deleteField(index)} onEdit={() => editField(row)} />
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

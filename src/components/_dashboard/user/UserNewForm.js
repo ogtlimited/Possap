@@ -67,7 +67,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
   const [departmentCode, setdepartmentCode] = useState([]);
   const [sectionCode, setSectionCode] = useState([]);
   const [subSectionCode, setSubSectionCode] = useState([]);
-  const [commandAccess, setCommandAccess] = useState([]);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -193,7 +192,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       },
       // approvalLevel: currentUser?.approvalLevel || '',
       // avatarUrl: currentUser?.avatarUrl || null,
-      commandAccess: commandAccess || [],
+      commandAccess: [],
       status: currentUser?.status,
       password: currentUser?.password || ''
     },
@@ -228,10 +227,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
     },
     [setFieldValue]
   );
-
-  const handleSetCommandAccess = useCallback((values) => {
-    setCommandAccess(values);
-  }, []);
 
   const [workflowOpen, setWorkflowOpen] = useState(false);
   const [officerWorkflowData, setOfficerWorkflowData] = useState();
@@ -567,9 +562,10 @@ export default function UserNewForm({ isEdit, currentUser }) {
           <Grid item xs={12} md={12}>
             <CommandAccess
               commandAccess={values.commandAccess}
-              setCommandAccess={handleSetCommandAccess}
+              setCommandAccess={setFieldValue}
               getCommandDetails={getCommandDetails}
               officerFormationOptions={officerFormation}
+              isEdit={isEdit}
             />
           </Grid>
         </Grid>

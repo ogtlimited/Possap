@@ -71,7 +71,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
         console.log(response);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
   };
 

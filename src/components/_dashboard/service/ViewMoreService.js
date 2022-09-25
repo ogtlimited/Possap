@@ -6,7 +6,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { Table, TableHead, TableCell, TableBody, Typography } from '@material-ui/core';
+import { Table, TableHead, TableCell, TableBody, Typography, TableRow } from '@material-ui/core';
 
 ViewMoreService.propTypes = {
   open: PropTypes.bool,
@@ -31,25 +31,32 @@ export default function ViewMoreService({ open, handleClose, formSchema }) {
             <TableHead>
               <TableCell>ID</TableCell>
               <TableCell>Label</TableCell>
-              <TableCell>Mandatory</TableCell>
+              <TableCell>Validators</TableCell>
+              <TableCell>Config</TableCell>
               <TableCell>Placeholder</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Options</TableCell>
+              <TableCell>Api</TableCell>
             </TableHead>
             <TableBody>
               {formSchema?.map((form, index) => (
-                <React.Fragment key={index}>
+                <TableRow key={index}>
                   <TableCell>{form.id}</TableCell>
                   <TableCell>{form.label}</TableCell>
-                  <TableCell>{form.mandatory}</TableCell>
+                  <TableCell>{form.validators?.required}</TableCell>
+                  <TableCell>{form.config?.multiple}</TableCell>
                   <TableCell>{form.placeholder}</TableCell>
                   <TableCell>{form.type}</TableCell>
-                  <Typography>
+                  <TableCell>
                     {form?.options?.map((option, index) => (
                       <Typography key={index}>{option?.value}</Typography>
                     ))}
-                  </Typography>
-                </React.Fragment>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>{form?.api?.path}</Typography>
+                    <Typography>{form?.api?.body?.key}</Typography> - <Typography>{form?.api?.body?.value}</Typography>
+                  </TableCell>
+                </TableRow>
               ))}
             </TableBody>
           </Table>

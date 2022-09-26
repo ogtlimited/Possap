@@ -230,7 +230,6 @@ export default function UserNewForm({ isEdit, currentUser }) {
 
   const [workflowOpen, setWorkflowOpen] = useState(false);
   const [officerWorkflowData, setOfficerWorkflowData] = useState();
-
   return (
     <FormikProvider value={formik}>
       <Form noValidate autoComplete="off" onSubmit={handleSubmit} enableReinitialize={false}>
@@ -455,11 +454,11 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     select
                     fullWidth
                     label="Role"
-                    {...getFieldProps('access.role')}
                     placeholder="Role"
                     onInputChange={(event, newValue) => {
                       setFieldValue('access.role', newValue);
                     }}
+                    // {...getFieldProps('access.role')}
                     SelectProps={{ native: true }}
                     options={Role}
                     error={Boolean(touched.access?.role && errors.access?.role)}

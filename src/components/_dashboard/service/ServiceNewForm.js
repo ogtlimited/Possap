@@ -49,9 +49,14 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       config: {
         multiple: ''
       },
+      showIf: {
+        value: '',
+        equals: ''
+      },
       placeholder: '',
       type: '',
       isResful: '',
+      isShowIf: '',
       options: [],
       value: '',
       api: {
@@ -95,9 +100,14 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       config: {
         multiple: ''
       },
+      showIf: {
+        value: '',
+        equals: ''
+      },
       placeholder: '',
       type: '',
       isResful: '',
+      isShowIf: '',
       options: [],
       value: '',
       api: {
@@ -172,6 +182,10 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       values[index][name].body.key = value;
     } else if (name === 'api' && fieldName === 'value') {
       values[index][name].body.value = value;
+    } else if (name === 'showIf' && fieldName === 'equals') {
+      values[index][name].equals = value;
+    } else if (name === 'showIf' && fieldName === 'value') {
+      values[index][name].value = value;
     } else {
       values[index][name] = value;
     }
@@ -187,13 +201,15 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       placeholder: service?.placeholder,
       config: service?.config,
       type: service?.type,
-      ...(service?.isResful === 'yes' ? { api: service?.api } : { options: service?.options })
+      ...(service?.isResful === 'yes' ? { api: service?.api } : { options: service?.options }),
+      ...(service?.isShowIf === 'yes' && { showIf: service?.showIf })
     }));
     const newValue = {
       name,
       approvalWorkFlow,
       formSchema: newServiceOptions
     };
+
     setLoading(true);
     try {
       await CreateService(newValue);
@@ -333,7 +349,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                             fullWidth
                             name="config"
                             select
-                            label="Config"
+                            label="Is Multiple?"
                             value={service.config.multiple}
                             onChange={(e) => handleChangeFormSchema(e, index)}
                             // {...register('validators')}
@@ -345,6 +361,51 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           </TextField>
                         </FormControl>
                       </Stack>
+                      <Stack sx={{ mt: 2, mb: 2 }}>
+                        <FormControl component="fieldset">
+                          <FormLabel component="legend">Show if?</FormLabel>
+                          <RadioGroup
+                            direction={{ xs: 'row', sm: 'row' }}
+                            aria-label="Show If?"
+                            name="isShowIf"
+                            value={service.isShowIf}
+                            onChange={(e) => handleChangeFormSchema(e, index)}
+                            sx={{ display: 'flex', flexDirection: 'row' }}
+                          >
+                            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                            <FormControlLabel value="no" control={<Radio />} label="No" />
+                          </RadioGroup>
+                        </FormControl>
+                      </Stack>
+                      {service.isShowIf === 'yes' && (
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} sx={{ mt: 2, mb: 2 }}>
+                          <FormControl variant="outlined" fullWidth>
+                            <TextField
+                              fullWidth
+                              label="Equals"
+                              name="showIf"
+                              value={service.showIf.equals}
+                              onChange={(e) => handleChangeFormSchema(e, index, 'equals')}
+                              // {...register('value')}
+                              // error={Boolean(errors.title)}
+                              // helperText={errors?.title?.message}
+                            />
+                          </FormControl>
+
+                          <FormControl variant="outlined" fullWidth>
+                            <TextField
+                              fullWidth
+                              label="Value"
+                              name="showIf"
+                              value={service.showIf.value}
+                              onChange={(e) => handleChangeFormSchema(e, index, 'value')}
+                              // {...register('value')}
+                              // error={Boolean(errors.title)}
+                              // helperText={errors?.title?.message}
+                            />
+                          </FormControl>
+                        </Stack>
+                      )}
                       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                         <FormControl variant="outlined" fullWidth>
                           <TextField
@@ -367,6 +428,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           </TextField>
                         </FormControl>
                       </Stack>
+
                       {service.type === 'select' && (
                         <Stack sx={{ mt: 2 }}>
                           <FormControl component="fieldset">
@@ -385,6 +447,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           </FormControl>
                         </Stack>
                       )}
+
                       {service.isResful === 'no' &&
                         service.type === 'select' &&
                         selectOptions &&

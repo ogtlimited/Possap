@@ -32,10 +32,11 @@ export default function ViewMoreService({ open, handleClose, formSchema }) {
               <TableCell>ID</TableCell>
               <TableCell>Label</TableCell>
               <TableCell>Validators</TableCell>
-              <TableCell>Config</TableCell>
+              <TableCell>Is Multiple?</TableCell>
               <TableCell>Placeholder</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Options</TableCell>
+              <TableCell>Show If?</TableCell>
               <TableCell>Api</TableCell>
             </TableHead>
             <TableBody>
@@ -51,6 +52,9 @@ export default function ViewMoreService({ open, handleClose, formSchema }) {
                     {form?.options?.map((option, index) => (
                       <Typography key={index}>{option?.value}</Typography>
                     ))}
+                  </TableCell>
+                  <TableCell>
+                    <Typography>{form?.showIf?.value}</Typography> - <Typography>{form?.showIf?.equals}</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography>{form?.api?.path}</Typography>

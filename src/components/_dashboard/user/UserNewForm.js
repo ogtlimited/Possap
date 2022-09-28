@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormikProvider, useFormik } from 'formik';
@@ -44,7 +44,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 //
 import countries from './countries';
 import usePoliceData from '../../../db/usePoliceData';
-import { AccessType, Role, ServicesList } from './constants';
+import { AccessType, Role } from './constants';
 import OfficerWorkFlow from './officerWorkflow';
 import CommandAccess from './commandAccess';
 
@@ -69,6 +69,14 @@ export default function UserNewForm({ isEdit, currentUser }) {
   const [subSectionCode, setSubSectionCode] = useState([]);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [servicesList, setServicesList] = useState([]);
+
+  useEffect(() => {
+    const url = getUrlString(`api/v1/possap-services`);
+    const response = axios.get(url).then((response) => {
+      setServicesList(response.data.data);
+    });
+  }, []);
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
@@ -192,7 +200,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       },
       // approvalLevel: currentUser?.approvalLevel || '',
       // avatarUrl: currentUser?.avatarUrl || null,
-      commandAccess: [],
+      commandAccessIds: [],
       status: currentUser?.status,
       password: currentUser?.password || ''
     },
@@ -495,7 +503,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                       helperText={touched.access?.services && errors.access?.services}
                       renderValue={(selected) => selected.join(', ')}
                     >
-                      {ServicesList.map((name) => (
+                      {servicesList?.map(({ name }) => (
                         <MenuItem
                           key={name}
                           value={name}
@@ -517,6 +525,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                   {values.access.accessType === 'Approver' ? (
                     <OfficerWorkFlow
                       services={values.access.services}
+                      servicesList={servicesList}
                       dialogOpen={workflowOpen}
                       setDialogOpen={setWorkflowOpen}
                       workflowState={officerWorkflowData}

@@ -51,6 +51,7 @@ export default function CommandAccess({
   const [sectionCode, setSectionCode] = useState({});
   const [subSectionCode, setSubSectionCode] = useState({});
   const [commandAccessArray, setCommandAccessArray] = useState([]);
+  const [commandAccessIds, setCommandAccessIds] = useState([]);
 
   const handleChange = async (val, setFieldValue, fieldName, data, next) => {
     const res = await getCommandDetails(val);
@@ -111,20 +112,33 @@ export default function CommandAccess({
       officerSection: sectionCode,
       officerSubSection: subSectionCode
     };
+    const ids = {
+      officerFormation: `${formationCode.code}`,
+      officerDepartment: departmentCode.code,
+      officerSection: sectionCode.code,
+      officerSubSection: subSectionCode.code || ''
+    };
     if (isAccessEdit) {
       const objIndex = commandAccessArray.findIndex((obj) => obj.officerFormation === formationCode);
       commandAccessArray[objIndex].officerDepartment = departmentCode;
       commandAccessArray[objIndex].officerSection = sectionCode;
       commandAccessArray[objIndex].officerSubSection = subSectionCode;
+
+      commandAccessIds[objIndex].officerDepartment = departmentCode.code;
+      commandAccessIds[objIndex].officerSection = sectionCode.code;
+      commandAccessIds[objIndex].officerSubSection = subSectionCode.code || '';
       setCommandAccessArray(commandAccessArray);
-      setCommandAccess('commandAccess', commandAccessArray);
+      setCommandAccessIds(commandAccessIds);
+      setCommandAccess('commandAccessIds', commandAccessIds);
       setAccessEdit(false);
     } else if (commandAccessArray.length > 0) {
       setCommandAccessArray([...commandAccessArray, values]);
-      setCommandAccess('commandAccess', [...commandAccessArray, values]);
+      setCommandAccessIds([...commandAccessIds, ids]);
+      setCommandAccess('commandAccessIds', [...commandAccessIds, ids]);
     } else {
       setCommandAccessArray([values]);
-      setCommandAccess('commandAccess', [...commandAccessArray, values]);
+      setCommandAccessIds([ids]);
+      setCommandAccess('commandAccessIds', [ids]);
     }
     setFormationCode({});
     setdepartmentCode({});

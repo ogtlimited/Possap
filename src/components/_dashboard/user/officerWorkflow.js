@@ -16,7 +16,8 @@ import {
   Select,
   MenuItem,
   ListSubheader,
-  OutlinedInput
+  OutlinedInput,
+  Dialog
 } from '@material-ui/core';
 import { WORKFLOW, POLICEEXTRACTAPPROVALS, CCAPPROVALS } from './constants';
 
@@ -43,11 +44,12 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-export default function OfficerWorkFlow({ services }) {
+export default function OfficerWorkFlow({ services, dialogOpen, setDialogOpen, workflowState, setWorkflowState }) {
   const [checked, setChecked] = React.useState([]);
   const [extractChecked, setextractChecked] = useState(Array(POLICEEXTRACTAPPROVALS.length).fill(false));
   const [ccertChecked, setccertChecked] = useState(Array(CCAPPROVALS.length).fill(false));
   const [eGSChecked, seteGSChecked] = useState(Array(POLICEEXTRACTAPPROVALS.length).fill(false));
+
   useEffect(() => {
     console.log(services);
     // setapprovals(WORKFLOW.filter((e) => services.includes(e.heading)));
@@ -62,85 +64,87 @@ export default function OfficerWorkFlow({ services }) {
     // });
   }, [services]);
 
-  const handleAllChecked = (value) => (value.length > 0 ? value.every((e) => e === true) : false);
-  const handleIndeterminate = (value) => (value.length > 0 ? value.every((e) => e !== true) : false);
+  // const handleAllChecked = (value) => (value.length > 0 ? value.every((e) => e === true) : false);
+  // const handleIndeterminate = (value) => (value.length > 0 ? value.every((e) => e !== true) : false);
 
-  const handleChange1 = (event, record, setCheck) => {
-    console.log(event.target.checked);
-    const allCheck = record[0] === true ? Array(record.length).fill(true) : Array(record.length).fill(false);
-    console.log(allCheck);
-    setCheck(allCheck);
-  };
+  // const handleChange1 = (event, record, setCheck) => {
+  //   console.log(event.target.checked);
+  //   const allCheck = record[0] === true ? Array(record.length).fill(true) : Array(record.length).fill(false);
+  //   console.log(allCheck);
+  //   setCheck(allCheck);
+  // };
 
-  const handleChildChange = (event, record, index, setCheck) => {
+  const [workflowData, setWorkflowData] = useState({
+    'POLICE EXTRACT': [],
+    'POLICE CHARACTER CERTIFICATE': [],
+    'ESCORT AND GUARD SERVICES': []
+  });
+
+  const handleChildChange = (event, record, index, setCheck, service, name) => {
     record[index] = event.target.checked;
-    console.log(event.target.checked, record, index);
     setCheck(record);
+    console.log(record);
+    setWorkflowData((previous) => {
+      const array3 = record[index] ? [...previous[service], ...[name]] : previous[service].filter((e) => e !== name);
+      const updated = previous;
+      updated[service] = array3;
+      return updated;
+    });
   };
 
-  const children = (lists, record, setCheck) => (
+  const save = () => {
+    setWorkflowState(workflowData);
+    setDialogOpen(false);
+    console.log(workflowData);
+  };
+
+  const children = (lists, record, setCheck, service) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
       {lists.map((ls, i) => (
         <FormControlLabel
+          key={`${ls}-${i}`}
           label={ls}
-          control={<Checkbox checked={record[i]} onChange={(evt) => handleChildChange(evt, record, i, setCheck)} />}
+          control={
+            <Checkbox
+              defaultChecked={workflowData[service].includes(ls)}
+              onChange={(evt) => handleChildChange(evt, record, i, setCheck, service, ls)}
+            />
+          }
         />
       ))}
     </Box>
   );
 
   return (
-    <div>
+    <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
       {services &&
         services.map((s, i) => (
-          <>
+          <Grid key={`${s}-${i}`} container spacing={3}>
             {s === 'POLICE EXTRACT' && (
-              <>
-                <FormControlLabel
-                  label="Extract Request Flow"
-                  control={
-                    <Checkbox
-                      checked={handleAllChecked(extractChecked)}
-                      indeterminate={handleIndeterminate(extractChecked)}
-                      onChange={(evt) => handleChange1(evt, extractChecked, setextractChecked)}
-                    />
-                  }
-                />
-                {children(POLICEEXTRACTAPPROVALS, extractChecked, setextractChecked)}
-              </>
+              <Grid item xs={12} md={12} sx={{ margin: 3 }}>
+                <Box>{s}</Box>
+                {children(POLICEEXTRACTAPPROVALS, extractChecked, setextractChecked, s)}
+              </Grid>
             )}
             {s === 'POLICE CHARACTER CERTIFICATE' && (
-              <>
-                <FormControlLabel
-                  label="Police Character Certificate"
-                  control={
-                    <Checkbox
-                      checked={handleAllChecked(ccertChecked)}
-                      indeterminate={handleIndeterminate(ccertChecked)}
-                      onChange={(evt) => handleChange1(evt, ccertChecked, setccertChecked)}
-                    />
-                  }
-                />
-                {children(CCAPPROVALS, ccertChecked, setccertChecked)}
-              </>
+              <Grid item xs={12} md={12} sx={{ margin: 3 }}>
+                <Box>{s}</Box>
+                {children(CCAPPROVALS, ccertChecked, setccertChecked, s)}
+              </Grid>
             )}
             {s === 'ESCORT AND GUARD SERVICES' && (
-              <>
-                <FormControlLabel
-                  label="Escort & Guard Request Flow"
-                  control={
-                    <Checkbox
-                      checked={handleAllChecked(eGSChecked)}
-                      indeterminate={handleIndeterminate(eGSChecked)}
-                      onChange={(evt) => handleChange1(evt, eGSChecked, seteGSChecked)}
-                    />
-                  }
-                />
-                {children(POLICEEXTRACTAPPROVALS, eGSChecked, seteGSChecked)}
-              </>
+              <Grid item xs={12} md={12} sx={{ margin: 3 }}>
+                <Box>{s}</Box>
+                {children(POLICEEXTRACTAPPROVALS, eGSChecked, seteGSChecked, s)}
+              </Grid>
             )}
-          </>
+          </Grid>
         ))}
-    </div>
+      <Grid item xs={12} md={12} sx={{ mt: 5, mb: 3, margin: 2 }}>
+        <Button type="button" variant="contained" sx={{ width: 5 }} onClick={save}>
+          Save
+        </Button>
+      </Grid>
+    </Dialog>
   );
 }

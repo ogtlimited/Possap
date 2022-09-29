@@ -58,13 +58,16 @@ UserNewForm.propTypes = {
 export default function UserNewForm({ isEdit, currentUser }) {
   const navigate = useNavigate();
   const [policeData, setpoliceData] = useState([]);
+
   const [department, setdepartment] = useState([]);
   const [officerSection, setofficerSection] = useState([]);
   const [officerSubSection, setofficerSubSection] = useState([]);
   const { enqueueSnackbar } = useSnackbar();
 
-  const [formationCode, setFormationCode] = useState([]);
-  const [departmentCode, setdepartmentCode] = useState([]);
+  const [officerDetails, setOfficerDetails] = useState();
+
+  const [formationCode, setFormationCode] = useState(Number(officerDetails?.CommandLevelCode));
+  const [departmentCode, setdepartmentCode] = useState(officerDetails?.CommandCode || []);
   const [sectionCode, setSectionCode] = useState([]);
   const [subSectionCode, setSubSectionCode] = useState([]);
 
@@ -126,6 +129,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       // setofficerSection(policeData[index].sub);
     }
   };
+
   const handleMultiChange = (event, setFieldValue) => {
     const {
       target: { value }
@@ -146,6 +150,40 @@ export default function UserNewForm({ isEdit, currentUser }) {
     const url = getUrlString(`api/v1/officers/signup`);
     const response = axios.post(url, data);
     console.log(data);
+  };
+
+  const getOfficerDetails = async () => {
+    const apNum = getFieldProps('apNumber').value;
+    const data = new URLSearchParams();
+    data.append('ServiceNumber', apNum);
+    const url = getUrlString(`api/v1/helper/verifyAPNumber`);
+    const response = await axios.post(url, data, { headers: { 'content-type': 'application/x-www-form-urlencoded' } });
+    setOfficerDetails(response.data.data);
+    setFormationCode(Number(response.data.data.CommandLevelCode));
+    handleChange(
+      [Number(response.data.data.CommandLevelCode)],
+      setFieldValue,
+      'profile.officerFormation',
+      policeData,
+      setdepartment
+    );
+    setdepartmentCode(response.data.data.CommandCode);
+    handleChange(
+      [Number(response.data.data.CommandLevelCode), response.data.data.CommandCode],
+      setFieldValue,
+      'profile.officerDeptartment',
+      department,
+      setofficerSection
+    );
+    setSectionCode(response.data.data.SubCommandCode);
+    handleChange(
+      [Number(response.data.data.CommandLevelCode), response.data.data.CommandCode, response.data.data.SubCommandCode],
+      setFieldValue,
+      'profile.officerSection',
+      officerSection,
+      setofficerSubSection
+    );
+    setSubSectionCode(response.data.data.SubSubCommandCode);
   };
 
   const NewUserSchema = Yup.object().shape({
@@ -181,17 +219,18 @@ export default function UserNewForm({ isEdit, currentUser }) {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      apNumber: currentUser?.apNumber || '',
+      apNumber: currentUser?.apNumber || officerDetails?.ServiceNumber || '',
       // useServiceNum: currentUser?.apNumber || '',
-      fullName: currentUser?.fullName || '',
+      fullName:
+        currentUser?.fullName || officerDetails ? `${officerDetails?.FirstName} ${officerDetails?.Surname}` : '',
       userName: currentUser?.userName || '',
-      email: currentUser?.email || '',
-      phoneNumber: currentUser?.phoneNumber || '',
+      email: currentUser?.email || officerDetails?.Email || '',
+      phoneNumber: currentUser?.phoneNumber || officerDetails?.PhoneNumber || '',
       profile: {
         officerFormation: currentUser?.profile?.officerFormation || '',
         officerDeptartment: currentUser?.profile?.officerDeptartment || '',
-        officerSection: currentUser?.profile?.officerSection || '',
-        officerSubSection: currentUser?.profile.officerSubSection || ''
+        officerSection: currentUser?.profile?.officerSection || officerDetails?.SubCommandCode || '',
+        officerSubSection: currentUser?.profile.officerSubSection || officerDetails?.SubSubCommandCode || ''
       },
       access: {
         role: currentUser?.access?.role || '',
@@ -253,6 +292,9 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     error={Boolean(touched.apNumber && errors.apNumber)}
                     helperText={touched.apNumber && errors.apNumber}
                   />
+                  <LoadingButton type="button" variant="contained" onClick={getOfficerDetails}>
+                    Search
+                  </LoadingButton>
                 </Stack>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
                   <FormControlLabel
@@ -343,6 +385,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                     {...getFieldProps('profile.officerFormation')}
                     onChange={(evt) => {
                       setFormationCode(evt.target.value);
+                      console.log(evt.target.value);
                       handleChange(
                         [evt.target.value],
                         setFieldValue,

@@ -40,7 +40,7 @@ export default function CommandAccess({
   officerFormationOptions,
   isEdit
 }) {
-  console.log('setCommandAccess', commandAccess, isEdit);
+  // console.log('setCommandAccess', commandAccess, isEdit);
   const [policeData, setpoliceData] = useState([]);
   const [department, setdepartment] = useState([]);
   const [officerSection, setofficerSection] = useState([]);
@@ -103,6 +103,7 @@ export default function CommandAccess({
   });
 
   const [isAccessEdit, setAccessEdit] = useState(false);
+  const [editIndex, setEditIndex] = useState();
 
   const addCommand = (val, resetForm) => {
     console.log(formationCode);
@@ -119,14 +120,13 @@ export default function CommandAccess({
       officerSubSection: subSectionCode.code || ''
     };
     if (isAccessEdit) {
-      const objIndex = commandAccessArray.findIndex((obj) => obj.officerFormation === formationCode);
-      commandAccessArray[objIndex].officerDepartment = departmentCode;
-      commandAccessArray[objIndex].officerSection = sectionCode;
-      commandAccessArray[objIndex].officerSubSection = subSectionCode;
+      commandAccessArray[editIndex].officerDepartment = departmentCode;
+      commandAccessArray[editIndex].officerSection = sectionCode;
+      commandAccessArray[editIndex].officerSubSection = subSectionCode;
 
-      commandAccessIds[objIndex].officerDepartment = departmentCode.code;
-      commandAccessIds[objIndex].officerSection = sectionCode.code;
-      commandAccessIds[objIndex].officerSubSection = subSectionCode.code || '';
+      commandAccessIds[editIndex].officerDepartment = departmentCode.code;
+      commandAccessIds[editIndex].officerSection = sectionCode.code;
+      commandAccessIds[editIndex].officerSubSection = subSectionCode.code || '';
       setCommandAccessArray(commandAccessArray);
       setCommandAccessIds(commandAccessIds);
       setCommandAccess('commandAccessIds', commandAccessIds);
@@ -145,8 +145,9 @@ export default function CommandAccess({
     setSectionCode({});
     setSubSectionCode({});
   };
-  const editField = (field) => {
+  const editField = (field, index) => {
     setAccessEdit(true);
+    setEditIndex(index);
     setFormationCode(field.officerFormation);
     setdepartmentCode(field.officerDepartment);
     setSectionCode(field.officerSection);
@@ -351,7 +352,10 @@ export default function CommandAccess({
                         <TableCell>{row.officerSection.name}</TableCell>
                         <TableCell>{row.officerSubSection.name}</TableCell>
                         <TableCell>
-                          <CommandAccessMoreMenu onDelete={() => deleteField(index)} onEdit={() => editField(row)} />
+                          <CommandAccessMoreMenu
+                            onDelete={() => deleteField(index)}
+                            onEdit={() => editField(row, index)}
+                          />
                         </TableCell>
                       </TableRow>
                     ))}

@@ -199,9 +199,12 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       label: service?.label,
       validators: service?.validators,
       placeholder: service?.placeholder,
-      config: service?.config,
       type: service?.type,
-      ...(service?.isResful === 'yes' ? { api: service?.api } : { options: service?.options }),
+      ...(service?.type === 'radio' && { options: service?.options }),
+      ...(service?.type === 'select' && { config: service?.config }),
+      ...(service?.isResful === 'yes'
+        ? { api: service?.api }
+        : service?.type === 'select' && { options: service?.options }),
       ...(service?.isShowIf === 'yes' && { showIf: service?.showIf })
     }));
     const newValue = {
@@ -343,24 +346,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           />
                         </FormControl>
                       </Stack>
-                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} sx={{ mb: 2 }}>
-                        <FormControl variant="outlined" fullWidth>
-                          <TextField
-                            fullWidth
-                            name="config"
-                            select
-                            label="Is Multiple?"
-                            value={service.config.multiple}
-                            onChange={(e) => handleChangeFormSchema(e, index)}
-                            // {...register('validators')}
-                            // error={Boolean(errors.foreign_table)}
-                            // helperText={errors?.foreign_table?.message}
-                          >
-                            <MenuItem value>Yes</MenuItem>
-                            <MenuItem value={false}>No</MenuItem>
-                          </TextField>
-                        </FormControl>
-                      </Stack>
+
                       <Stack sx={{ mt: 2, mb: 2 }}>
                         <FormControl component="fieldset">
                           <FormLabel component="legend">Show if?</FormLabel>
@@ -406,7 +392,7 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           </FormControl>
                         </Stack>
                       )}
-                      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                      <Stack direction={{ xs: 'column', sm: 'row' }} sx={{ mb: 2 }} spacing={{ xs: 3, sm: 2 }}>
                         <FormControl variant="outlined" fullWidth>
                           <TextField
                             fullWidth
@@ -428,6 +414,59 @@ export default function ServiceNewForm({ isEdit, currentService }) {
                           </TextField>
                         </FormControl>
                       </Stack>
+                      {service.type === 'radio' &&
+                        selectOptions &&
+                        selectOptions.map((select, i) => (
+                          <Stack key={i} direction={{ xs: 'column', sm: 'row' }} sx={{ mt: 2 }}>
+                            <Stack sx={{ display: 'flex', flexDirection: 'row' }}>
+                              <FormControl variant="outlined">
+                                <TextField
+                                  fullWidth
+                                  label="Option"
+                                  name="value"
+                                  value={select.value}
+                                  onChange={(e) => handleChangeTypeOptions(e, i, index)}
+                                  // {...register('value')}
+                                  // error={Boolean(errors.title)}
+                                  // helperText={errors?.title?.message}
+                                />
+                              </FormControl>
+                              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <IconButton variant="contained" onClick={() => handleRemoveSelectOptionsFields(index)}>
+                                  <RemoveCircle />
+                                </IconButton>
+                              </div>
+                            </Stack>
+                          </Stack>
+                        ))}
+                      {service.type === 'radio' && (
+                        <Grid item xs={12} md={6} sx={{ marginTop: 2 }}>
+                          <IconButton variant="contained" onClick={handleAddSelectOptionsFields}>
+                            <AddCircle />
+                          </IconButton>
+                        </Grid>
+                      )}
+
+                      {service.type === 'select' && (
+                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }} sx={{ mb: 2 }}>
+                          <FormControl variant="outlined" fullWidth>
+                            <TextField
+                              fullWidth
+                              name="config"
+                              select
+                              label="Is Multiple?"
+                              value={service.config.multiple}
+                              onChange={(e) => handleChangeFormSchema(e, index)}
+                              // {...register('validators')}
+                              // error={Boolean(errors.foreign_table)}
+                              // helperText={errors?.foreign_table?.message}
+                            >
+                              <MenuItem value>Yes</MenuItem>
+                              <MenuItem value={false}>No</MenuItem>
+                            </TextField>
+                          </FormControl>
+                        </Stack>
+                      )}
 
                       {service.type === 'select' && (
                         <Stack sx={{ mt: 2 }}>

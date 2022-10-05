@@ -18,13 +18,21 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
-  Radio
+  Radio,
+  Paper,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Table
 } from '@material-ui/core';
 import { AddCircle, RemoveCircle, Send } from '@material-ui/icons';
 // utils
 // routes
 import CreateService from '../../../_apis_/auth/service';
 import { PATH_DASHBOARD } from '../../../routes/paths';
+import CommandAccessMoreMenu from '../user/list/CommandAccessMoreMenu';
 //
 
 // ----------------------------------------------------------------------
@@ -38,6 +46,9 @@ export default function ServiceNewForm({ isEdit, currentService }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
+  const [workflow, setWorkFlow] = useState('');
+  const [indextoEdit, setIndexToEdit] = useState(null);
+  const [editWorkFlow, setEditWorkFlow] = useState(false);
 
   const [serviceOptions, setServiceOptions] = useState([
     {
@@ -68,17 +79,13 @@ export default function ServiceNewForm({ isEdit, currentService }) {
       }
     }
   ]);
-  const [workFlowOptions, setWorkFlowOptions] = useState([
-    {
-      approvalWorkFlow: ''
-    }
-  ]);
+
   const [selectOptions, setSelectOptions] = useState([
     {
       value: ''
     }
   ]);
-  const [approvalWorkFlow, setApprovalWorkFlow] = useState([]);
+  const [workfFlows, setWorkFlows] = useState([]);
 
   const { enqueueSnackbar } = useSnackbar();
   const handleRemoveFields = (index) => {
@@ -120,21 +127,32 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     });
     setServiceOptions(values);
   };
-  const handleRemoveWorkFlowFields = (index) => {
-    const values = [...workFlowOptions];
 
-    if (values.length > 1) {
-      values.splice(index, 1);
-      setWorkFlowOptions(values);
+  const handleAddWorkFlow = () => {
+    if (workflow.length > 0) {
+      if (editWorkFlow) {
+        workfFlows[indextoEdit] = workflow;
+        setWorkFlows(workfFlows);
+        setEditWorkFlow(false);
+      } else {
+        const newValue = [...workfFlows];
+
+        newValue.push(workflow);
+        setWorkFlows(newValue);
+      }
+      setWorkFlow('');
     }
   };
-  const handleAddWorkFlowFields = () => {
-    const values = [...workFlowOptions];
-    values.push({
-      approvalWorkFlow: ''
-    });
-    setWorkFlowOptions(values);
+  const deleteField = (index) => {
+    const filter = workfFlows.filter((val, idx) => index !== idx);
+    setWorkFlows(filter);
   };
+  const editField = (field, index) => {
+    setEditWorkFlow(true);
+    setWorkFlow(field);
+    setIndexToEdit(index);
+  };
+
   const handleRemoveSelectOptionsFields = (index) => {
     const values = [...selectOptions];
 
@@ -151,12 +169,6 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     setSelectOptions(values);
   };
 
-  const handleChangeWorkflow = (editorState, index) => {
-    const values = [...workFlowOptions];
-    values[index].approvalWorkFlow = editorState;
-    const newValue = values.map((val) => val.approvalWorkFlow);
-    setApprovalWorkFlow([...newValue]);
-  };
   const handleChangeTypeOptions = (editorState, i, index) => {
     const values = [...selectOptions];
     const { name, value } = editorState.target;
@@ -209,10 +221,9 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     }));
     const newValue = {
       name,
-      approvalWorkFlow,
+      approvalWorkFlow: workfFlows,
       formSchema: newServiceOptions
     };
-
     setLoading(true);
     try {
       await CreateService(newValue);
@@ -255,35 +266,63 @@ export default function ServiceNewForm({ isEdit, currentService }) {
               <Box>
                 Approval WorkFlow (<small>This is the approval workflow of the service</small>)
               </Box>
-              {workFlowOptions &&
-                workFlowOptions.map((workflow, index) => (
-                  <Grid key={index} sx={{ display: 'flex' }}>
-                    <Grid item md={10} spacing={{ xs: 3, sm: 2 }}>
-                      <TextField
-                        fullWidth
-                        sx={{ width: '100%', flex: 1 }}
-                        label="Approval Work flow"
-                        onChange={(state) => handleChangeWorkflow(state.target.value, index)}
-                        // {...register('approvalWorkFlow')}
-                        // error={Boolean(touched.apNumber && errors.apNumber)}
-                        // helperText={touched.apNumber && errors.apNumber}
-                      />
-                    </Grid>
-                    <Grid item md={2} sx={{ display: 'flex', alignItems: 'center' }}>
-                      <IconButton variant="contained" onClick={() => handleRemoveWorkFlowFields(index)}>
-                        <RemoveCircle />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                ))}
+              <Grid sx={{ display: 'flex' }}>
+                <Grid item md={10} spacing={{ xs: 3, sm: 2 }}>
+                  <TextField
+                    fullWidth
+                    sx={{ width: '100%', flex: 1 }}
+                    label="Approval Work flow"
+                    value={workflow}
+                    onChange={(state) => setWorkFlow(state.target.value)}
+                    // {...register('approvalWorkFlow')}
+                    // error={Boolean(touched.apNumber && errors.apNumber)}
+                    // helperText={touched.apNumber && errors.apNumber}
+                  />
+                </Grid>
+              </Grid>
+
               <Grid item xs={12} md={6} sx={{ marginTop: 2 }}>
-                <Button variant="contained" startIcon={<AddCircle />} onClick={handleAddWorkFlowFields}>
-                  Add Field
+                <Button variant="contained" startIcon={<AddCircle />} onClick={handleAddWorkFlow}>
+                  {editWorkFlow ? 'Edit Field' : 'Add Field'}
                 </Button>
               </Grid>
             </Stack>
           </Card>
         </Grid>
+        {workfFlows.length > 0 ? (
+          <Grid container spacing={3}>
+            <Grid item>
+              <Card sx={{ p: 2, pb: 5, margin: '10px 0' }}>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>WorkFlow</TableCell>
+
+                        <TableCell>Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {workfFlows.map((row, index) => (
+                        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableCell>{row}</TableCell>
+
+                          <TableCell>
+                            {/* <WorkFlowMoreMenu onDelete={() => deleteField(index)} onEdit={() => editField(row)} /> */}
+                            <CommandAccessMoreMenu
+                              onDelete={() => deleteField(index)}
+                              onEdit={() => editField(row, index)}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Card>
+            </Grid>
+          </Grid>
+        ) : null}
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3, pb: 10 }}>
             <Stack spacing={3}>

@@ -61,14 +61,20 @@ const sidebarConfig = [
       {
         title: 'Police Requests',
 
-        path: PATH_DASHBOARD.services.root,
-        icon: ICONS.booking,
-        children: [
-          { title: 'Extract', path: PATH_DASHBOARD.services.extract, canView: 'officer' },
-          { title: 'Character Certificate', path: PATH_DASHBOARD.services.clearance, canView: 'officer' },
-          { title: 'E & G Services', path: PATH_DASHBOARD.services.guard, canView: 'officer' }
-        ]
+        path: PATH_DASHBOARD.services.policeRequests,
+        icon: ICONS.booking
       },
+      // {
+      //   title: 'Police Requests',
+
+      //   path: PATH_DASHBOARD.services.root,
+      //   icon: ICONS.booking,
+      //   children: [
+      //     { title: 'Extract', path: PATH_DASHBOARD.services.extract, canView: 'officer' },
+      //     { title: 'Character Certificate', path: PATH_DASHBOARD.services.clearance, canView: 'officer' },
+      //     { title: 'E & G Services', path: PATH_DASHBOARD.services.guard, canView: 'officer' }
+      //   ]
+      // },
       {
         title: 'user',
 

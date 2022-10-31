@@ -44,7 +44,14 @@ function union(a, b) {
   return [...a, ...not(b, a)];
 }
 
-export default function OfficerWorkFlow({ services, dialogOpen, setDialogOpen, workflowState, setWorkflowState }) {
+export default function OfficerWorkFlow({
+  services,
+  dialogOpen,
+  setDialogOpen,
+  workflowState,
+  setWorkflowState,
+  servicesList
+}) {
   const [checked, setChecked] = React.useState([]);
   const [extractChecked, setextractChecked] = useState(Array(POLICEEXTRACTAPPROVALS.length).fill(false));
   const [ccertChecked, setccertChecked] = useState(Array(CCAPPROVALS.length).fill(false));
@@ -74,20 +81,20 @@ export default function OfficerWorkFlow({ services, dialogOpen, setDialogOpen, w
   //   setCheck(allCheck);
   // };
 
-  const [workflowData, setWorkflowData] = useState({
-    'POLICE EXTRACT': [],
-    'POLICE CHARACTER CERTIFICATE': [],
-    'ESCORT AND GUARD SERVICES': []
-  });
+  const [workflowData, setWorkflowData] = useState({});
 
   const handleChildChange = (event, record, index, setCheck, service, name) => {
     record[index] = event.target.checked;
     setCheck(record);
     console.log(record);
     setWorkflowData((previous) => {
-      const array3 = record[index] ? [...previous[service], ...[name]] : previous[service].filter((e) => e !== name);
       const updated = previous;
-      updated[service] = array3;
+      if (Object.keys(previous).length === 0) {
+        updated[service] = [name];
+      } else {
+        const array3 = record[index] ? [...previous[service], ...[name]] : previous[service].filter((e) => e !== name);
+        updated[service] = array3;
+      }
       return updated;
     });
   };
@@ -100,13 +107,13 @@ export default function OfficerWorkFlow({ services, dialogOpen, setDialogOpen, w
 
   const children = (lists, record, setCheck, service) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', ml: 3 }}>
-      {lists.map((ls, i) => (
+      {lists?.map((ls, i) => (
         <FormControlLabel
           key={`${ls}-${i}`}
           label={ls}
           control={
             <Checkbox
-              defaultChecked={workflowData[service].includes(ls)}
+              defaultChecked={workflowData[service]?.includes(ls)}
               onChange={(evt) => handleChildChange(evt, record, i, setCheck, service, ls)}
             />
           }
@@ -115,31 +122,24 @@ export default function OfficerWorkFlow({ services, dialogOpen, setDialogOpen, w
     </Box>
   );
 
+  console.log(servicesList);
+
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
       {services &&
-        services.map((s, i) => (
-          <Grid key={`${s}-${i}`} container spacing={3}>
-            {s === 'POLICE EXTRACT' && (
-              <Grid item xs={12} md={12} sx={{ margin: 3 }}>
-                <Box>{s}</Box>
-                {children(POLICEEXTRACTAPPROVALS, extractChecked, setextractChecked, s)}
+        servicesList.map((s, i) => {
+          if (services.includes(s.name)) {
+            return (
+              <Grid key={`${s.name}-${i}`} container spacing={3}>
+                <Grid item xs={12} md={12} sx={{ margin: 3 }}>
+                  <Box>{s.name}</Box>
+                  {children(s.approvalWorkFlow, extractChecked, setextractChecked, s.name)}
+                </Grid>
               </Grid>
-            )}
-            {s === 'POLICE CHARACTER CERTIFICATE' && (
-              <Grid item xs={12} md={12} sx={{ margin: 3 }}>
-                <Box>{s}</Box>
-                {children(CCAPPROVALS, ccertChecked, setccertChecked, s)}
-              </Grid>
-            )}
-            {s === 'ESCORT AND GUARD SERVICES' && (
-              <Grid item xs={12} md={12} sx={{ margin: 3 }}>
-                <Box>{s}</Box>
-                {children(POLICEEXTRACTAPPROVALS, eGSChecked, seteGSChecked, s)}
-              </Grid>
-            )}
-          </Grid>
-        ))}
+            );
+          }
+          return <></>;
+        })}
       <Grid item xs={12} md={12} sx={{ mt: 5, mb: 3, margin: 2 }}>
         <Button type="button" variant="contained" sx={{ width: 5 }} onClick={save}>
           Save

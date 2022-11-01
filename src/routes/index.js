@@ -83,6 +83,8 @@ export default function Router() {
         { path: '/', element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <GeneralApp /> },
         { path: 'reports', element: <Reports /> },
+        { path: 'police-requests', element: <PoliceRequests /> },
+        { path: 'police-requests/:id', element: <ViewServiceRequests /> },
         {
           path: 'reports',
           children: [
@@ -202,7 +204,8 @@ const Approval = Loadable(lazy(() => import('../pages/dashboard/Approval')));
 const ViewDetails = Loadable(lazy(() => import('../pages/dashboard/ViewDetails')));
 const ServiceList = Loadable(lazy(() => import('../pages/dashboard/ServiceList')));
 const ServiceCreate = Loadable(lazy(() => import('../pages/dashboard/ServiceCreate')));
-
+const PoliceRequests = Loadable(lazy(() => import('../pages/dashboard/PoliceRequests')));
+const ViewServiceRequests = Loadable(lazy(() => import('../pages/dashboard/ViewServiceRequests')));
 // Main
 const LandingPage = Loadable(lazy(() => import('../pages/LandingPage')));
 const About = Loadable(lazy(() => import('../pages/About')));

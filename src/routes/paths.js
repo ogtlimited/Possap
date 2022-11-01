@@ -47,6 +47,8 @@ export const PATH_DASHBOARD = {
     guard: path(ROOTS_DASHBOARD, '/reports/guard-services')
   },
   services: {
+    policeRequests: path(ROOTS_DASHBOARD, '/police-requests'),
+    ViewServiceRequests: path(ROOTS_DASHBOARD, '/police-requests/:id'),
     root: path(ROOTS_DASHBOARD, '/requests'),
     extract: path(ROOTS_DASHBOARD, '/requests/police-extract'),
     clearance: path(ROOTS_DASHBOARD, '/requests/character-certificate'),

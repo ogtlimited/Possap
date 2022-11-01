@@ -191,7 +191,7 @@ export default function PoliceRequests() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <RequestMenu serviceName={name} />
+                          <RequestMenu serviceName={id} />
                         </TableCell>
                       </TableRow>
                     );

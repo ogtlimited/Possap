@@ -9,7 +9,7 @@ export const TACTICALPATH = '/api/v1/eag/tactical-squad';
 export const ALLESCORTSANDSERVICES = '/api/v1/eag';
 export const ALLPOLICEEXTRACTS = '/api/v1/police-extracts/officers-extracts';
 export const ALLCHARACTERCERTIFICATES = '/api/v1/police-character-certificate/officers-pcc';
-export const POLICEREQUESTS = '/api/v1/police-requests';
+export const POLICEREQUESTS = '/api/v1/possap-service-fields';
 
 export const PCC = '/api/v1/police-character-certificate/';
 

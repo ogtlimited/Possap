@@ -37,10 +37,12 @@ import usePoliceRequests from '../../db/usePoliceRequests';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'service_category', label: 'Service Category', alignRight: false },
-  { id: 'id', label: 'File Number', alignRight: false },
-  { id: 'state', label: 'state', alignRight: false },
+  { id: 'fullName', label: 'Applicant', alignRight: false },
+  { id: 'state', label: 'State', alignRight: false },
+  { id: 'ref', label: 'Reference ID', alignRight: false },
+  { id: 'name', label: 'Name of Service', alignRight: false },
+  { id: 'approvalLevel', label: 'Approval Level', alignRight: false },
+  { id: 'approvingOfficers', label: 'Approving Officers', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' }
 ];
@@ -88,6 +90,10 @@ export default function ViewServiceRequests() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const { id } = useParams();
   const { data, error, isFetching } = usePoliceRequests(id);
+
+  if (!isFetching) {
+    console.log({ data });
+  }
 
   if (isFetching) {
     return 'Loading...';
@@ -176,11 +182,13 @@ export default function ViewServiceRequests() {
                 <TableBody>
                   {filteredRequests?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                     const {
-                      extract_category,
+                      ref,
+                      service: { name },
+                      approvalLevel,
+                      approvingOfficers,
+                      owner: { fullName, state },
                       status,
-                      extract_police_division_state,
-                      id,
-                      user: { fullName }
+                      formFields
                     } = row;
                     const isItemSelected = selected.indexOf(fullName) !== -1;
 
@@ -204,9 +212,11 @@ export default function ViewServiceRequests() {
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{extract_category}</TableCell>
-                        <TableCell align="left">{id}</TableCell>
-                        <TableCell align="left">{extract_police_division_state}</TableCell>
+                        <TableCell align="left">{state}</TableCell>
+                        <TableCell align="left">{ref}</TableCell>
+                        <TableCell align="left">{name}</TableCell>
+                        <TableCell align="left">{approvalLevel}</TableCell>
+                        <TableCell align="left">{approvingOfficers}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
@@ -217,7 +227,7 @@ export default function ViewServiceRequests() {
                         </TableCell>
 
                         <TableCell align="right">
-                          <ServicesMoreMenu serviceData={row} context="extract" />
+                          <ServicesMoreMenu serviceData={row} formFields={formFields} />
                         </TableCell>
                       </TableRow>
                     );

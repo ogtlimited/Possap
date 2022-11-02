@@ -159,7 +159,7 @@ export default function ViewServiceRequests() {
           heading={`Police ${id}`}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'Request', href: PATH_DASHBOARD.services.root },
+            { name: 'Request', href: PATH_DASHBOARD.services.policeRequests },
             { name: `${id}` }
           ]}
         />

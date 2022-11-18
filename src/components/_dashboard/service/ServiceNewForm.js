@@ -204,6 +204,19 @@ export default function ServiceNewForm({ isEdit, currentService }) {
 
     setServiceOptions(values);
   };
+
+  function createSlug(name) {
+    const val = name.split(' ');
+    if (val.length === 1) {
+      const newString = val[0].substring(0, 3);
+
+      return newString.toUpperCase();
+    }
+    const newString = val.map((v) => v.substring(0, 1)).join('');
+
+    return newString.toUpperCase();
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault();
     const newServiceOptions = serviceOptions.map((service) => ({
@@ -222,7 +235,8 @@ export default function ServiceNewForm({ isEdit, currentService }) {
     const newValue = {
       name,
       approvalWorkFlow: workfFlows,
-      formSchema: newServiceOptions
+      formSchema: newServiceOptions,
+      slug: createSlug(name)
     };
     setLoading(true);
     try {

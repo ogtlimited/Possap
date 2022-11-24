@@ -107,9 +107,9 @@ export default function Payment() {
               <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}> */}
             <Grid p={2} container spacing={upMd ? 5 : 2}>
               <Grid item xs={12} md={7}>
-                {values.serviceType === sTypes[0] ? (
+                {values.serviceType === 'PE' ? (
                   <PoliceExtractForm setStep={setStep} parentValues={values} />
-                ) : values.serviceType === sTypes[1] ? (
+                ) : values.serviceType === 'PCC' ? (
                   <CharacterCertForm setStep={setStep} parentValues={values} />
                 ) : values.serviceType === sTypes[2] ? (
                   <EGForm setStep={setStep} parentValues={values} />

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import plusFill from '@iconify/icons-eva/plus-fill';
 import checkmarkCircle2Fill from '@iconify/icons-eva/checkmark-circle-2-fill';
 // material
@@ -18,6 +18,8 @@ import {
   FormControlLabel
 } from '@material-ui/core';
 //
+import useServicesData from '../../../db/useGetService';
+import { GetServices } from '../../../_apis_/auth/service';
 import ScrollToTop from "../../ScrollToTop";
 import { MHidden } from '../../@material-extend';
 import PaymentNewCardForm from '../payment/PaymentNewCardForm';
@@ -26,20 +28,22 @@ import PaymentNewCardForm from '../payment/PaymentNewCardForm';
 
 const SERVICE_OPTIONS = [
   {
-    value: 'character-certificate',
-    title: 'character certificate',
-    icons: ['/static/icons/certificate.svg']
+    // value: 'character-certificate',
+    // title: 'character certificate',
+    icons: ['/static/icons/certificate.svg'],
+    slug: 'PCC'
   },
   {
-    value: 'police-extract',
-    title: 'Police Extract',
-    icons: ['/static/icons/extract.svg']
+    // value: 'police-extract',
+    // title: 'Police Extract',
+    icons: ['/static/icons/extract.svg'],
+    slug: 'PE',
   },
-  {
-    value: 'escort-and-guard-services',
-    title: 'Escort and Guard Services',
-    icons: ['/static/icons/guard.svg']
-  }
+  // {
+  //   value: 'escort-and-guard-services',
+  //   title: 'Escort and Guard Services',
+  //   icons: ['/static/icons/guard.svg']
+  // }
 ];
 const GUARD_OPTIONS = [
   {
@@ -109,6 +113,8 @@ SelectService.propTypes = {
 
 export default function SelectService({ formik }) {
   const [show, setShow] = useState(false);
+  const [services, setServices] = useState([]);
+  const res = useServicesData();
   const { values, getFieldProps } = formik;
   const handleCollapseIn = () => {
     setShow((prev) => !prev);
@@ -118,6 +124,25 @@ export default function SelectService({ formik }) {
     setShow(false);
   };
 
+
+  useEffect(() => {
+    if (!res.isFetching) {
+      const array = res?.data?.data.data;
+      const options = SERVICE_OPTIONS.map((s) => {
+        const farray = array.filter((a) => s.slug === a.slug)[0];
+        if(farray) {
+          return {
+            ...s, title: farray.name, value: farray.id  
+          }
+        }
+        return s;
+      })
+      setServices(options);
+      console.log(options);
+    }
+   
+  }, [res]);
+
   return (
     <RootStyle>
       <Typography variant="subtitle1" sx={{ mb: 5 }}>
@@ -125,8 +150,8 @@ export default function SelectService({ formik }) {
       </Typography>
       <RadioGroup {...getFieldProps('serviceType')}>
         <Stack spacing={3}>
-          {SERVICE_OPTIONS.map((method) => {
-            const { value, title, icons } = method;
+          {services.map((method) => {
+            const {value, title, icons, slug } = method;
             const hasChildren = value === 'escort-and-guard-services';
 
             return (
@@ -140,7 +165,7 @@ export default function SelectService({ formik }) {
                 }}
               >
                 <FormControlLabel
-                  value={value}
+                  value={slug}
                   control={<Radio checkedIcon={<Icon icon={checkmarkCircle2Fill} />} />}
                   label={
                     <Typography variant="subtitle2" sx={{ ml: 1 }}>

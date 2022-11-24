@@ -89,7 +89,7 @@ export default function CharacterCertForm({ setStep, parentValues }) {
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
         const response = await mutation.mutateAsync(values);
-        console.log(response);
+        console.log('92', response);
         const redirectPath = `/services/invoice/2?requestID=${response.data.data.createPoliceCertificate.id}`;
         console.log(redirectPath);
         navigate(redirectPath);

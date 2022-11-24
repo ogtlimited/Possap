@@ -52,7 +52,7 @@ const MenuProps = {
 };
 // ----------------------------------------------------------------------
 
-export default function PoliceExtractForm({ parentValues, setStep }) {
+export default function PoliceExtractForm({ parentValues, setStep, serviceId }) {
   const isMountedRef = useIsMountedRef();
   const { user } = useAuth();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -105,10 +105,14 @@ export default function PoliceExtractForm({ parentValues, setStep }) {
     validationSchema: PoliceSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        const response = await mutation.mutateAsync(values);
+        const newValue = {
+          service: serviceId,
+          formFields: [values]
+        };
+        const response = await mutation.mutateAsync(newValue);
 
         // REDIREECT TO services/invoice/1?requestID=1
-        const redirectPath = `services/invoice/1?requestID=${response.data.data.createPoliceExtract.id}`;
+        const redirectPath = `services/invoice/1?requestID=${response.data.data.id}`;
         <Navigate to={redirectPath} />;
 
         enqueueSnackbar('Police extract created successfully', {

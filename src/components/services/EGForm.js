@@ -33,7 +33,7 @@ import ScrollToTop from '../ScrollToTop';
 
 // ----------------------------------------------------------------------
 
-export default function EGForm({ parentValues, setStep }) {
+export default function EGForm({ parentValues, setStep, serviceId }) {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
@@ -79,8 +79,12 @@ export default function EGForm({ parentValues, setStep }) {
     // validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
+        const newValue = {
+          service: serviceId,
+          formFields: [values]
+        };
         mutation.mutate(
-          { ...parentValues, ...values },
+          { ...parentValues, ...newValue },
           {
             onSuccess: (data) => {
               const redirectPath = `/services/invoice/3?requestID=${data.data.data.id}`;

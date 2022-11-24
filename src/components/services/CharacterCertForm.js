@@ -43,7 +43,7 @@ import { countries } from './countries';
 import ScrollToTop from '../ScrollToTop';
 // ----------------------------------------------------------------------
 
-export default function CharacterCertForm({ setStep, parentValues }) {
+export default function CharacterCertForm({ setStep, parentValues, serviceId }) {
   const isMountedRef = useIsMountedRef();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -88,10 +88,15 @@ export default function CharacterCertForm({ setStep, parentValues }) {
     validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        const response = await mutation.mutateAsync(values);
-        console.log('92', response);
-        const redirectPath = `/services/invoice/2?requestID=${response.data.data.createPoliceCertificate.id}`;
-        console.log(redirectPath);
+        const newValue = {
+          service: serviceId,
+          formFields: [values]
+        };
+
+        const response = await mutation.mutateAsync(newValue);
+
+        const redirectPath = `/services/invoice/2?requestID=${response.data.data.id}`;
+
         navigate(redirectPath);
         enqueueSnackbar('Form submitted success', {
           variant: 'success',

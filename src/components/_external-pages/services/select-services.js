@@ -20,7 +20,7 @@ import {
 //
 import useServicesData from '../../../db/useGetService';
 import { GetServices } from '../../../_apis_/auth/service';
-import ScrollToTop from "../../ScrollToTop";
+import ScrollToTop from '../../ScrollToTop';
 import { MHidden } from '../../@material-extend';
 import PaymentNewCardForm from '../payment/PaymentNewCardForm';
 
@@ -37,8 +37,8 @@ const SERVICE_OPTIONS = [
     // value: 'police-extract',
     // title: 'Police Extract',
     icons: ['/static/icons/extract.svg'],
-    slug: 'PE',
-  },
+    slug: 'PE'
+  }
   // {
   //   value: 'escort-and-guard-services',
   //   title: 'Escort and Guard Services',
@@ -83,8 +83,7 @@ const SUBCATEGORY_OPTIONS = [
   {
     value: 'Traditional Rulers',
     label: 'Traditional Rulers'
-  },
-  
+  }
 ];
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -116,6 +115,7 @@ export default function SelectService({ formik }) {
   const [services, setServices] = useState([]);
   const res = useServicesData();
   const { values, getFieldProps } = formik;
+
   const handleCollapseIn = () => {
     setShow((prev) => !prev);
   };
@@ -123,25 +123,23 @@ export default function SelectService({ formik }) {
   const handleCollapseOut = () => {
     setShow(false);
   };
-
-
   useEffect(() => {
     if (!res.isFetching) {
       const array = res?.data?.data.data;
       const options = SERVICE_OPTIONS.map((s) => {
         const farray = array.filter((a) => s.slug === a.slug)[0];
-        if(farray) {
+        if (farray) {
           return {
-            ...s, title: farray.name, value: farray.id  
-          }
+            ...s,
+            title: farray.name,
+            value: farray.id
+          };
         }
         return s;
-      })
+      });
       setServices(options);
-      console.log(options);
     }
-   
-  }, [res]);
+  }, [res?.data?.data.data, res.isFetching]);
 
   return (
     <RootStyle>
@@ -151,7 +149,7 @@ export default function SelectService({ formik }) {
       <RadioGroup {...getFieldProps('serviceType')}>
         <Stack spacing={3}>
           {services.map((method) => {
-            const {value, title, icons, slug } = method;
+            const { value, title, icons, slug } = method;
             const hasChildren = value === 'escort-and-guard-services';
 
             return (

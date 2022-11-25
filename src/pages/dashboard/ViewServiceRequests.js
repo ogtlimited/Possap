@@ -3,7 +3,7 @@
 import { filter, identity } from 'lodash';
 import { sentenceCase } from 'change-case';
 import { useState } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { Link as RouterLink, useParams, useLocation } from 'react-router-dom';
 // material
 import { useTheme } from '@material-ui/core/styles';
 import {
@@ -90,10 +90,13 @@ export default function ViewServiceRequests() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const { id } = useParams();
   const { data, error, isFetching } = usePoliceRequests(id);
+  const {
+    state: { name }
+  } = useLocation();
 
-  if (!isFetching) {
-    console.log({ data });
-  }
+  // if (!isFetching) {
+  //   console.log({ data });
+  // }
 
   if (isFetching) {
     return 'Loading...';
@@ -153,14 +156,14 @@ export default function ViewServiceRequests() {
   const isUserNotFound = filteredRequests?.length === 0;
 
   return (
-    <Page title={`Police ${id} | Possap`}>
+    <Page title={` ${name} | Possap`}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={`Police ${id}`}
+          heading={` ${name}`}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'Request', href: PATH_DASHBOARD.services.policeRequests },
-            { name: `${id}` }
+            { name: `${name}` }
           ]}
         />
 
@@ -186,11 +189,11 @@ export default function ViewServiceRequests() {
                       service: { name },
                       approvalLevel,
                       approvingOfficers,
-                      owner: { fullName, state },
+                      owner,
                       status,
                       formFields
                     } = row;
-                    const isItemSelected = selected.indexOf(fullName) !== -1;
+                    const isItemSelected = selected.indexOf(owner?.fullName) !== -1;
 
                     return (
                       <TableRow
@@ -202,21 +205,24 @@ export default function ViewServiceRequests() {
                         aria-checked={isItemSelected}
                       >
                         <TableCell padding="checkbox">
-                          <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, fullName)} />
+                          <Checkbox
+                            checked={isItemSelected}
+                            onChange={(event) => handleClick(event, owner?.fullName)}
+                          />
                         </TableCell>
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={fullName} src="" />
+                            <Avatar alt={owner?.fullName} src="" />
                             <Typography variant="subtitle2" noWrap>
-                              {fullName}
+                              {owner?.fullName || 'Not Available'}
                             </Typography>
                           </Stack>
                         </TableCell>
-                        <TableCell align="left">{state}</TableCell>
+                        <TableCell align="left">{owner?.state || 'Not Available'}</TableCell>
                         <TableCell align="left">{ref}</TableCell>
                         <TableCell align="left">{name}</TableCell>
                         <TableCell align="left">{approvalLevel}</TableCell>
-                        <TableCell align="left">{approvingOfficers}</TableCell>
+                        <TableCell align="left">{approvingOfficers || 'Not Available'}</TableCell>
                         <TableCell align="left">
                           <Label
                             variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}

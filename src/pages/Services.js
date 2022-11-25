@@ -8,6 +8,8 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import { useTheme, styled } from '@material-ui/core/styles';
 import { Box, Card, Grid, Container, Typography, useMediaQuery, Button } from '@material-ui/core';
 // utils
+import useServicesData from '../db/useGetService';
+
 import ServiceForm from '../components/services/services-form';
 import fakeRequest from '../utils/fakeRequest';
 // components
@@ -34,6 +36,7 @@ export default function Payment() {
   const { enqueueSnackbar } = useSnackbar();
   const theme = useTheme();
   const { user, isAuthenticated } = useAuth();
+  const [serviceId, setServiceId] = useState(null);
   const { handleFormChange } = useServiceForm();
   const [initialValues, setinitialValues] = useState({
     originState: user?.state,
@@ -67,7 +70,16 @@ export default function Payment() {
     }
   });
   const { values, errors, isSubmitting } = formik;
+  const res = useServicesData();
 
+  useEffect(() => {
+    if (!res.isFetching) {
+      const array = res?.data?.data.data;
+      const getId = array.filter((arr) => arr.slug === values.serviceType);
+      setServiceId(getId[0]?.id);
+    }
+  }, [res?.data?.data.data, res.isFetching, values.serviceType]);
+  console.log({ serviceId });
   return (
     <RootStyle title="Request Service ">
       <Container maxWidth="lg">
@@ -107,12 +119,12 @@ export default function Payment() {
               <Form noValidate autoComplete="off" onSubmit={formik.handleSubmit}> */}
             <Grid p={2} container spacing={upMd ? 5 : 2}>
               <Grid item xs={12} md={7}>
-                {values.serviceType === sTypes[0] ? (
-                  <PoliceExtractForm setStep={setStep} parentValues={values} />
-                ) : values.serviceType === sTypes[1] ? (
-                  <CharacterCertForm setStep={setStep} parentValues={values} />
+                {values.serviceType === 'PE' ? (
+                  <PoliceExtractForm setStep={setStep} parentValues={values} serviceId={serviceId} />
+                ) : values.serviceType === 'PCC' ? (
+                  <CharacterCertForm setStep={setStep} parentValues={values} serviceId={serviceId} />
                 ) : values.serviceType === sTypes[2] ? (
-                  <EGForm setStep={setStep} parentValues={values} />
+                  <EGForm setStep={setStep} parentValues={values} serviceId={serviceId} />
                 ) : (
                   []
                 )}

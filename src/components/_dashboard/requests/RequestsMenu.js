@@ -12,15 +12,16 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
 RequestMenu.propTypes = {
-  serviceName: PropTypes.string
+  serviceName: PropTypes.string,
+  name: PropTypes.string
 };
 
-export default function RequestMenu({ serviceName }) {
+export default function RequestMenu({ serviceName, name }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const handleClickOpen = () => {
-    navigate(`${PATH_DASHBOARD.services.policeRequests}/${serviceName}`);
+    navigate(`${PATH_DASHBOARD.services.policeRequests}/${serviceName}`, { state: { name } });
   };
 
   return (

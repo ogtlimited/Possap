@@ -8,7 +8,7 @@ import { LoadingButton } from '@material-ui/lab';
 import axiosInstance from '../../utils/auth-fetch';
 import { PATH_DASHBOARD } from '../../routes/paths';
 import getUrlString from '../../utils/get-url-string';
-import { PCC, ALLESCORTSANDSERVICES, ALLPOLICEEXTRACTS } from '../../constants/api-routes';
+import { PCC, ALLESCORTSANDSERVICES, ALLPOLICEEXTRACTS, POLICEREQUESTS } from '../../constants/api-routes';
 
 ViewDetailsBody.propTypes = {
   data: PropTypes.object,
@@ -27,15 +27,15 @@ export default function ViewDetailsBody({ data, context }) {
   let title = '';
   switch (context) {
     case 'pcc':
-      mainUrl = getUrlString(PCC);
+      mainUrl = getUrlString(POLICEREQUESTS);
       title = 'CHARACTER CERTIFICATE';
       break;
     case 'eag':
-      mainUrl = getUrlString(ALLESCORTSANDSERVICES);
+      mainUrl = getUrlString(POLICEREQUESTS);
       title = 'ESCORT AND GUARD SERVICES';
       break;
     case 'extract':
-      mainUrl = getUrlString(ALLPOLICEEXTRACTS);
+      mainUrl = getUrlString(POLICEREQUESTS);
       title = 'EXTRACT';
       break;
 

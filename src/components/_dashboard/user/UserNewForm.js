@@ -240,6 +240,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       // approvalLevel: currentUser?.approvalLevel || '',
       // avatarUrl: currentUser?.avatarUrl || null,
       commandAccessIds: [],
+      canAccess: [],
       status: currentUser?.status,
       password: currentUser?.password || ''
     },
@@ -591,11 +592,11 @@ export default function UserNewForm({ isEdit, currentUser }) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {values.access.services.map((row, index) => (
+                      {values.access.services?.map((row, index) => (
                         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                           <TableCell>{row}</TableCell>
                           <TableCell>
-                            {officerWorkflowData[row].map(
+                            {officerWorkflowData[row]?.map(
                               (i, index) => `${i}${officerWorkflowData[row].length === index + 1 ? '' : ', '}`
                             )}
                           </TableCell>

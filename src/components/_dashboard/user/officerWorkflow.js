@@ -53,7 +53,7 @@ export default function OfficerWorkFlow({
   servicesList
 }) {
   const [checked, setChecked] = React.useState([]);
-  const [extractChecked, setextractChecked] = useState(Array(POLICEEXTRACTAPPROVALS.length).fill(false));
+  const [extractChecked, setextractChecked] = useState([]);
   const [ccertChecked, setccertChecked] = useState(Array(CCAPPROVALS.length).fill(false));
   const [eGSChecked, seteGSChecked] = useState(Array(POLICEEXTRACTAPPROVALS.length).fill(false));
 
@@ -86,10 +86,9 @@ export default function OfficerWorkFlow({
   const handleChildChange = (event, record, index, setCheck, service, name) => {
     record[index] = event.target.checked;
     setCheck(record);
-    console.log(record);
     setWorkflowData((previous) => {
       const updated = previous;
-      if (Object.keys(previous).length === 0) {
+      if (Object.keys(previous).length === 0 || !previous[service]) {
         updated[service] = [name];
       } else {
         const array3 = record[index] ? [...previous[service], ...[name]] : previous[service].filter((e) => e !== name);
@@ -121,8 +120,6 @@ export default function OfficerWorkFlow({
       ))}
     </Box>
   );
-
-  console.log(servicesList);
 
   return (
     <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>

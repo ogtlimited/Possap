@@ -235,12 +235,12 @@ export default function UserNewForm({ isEdit, currentUser }) {
       access: {
         role: currentUser?.access?.role || '',
         accessType: currentUser?.access?.accessType || '',
-        services: currentUser?.access?.services || []
+        services: currentUser?.access?.services || [],
+        canApprove: currentUser?.access?.canApprove || []
       },
       // approvalLevel: currentUser?.approvalLevel || '',
       // avatarUrl: currentUser?.avatarUrl || null,
       commandAccessIds: [],
-      canAccess: [],
       status: currentUser?.status,
       password: currentUser?.password || ''
     },
@@ -275,6 +275,14 @@ export default function UserNewForm({ isEdit, currentUser }) {
     },
     [setFieldValue]
   );
+
+  const getCanApproveNames = (service) => {
+    const names = [];
+    values.access.canApprove.map((w) =>
+      names.push(service.workFlow[0].WorkFlowApprovalLevel.find((item) => item.id === w)?.name)
+    );
+    return names.join(', ');
+  };
 
   const [workflowOpen, setWorkflowOpen] = useState(false);
   const [officerWorkflowData, setOfficerWorkflowData] = useState();
@@ -545,19 +553,23 @@ export default function UserNewForm({ isEdit, currentUser }) {
                       {...getFieldProps('access.services')}
                       error={Boolean(touched.access?.services && errors.access?.services)}
                       helperText={touched.access?.services && errors.access?.services}
-                      renderValue={(selected) => selected.join(', ')}
+                      renderValue={(selected) => {
+                        const names = [];
+                        selected.map((s) => names.push(servicesList.find((item) => item.id === s)?.name));
+                        return names.join(', ');
+                      }}
                     >
-                      {servicesList?.map(({ name }) => (
+                      {servicesList?.map(({ name, id }) => (
                         <MenuItem
-                          key={name}
-                          value={name}
+                          key={id}
+                          value={id}
                           onClick={() => {
-                            if (!(values.access.services.indexOf(name) > -1)) {
+                            if (!(values.access.services.indexOf(id) > -1)) {
                               setWorkflowOpen(true);
                             }
                           }}
                         >
-                          <Checkbox checked={values.access.services.indexOf(name) > -1} />
+                          <Checkbox checked={values.access.services.indexOf(id) > -1} />
                           <ListItemText primary={name} />
                         </MenuItem>
                       ))}
@@ -574,6 +586,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
                       setDialogOpen={setWorkflowOpen}
                       workflowState={officerWorkflowData}
                       setWorkflowState={setOfficerWorkflowData}
+                      setFieldValue={setFieldValue}
                     />
                   ) : null}
                 </Stack>
@@ -592,16 +605,19 @@ export default function UserNewForm({ isEdit, currentUser }) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {values.access.services?.map((row, index) => (
-                        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                          <TableCell>{row}</TableCell>
-                          <TableCell>
-                            {officerWorkflowData[row]?.map(
-                              (i, index) => `${i}${officerWorkflowData[row].length === index + 1 ? '' : ', '}`
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {values.access.services?.map((row, index) =>
+                        servicesList.map((s, i) => {
+                          if (values.access.services.includes(s.id)) {
+                            return (
+                              <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableCell>{s.name}</TableCell>
+                                <TableCell>{getCanApproveNames(s)}</TableCell>
+                              </TableRow>
+                            );
+                          }
+                          return <></>;
+                        })
+                      )}
                     </TableBody>
                   </Table>
                   <LoadingButton type="button" variant="contained" onClick={() => setWorkflowOpen(true)}>

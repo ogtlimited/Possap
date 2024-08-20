@@ -2,26 +2,43 @@
   "root": true,
   "env": {
     "browser": true,
-    "node": true
+    "es2021": true
   },
+  "plugins": [
+    "perfectionist",
+    "unused-imports",
+    "prettier"
+  ],
   "extends": [
     "airbnb",
-    "prettier",
-    "plugin:jsx-a11y/recommended",
-    "plugin:react-hooks/recommended"
+    "airbnb/hooks",
+    "prettier"
   ],
-  "plugins": [
-    "prettier",
-    "react",
-    "react-hooks"
-  ],
-  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 8,
-    "requireConfigFile": false,
+    "ecmaVersion": "latest",
+    "sourceType": "module",
     "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
-      "impliedStrict": true
+      "jsx": true
+    }
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "alias": {
+        "map": [
+          [
+            "src",
+            "./src"
+          ]
+        ],
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".json"
+        ]
+      }
     }
   },
   "rules": {

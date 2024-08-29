@@ -1,42 +1,48 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Minimal UI ([Free version](https://free.minimals.cc/))
 
-## 1.install
+![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-### npm
+![preview](public/assets/images/minimal-free-preview.jpg)
 
-```
-npm i
-or
-npm i --legacy-peer-deps
-```
+> Free React Admin Dashboard made with Material-UI components and React + Vite.js.
 
-### yarn
+## Pages
 
-```
-yarn install
-```
+- [Dashboard](https://free.minimals.cc/)
+- [Users](https://free.minimals.cc/user)
+- [Products](https://free.minimals.cc/products)
+- [Blog](https://free.minimals.cc/blog)
+- [Sign in](https://free.minimals.cc/sign-in)
+- [Not found](https://free.minimals.cc/404)
 
-## 2.Start
+## Quick start
 
-```sh
-npm start
-or
-yarn start
-```
+- Clone the repo: `git clone https://github.com/minimal-ui-kit/material-kit-react.git`
+- Recommended: `Node.js v20.x`
+- **Install:** `npm i` or `yarn install`
+- **Start:** `npm run dev` or `yarn dev`
+- **Build:** `npm run build` or `yarn build`
+- Open browser: `http://localhost:3039`
 
-## 3.Build
+## Upgrade to PRO Version
 
-```sh
-npm run build or yarn build
-```
+| Minimal Free                | [Minimal Pro](https://material-ui.com/store/items/minimal-dashboard/)                                   |
+| :-------------------------- | :------------------------------------------------------------------------------------------------------ |
+| **6** Pages                 | **70+** Pages                                                                                           |
+| **Partial** theme customize | **Fully** theme customize                                                                               |
+| -                           | **Next.js** version                                                                                     |
+| -                           | **TypeScript** version (Standard Plus and Extended license)                                             |
+| -                           | Design **Figma** file (Standard Plus and Extended license)                                              |
+| -                           | Authentication with **Amplify**, **Auth0**, **JWT**, **Firebase** and **Supabase**                      |
+| -                           | Light/dark mode, right-to-left, form validation... ([+more components](https://minimals.cc/components)) |
+| -                           | Complete users flows                                                                                    |
+| -                           | 1 year of free updates / 6 months of technical support                                                  |
+| -                           | Learn more: [Package & license](https://docs.minimals.cc/package)                                       |
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## License
 
-The build is minified and the filenames include the hashes.<br>
+Distributed under the [MIT](https://github.com/minimal-ui-kit/minimal.free/blob/main/LICENSE.md) license.
 
-Your app is ready to be deployed.
+## Contact us
 
-## User Guide
-
-You can find detailed instructions on using Create React App and many tips in [its documentation](https://facebook.github.io/create-react-app/).
+Email: support@minimals.cc

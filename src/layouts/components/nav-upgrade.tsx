@@ -36,13 +36,13 @@ export function NavUpgrade({ sx, ...other }: StackProps) {
 
       <Box
         component="img"
-        alt="Minimal dashboard"
+        alt="POSSAP dashboard"
         src="/assets/illustrations/illustration-dashboard.webp"
         sx={{ width: 200, my: 2 }}
       />
 
       <Button
-        href="https://material-ui.com/store/items/minimal-dashboard/"
+        href="https://material-ui.com/store/items/POSSAP-dashboard/"
         target="_blank"
         variant="contained"
         color="inherit"

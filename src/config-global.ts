@@ -10,6 +10,6 @@ export type ConfigValue = {
 // ----------------------------------------------------------------------
 
 export const CONFIG: ConfigValue = {
-  appName: 'POSSAP UI',
+  appName: 'POSSAP App',
   appVersion: packageJson.version,
 };

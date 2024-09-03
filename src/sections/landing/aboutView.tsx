@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Box, Grid, List, ListItem, Typography } from '@mui/material'
+import { Box, List, ListItem, Typography } from '@mui/material'
 
 export default function AboutView() {
   return (
@@ -9,7 +9,7 @@ export default function AboutView() {
         <Typography variant="h4" textAlign="center">About</Typography>
       </Box>
 
-      <Box display="flex" flexDirection="column" gap={2} sx={{ padding: "20px", background: "white", width: "60%", margin: "30px auto", marginBottom: "30px", borderRadius: "10px"}}>
+      <Box display="flex" flexDirection="column" gap={2} sx={{ padding: "20px", background: "white", width: "60%", margin: "30px auto", borderRadius: "10px"}}>
         <Typography variant='h5' sx={{ textDecoration: "underline" }}>HISTORY OF THE NIGERIA POLICE FORCE</Typography>
         <Typography>
           The Nigeria Police Force (NPF) is the principal law enforcement agency in Nigeria. It has staff deployment across the 36 states of the country and the Federal Capital Territory (FCT). 

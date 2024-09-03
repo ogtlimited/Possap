@@ -14,6 +14,7 @@ import LandingPage from 'src/sections/landing/LandingPage';
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'));
+export const ValidateDocumentPage = lazy(() => import('src/pages/ValidateDocument'));
 
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
@@ -41,7 +42,8 @@ export function Router() {
       element: <LandingPageLayout />,
       children: [
         { path: '', element: <LandingPage /> },
-      ]
+        { path: 'p/validate-document', element: <ValidateDocumentPage /> },
+      ],
     },
     {
       path: 'dashboard',

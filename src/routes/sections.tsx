@@ -18,6 +18,7 @@ export const HomePage = lazy(() => import('src/pages/home'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const AboutPage = lazy(() => import('src/pages/about'));
 
 // ----------------------------------------------------------------------
 
@@ -41,6 +42,7 @@ export function Router() {
       element: <LandingPageLayout />,
       children: [
         { path: '', element: <LandingPage /> },
+        { path: '/p/about', element: <AboutPage /> },
       ]
     },
     {

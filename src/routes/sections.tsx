@@ -19,7 +19,13 @@ export const ValidateDocumentPage = lazy(() => import('src/pages/ValidateDocumen
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const RetrieveEmailPage = lazy(() => import('src/pages/retrieve-email'));
+export const SignUpPage = lazy(() => import('src/pages/sign-up'));
+export const ForgotPassword = lazy(() => import('src/pages/forgot-password'));
+export const ResetPassword = lazy(() => import('src/pages/reset-password'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const AboutPage = lazy(() => import('src/pages/about'));
+export const ContactPage = lazy(() => import('src/pages/contact'));
+export const OTPPage = lazy(() => import('src/pages/otp'));
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +50,8 @@ export function Router() {
       children: [
         { path: '', element: <LandingPage /> },
         { path: 'p/validate-document', element: <ValidateDocumentPage /> },
+        { path: '/p/about', element: <AboutPage /> },
+        { path: '/p/contact', element: <ContactPage /> },
       ],
     },
     {
@@ -73,6 +81,38 @@ export function Router() {
       element: (
         <AuthLayout>
           <RetrieveEmailPage />
+        </AuthLayout>
+      ),
+    },
+    {
+      path: 'otp',
+      element: (
+        <AuthLayout>
+          <OTPPage />
+        </AuthLayout>
+      ),
+    },
+    {
+      path: 'signup',
+      element: (
+        <AuthLayout>
+          <SignUpPage />
+        </AuthLayout>
+      ),
+    },
+    {
+      path: 'forgot-password',
+      element: (
+        <AuthLayout>
+          <ForgotPassword />
+        </AuthLayout>
+      ),
+    },
+    {
+      path: 'reset-password',
+      element: (
+        <AuthLayout>
+          <ResetPassword />
         </AuthLayout>
       ),
     },

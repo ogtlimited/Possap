@@ -1,110 +1,121 @@
-import { useState, useCallback } from 'react';
+import * as Yup from 'yup';
+import React, { useState } from 'react';
+import { Form, Field, Formik } from 'formik';
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
-import InputAdornment from '@mui/material/InputAdornment';
+import { LoadingButton } from '@mui/lab';
+import {
+  Box,
+  Link,
+  Stack,
+  Button,
+  Checkbox,
+  Container,
+  TextField,
+  IconButton,
+  Typography,
+  InputAdornment,
+  FormControlLabel,
+} from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { Iconify } from 'src/components/iconify';
 
-// ----------------------------------------------------------------------
+// Validation schema
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email('Invalid email').required('Email is required'),
+  password: Yup.string().required('Password is required'),
+});
 
-export function SignInView() {
+export const SignInView = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleSignIn = useCallback(() => {
-    router.push('/');
-  }, [router]);
-
-  const renderForm = (
-    <Box display="flex" flexDirection="column" alignItems="flex-end">
-      <TextField
-        fullWidth
-        name="email"
-        label="Email address"
-        defaultValue="hello@gmail.com"
-        InputLabelProps={{ shrink: true }}
-        sx={{ mb: 3 }}
-      />
-
-      <Link variant="body2" color="inherit" sx={{ mb: 1.5 }}>
-        Forgot password?
-      </Link>
-
-      <TextField
-        fullWidth
-        name="password"
-        label="Password"
-        defaultValue="@demo1234"
-        InputLabelProps={{ shrink: true }}
-        type={showPassword ? 'text' : 'password'}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-        sx={{ mb: 3 }}
-      />
-
-      <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        color="inherit"
-        variant="contained"
-        onClick={handleSignIn}
-      >
-        Sign in
-      </LoadingButton>
-    </Box>
-  );
-
   return (
-    <>
-      <Box gap={1.5} display="flex" flexDirection="column" alignItems="center" sx={{ mb: 5 }}>
-        <Typography variant="h5">Sign in</Typography>
-        <Typography variant="body2" color="text.secondary">
-          Don’t have an account?
-          <Link variant="subtitle2" sx={{ ml: 0.5 }}>
-            Get started
-          </Link>
+    <Container maxWidth="lg" style={{ marginTop: '10px' }}>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <img src="/assets/images/PossapLogo.svg" alt="Logo" style={{ width: 80, height: 'auto' }} />
+        <Typography variant="h3">Welcome</Typography>
+        <Typography variant="body2" color="textSecondary">
+          Enter your credentials
         </Typography>
       </Box>
-
-      {renderForm}
-
-      <Divider sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }}>
-        <Typography
-          variant="overline"
-          sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}
-        >
-          OR
+      <Formik
+        initialValues={{ email: '', password: '', rememberMe: false }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          console.log('Form Data', values);
+          router.push('/');
+        }}
+      >
+        {({ errors, touched }) => (
+          <Form>
+            <Box mt={3}>
+              <Field
+                as={TextField}
+                fullWidth
+                name="email"
+                label="Email"
+                variant="outlined"
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
+              />
+            </Box>
+            <Box mt={2}>
+              <Field
+                as={TextField}
+                fullWidth
+                name="password"
+                label="Password"
+                variant="outlined"
+                type={showPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <Iconify icon={showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
+              />
+            </Box>
+            <Stack direction={{ xs: 'column', sm: 'row' }} mt={2} spacing={{ xs: 1, sm: 1, md: 6 }}>
+              <FormControlLabel
+                control={<Field as={Checkbox} name="rememberMe" />}
+                label="Remember me"
+              />
+              <Box pt={0.9}>
+                <Link href="/retrieve-email" variant="body2">
+                  Retrieve Email
+                </Link>
+                <span> | </span>
+                <Link href="/forgot-password" variant="body2">
+                  Forgot Password?
+                </Link>
+              </Box>
+            </Stack>
+            <Box mt={3}>
+              <LoadingButton
+                fullWidth
+                size="large"
+                type="submit"
+                color="primary"
+                variant="contained"
+              >
+                Sign in
+              </LoadingButton>
+            </Box>
+          </Form>
+        )}
+      </Formik>
+      <Box mt={2} textAlign="center">
+        <Typography variant="body2" color="textSecondary">
+          Dont have an account? <Link href="/signup">Signup</Link>
         </Typography>
-      </Divider>
-
-      <Box gap={1} display="flex" justifyContent="center">
-        <IconButton color="inherit">
-          <Iconify icon="logos:google-icon" />
-        </IconButton>
-        <IconButton color="inherit">
-          <Iconify icon="eva:github-fill" />
-        </IconButton>
-        <IconButton color="inherit">
-          <Iconify icon="ri:twitter-x-fill" />
-        </IconButton>
       </Box>
-    </>
+    </Container>
   );
-}
+};

@@ -19,6 +19,9 @@ export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
 export const SignUpPage = lazy(() => import('src/pages/sign-up'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const AboutPage = lazy(() => import('src/pages/about'));
+export const ContactPage = lazy(() => import('src/pages/contact'));
+export const OTPPage = lazy(() => import('src/pages/otp'));
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +45,8 @@ export function Router() {
       element: <LandingPageLayout />,
       children: [
         { path: '', element: <LandingPage /> },
+        { path: '/p/about', element: <AboutPage /> },
+        { path: '/p/contact', element: <ContactPage /> }
       ]
     },
     {
@@ -63,6 +68,14 @@ export function Router() {
       element: (
         <AuthLayout>
           <SignInPage />
+        </AuthLayout>
+      ),
+    },
+    {
+      path: 'otp',
+      element: (
+        <AuthLayout>
+          <OTPPage />
         </AuthLayout>
       ),
     },

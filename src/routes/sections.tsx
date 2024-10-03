@@ -49,7 +49,7 @@ export function Router() {
       element: <LandingPageLayout />,
       children: [
         { path: '', element: <LandingPage /> },
-        { path: 'p/validate-document', element: <ValidateDocumentPage /> },
+        { path: '/validate-document', element: <ValidateDocumentPage /> },
         { path: '/p/about', element: <AboutPage /> },
         { path: '/p/contact', element: <ContactPage /> },
       ],

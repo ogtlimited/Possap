@@ -60,7 +60,7 @@ export function RetrieveEmailVerifyToken() {
         fullWidth
         size="large"
         type="submit"
-        color="inherit"
+        color="primary"
         variant="contained"
         onClick={handleSignIn}
       >

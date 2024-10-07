@@ -80,7 +80,7 @@ const LandingNavBar = () => {
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={handleMenuClose} component={Link} href="/p/request-list">
+            <MenuItem onClick={handleMenuClose} component={Link} href="/request-list">
               Requests
             </MenuItem>
             <MenuItem onClick={handleMenuClose} component={Link} href="/p/change-password">

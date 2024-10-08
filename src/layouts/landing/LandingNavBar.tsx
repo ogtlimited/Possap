@@ -40,7 +40,7 @@ const LandingNavBar = () => {
             <Button color="inherit" component={Link} href="/p/select-service">
               Request Service
             </Button>
-            <Button color="inherit" component={Link} href="/p/validate-document">
+            <Button color="inherit" component={Link} href="/validate-document">
               Validate Document
             </Button>
             <Button color="inherit" component={Link} href="/p/about">
@@ -60,10 +60,7 @@ const LandingNavBar = () => {
             aria-haspopup="true"
             onClick={handleMenuOpen}
           >
-            <Avatar
-              src="/assets/images/user.svg"
-              alt="User"
-            />
+            <Avatar src="/assets/images/user.svg" alt="User" />
           </IconButton>
           <Menu
             id="menu-appbar"

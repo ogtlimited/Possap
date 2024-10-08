@@ -12,7 +12,7 @@ export default function RequestDetailsView() {
   const date = new Date();
 
   return (
-    <Box sx={{ height: "100vh", color: "#212529"}}>
+    <Box sx={{ color: "#212529"}}>
       <Box component="div" style={{ display: "flex", padding: "1rem", borderBottom: "1px solid black", gap: "1rem"}}>
         <Grid onClick={() => navigate(-1)} display="flex" alignItems="center" borderRight="1px solid black" padding="0 10px" style={{ cursor: "pointer" }}>
           <Iconify icon="mingcute:left-line" sx={{ mr: 1 }} />
@@ -40,8 +40,8 @@ export default function RequestDetailsView() {
         </Typography>
       </Box>
 
-      <Box component="div" style={{ display: "flex", margin: "1rem 0", gap: "2.75rem", padding: "3rem" }}>
-        <Box component="div" sx={{ width: "50%", display: "flex", gap: "1rem" }}>
+      <Grid container spacing={3} sx={{ margin: "1rem 0", padding: "3rem", width: "100vw" }}>
+        <Grid item xs={12} md={6} sx={{ display: "flex", gap: "1rem" }}>
           <Box component="div" width="70px" height="70px" borderRadius="50%" border="2px solid green" />
           <Card style={{ padding: "1rem", width: "80%" }}>
             <Typography>
@@ -52,49 +52,51 @@ export default function RequestDetailsView() {
             </Typography>
             <Link href=''>View Invoice</Link>
           </Card>
-        </Box>
+        </Grid>
 
-        <Card sx={{ width: "50%"}}>
-          <Box component="div" display="flex" padding="10px 20px" alignItems="center" borderBottom="1px solid #E3E3E3">
-            <Iconify icon="lucide:info" sx={{ mr: 1, opacity: "0.5" }} />
-            <Typography>Request Details</Typography>
-          </Box>
-          <Grid container spacing={3} padding="1.75rem">
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">Service Requested:</Typography>
-              <Typography>TINT PERMIT</Typography>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <Box component="div" display="flex" padding="10px 20px" alignItems="center" borderBottom="1px solid #E3E3E3">
+              <Iconify icon="lucide:info" sx={{ mr: 1, opacity: "0.5" }} />
+              <Typography>Request Details</Typography>
+            </Box>
+            <Grid container spacing={3} padding="1.75rem">
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">Service Requested:</Typography>
+                <Typography>TINT PERMIT</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">Address:</Typography>
+                <Typography>kubwa abuja</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">File Ref Number:</Typography>
+                <Typography>TGP0000002307</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">VIN</Typography>
+                <Typography>28383848538</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">Plate Number:</Typography>
+                <Typography>ABC499393</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">Vehicle Make:</Typography>
+                <Typography>Toyota</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">Color:</Typography>
+                <Typography>Black</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={500} color="#767070">Date Issued:</Typography>
+                <Typography>{fDateTime(date, 'DD/MM/YYYY h:mm a')}</Typography>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">Address:</Typography>
-              <Typography>kubwa abuja</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">File Ref Number:</Typography>
-              <Typography>TGP0000002307</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">VIN</Typography>
-              <Typography>28383848538</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">Plate Number:</Typography>
-              <Typography>ABC499393</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">Vehicle Make:</Typography>
-              <Typography>Toyota</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">Color:</Typography>
-              <Typography>Black</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography fontWeight={500} color="#767070">Date Issued:</Typography>
-              <Typography>{fDateTime(date, 'DD/MM/YYYY h:mm a')}</Typography>
-            </Grid>
-          </Grid>
-        </Card>
-      </Box>
+          </Card>
+        </Grid>
+      </Grid>
     </Box>
   )
 }

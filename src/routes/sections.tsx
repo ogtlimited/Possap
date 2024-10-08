@@ -14,9 +14,11 @@ import LandingPage from 'src/sections/landing/LandingPage';
 // ----------------------------------------------------------------------
 
 export const HomePage = lazy(() => import('src/pages/home'));
+export const ValidateDocumentPage = lazy(() => import('src/pages/ValidateDocument'));
 
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
+export const RetrieveEmailPage = lazy(() => import('src/pages/retrieve-email'));
 export const SignUpPage = lazy(() => import('src/pages/sign-up'));
 export const ForgotPassword = lazy(() => import('src/pages/forgot-password'));
 export const ResetPassword = lazy(() => import('src/pages/reset-password'));
@@ -53,8 +55,9 @@ export function Router() {
           path: 'select-service',
           element: <SelectServicePage />,
         },
-        { path: '/contact', element: <ContactPage /> }
-      ]
+        { path: '/contact', element: <ContactPage /> },
+        { path: '/validate-document', element: <ValidateDocumentPage /> },
+      ],
     },
     {
       path: 'dashboard',
@@ -75,6 +78,14 @@ export function Router() {
       element: (
         <AuthLayout>
           <SignInPage />
+        </AuthLayout>
+      ),
+    },
+    {
+      path: 'retrieve-email',
+      element: (
+        <AuthLayout>
+          <RetrieveEmailPage />
         </AuthLayout>
       ),
     },

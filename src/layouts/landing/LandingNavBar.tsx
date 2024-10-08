@@ -60,10 +60,7 @@ const LandingNavBar = () => {
             aria-haspopup="true"
             onClick={handleMenuOpen}
           >
-            <Avatar
-              src="/assets/images/user.svg"
-              alt="User"
-            />
+            <Avatar src="/assets/images/user.svg" alt="User" />
           </IconButton>
           <Menu
             id="menu-appbar"

@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
+// import Card from '@mui/material/Card';
 import { LoadingButton } from '@mui/lab';
 import { Stack, TextField } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -55,13 +55,7 @@ const OTPView = () => {
       }}
     >
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
-        <Card
-          sx={{
-            p: 5,
-            width: 1,
-            maxWidth: 420,
-          }}
-        >
+        
           <Typography variant="h4" sx={{ textAlign: 'center' }}>
             Verify OTP
           </Typography>
@@ -114,7 +108,7 @@ const OTPView = () => {
               Complete Login
             </LoadingButton>
           </form>
-        </Card>
+       
       </Stack>
     </Box>
   );

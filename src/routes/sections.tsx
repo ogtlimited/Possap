@@ -27,6 +27,10 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const AboutPage = lazy(() => import('src/pages/about'));
 export const ContactPage = lazy(() => import('src/pages/contact'));
 export const OTPPage = lazy(() => import('src/pages/otp'));
+export const RequestsPage = lazy(() => import('src/pages/request-list'));
+export const RequestDetailsPage = lazy(() => import('src/pages/request-details'));
+export const RequestInvoicePage = lazy(() => import('src/pages/request-invoice'));
+export const SelectServicePage = lazy(() => import('src/pages/select-service'));
 
 // ----------------------------------------------------------------------
 
@@ -50,10 +54,17 @@ export function Router() {
       element: <LandingPageLayout />,
       children: [
         { path: '', element: <LandingPage /> },
+        { path: '/request-list', element: <RequestsPage /> },
+        { path: '/request-details/:id', element: <RequestDetailsPage /> },
+        { path: '/request-invoice/:id', element: <RequestInvoicePage /> },
+        { path: '/about', element: <AboutPage /> },
+        {
+          path: 'select-service',
+          element: <SelectServicePage />,
+        },
+        { path: '/contact', element: <ContactPage /> },
         { path: '/validate-document', element: <ValidateDocumentPage /> },
         { path: '/make-payment', element: <MakePaymentPage /> },
-        { path: '/p/about', element: <AboutPage /> },
-        { path: '/p/contact', element: <ContactPage /> },
       ],
     },
     {

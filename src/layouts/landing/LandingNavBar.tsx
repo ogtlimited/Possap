@@ -37,16 +37,16 @@ const LandingNavBar = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Button color="inherit" component={Link} href="/p/select-service">
+            <Button color="inherit" component={Link} href="/select-service">
               Request Service
             </Button>
             <Button color="inherit" component={Link} href="/validate-document">
               Validate Document
             </Button>
-            <Button color="inherit" component={Link} href="/p/about">
+            <Button color="inherit" component={Link} href="/about">
               About
             </Button>
-            <Button color="inherit" component={Link} href="/p/contact">
+            <Button color="inherit" component={Link} href="/contact">
               Contact
             </Button>
           </Box>
@@ -77,7 +77,7 @@ const LandingNavBar = () => {
             open={Boolean(anchorEl)}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={handleMenuClose} component={Link} href="/p/request-list">
+            <MenuItem onClick={handleMenuClose} component={Link} href="/request-list">
               Requests
             </MenuItem>
             <MenuItem onClick={handleMenuClose} component={Link} href="/p/change-password">

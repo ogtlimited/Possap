@@ -37,16 +37,16 @@ const LandingNavBar = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Button color="inherit" component={Link} href="/p/select-service">
+            <Button color="inherit" component={Link} href="/select-service">
               Request Service
             </Button>
-            <Button color="inherit" component={Link} href="/p/validate-document">
+            <Button color="inherit" component={Link} href="/validate-document">
               Validate Document
             </Button>
-            <Button color="inherit" component={Link} href="/p/about">
+            <Button color="inherit" component={Link} href="/about">
               About
             </Button>
-            <Button color="inherit" component={Link} href="/p/contact">
+            <Button color="inherit" component={Link} href="/contact">
               Contact
             </Button>
           </Box>
@@ -60,10 +60,7 @@ const LandingNavBar = () => {
             aria-haspopup="true"
             onClick={handleMenuOpen}
           >
-            <Avatar
-              src="/assets/images/user.svg"
-              alt="User"
-            />
+            <Avatar src="/assets/images/user.svg" alt="User" />
           </IconButton>
           <Menu
             id="menu-appbar"

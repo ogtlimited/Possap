@@ -13,7 +13,7 @@ export default function Page() {
         <title> {`Dashboard - ${CONFIG.appName}`}</title>
         <meta
           name="description"
-          content="The starting point for your next project with POSSAP, built on the newest version of Material-UI ©, ready to be customized to your style"
+          content="Police Specialized Services Automation Project (POSSAP) Portal"
         />
         <meta name="keywords" content="POSSAP, Police Services, Extract, Escort & Guard, Tint Permit" />
       </Helmet>

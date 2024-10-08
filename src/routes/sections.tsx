@@ -24,6 +24,7 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const AboutPage = lazy(() => import('src/pages/about'));
 export const ContactPage = lazy(() => import('src/pages/contact'));
 export const OTPPage = lazy(() => import('src/pages/otp'));
+export const SelectServicePage = lazy(() => import('src/pages/select-service'));
 
 // ----------------------------------------------------------------------
 
@@ -47,8 +48,12 @@ export function Router() {
       element: <LandingPageLayout />,
       children: [
         { path: '', element: <LandingPage /> },
-        { path: '/p/about', element: <AboutPage /> },
-        { path: '/p/contact', element: <ContactPage /> }
+        { path: '/about', element: <AboutPage /> },
+        {
+          path: 'select-service',
+          element: <SelectServicePage />,
+        },
+        { path: '/contact', element: <ContactPage /> }
       ]
     },
     {

@@ -51,18 +51,18 @@ const ValidateDocument = () => {
       sx={{ display: 'flex', alignItems: 'center' }}
     >
       <CheckCircleIcon sx={{ mr: 0.5, color: '#4dd555', fontSize: '14px' }} fontSize="inherit" />
-      Home
+      <Typography sx={{ display: { xs: 'none', sm: 'flex' } }}> Home</Typography>
     </Link>,
     <Link underline="hover" key="2" color="primary" sx={{ display: 'flex', alignItems: 'center' }}>
       <RadioButtonCheckedIcon
         sx={{ mr: 0.5, color: '#2f4cb0', fontSize: '14px' }}
         fontSize="inherit"
       />
-      Validate Document
+      <Typography sx={{ display: { xs: 'none', sm: 'flex' } }}> Validate Document</Typography>
     </Link>,
     <Typography key="3" color="inherit" sx={{ display: 'flex', alignItems: 'center' }}>
       <RadioButtonUncheckedIcon sx={{ mr: 0.5, fontSize: '14px' }} fontSize="inherit" />
-      Document Info
+      <Typography sx={{ display: { xs: 'none', sm: 'flex' } }}> Document Info</Typography>
     </Typography>,
   ];
   return (
@@ -86,7 +86,11 @@ const ValidateDocument = () => {
       <Card
         sx={{
           padding: '30px',
-          width: '40%',
+          width: {
+            xs: '100%', // 100% width on extra-small screens (mobile)
+            sm: '80%', // Default or auto width on small screens and up
+            md: '40%',
+          },
           margin: '30px auto',
           borderRadius: '10px',
           display: 'flex',

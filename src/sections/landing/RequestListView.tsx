@@ -109,7 +109,7 @@ export default function RequestListView() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, whiteSpace: 'nowrap' }}
                   >
                     {column.label}
                   </TableCell>

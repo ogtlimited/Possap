@@ -26,7 +26,7 @@ const columns: Column[] = [
   {
     id: 'status',
     label: 'Status',
-    minWidth: 100,
+    minWidth: 150,
     render: (value: string) => 
       <Typography
         style={{
@@ -105,7 +105,7 @@ export default function RequestInvoiceView() {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, whiteSpace: "nowrap" }}
                   >
                     {column.label}
                   </TableCell>

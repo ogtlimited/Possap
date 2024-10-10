@@ -15,6 +15,7 @@ import LandingPage from 'src/sections/landing/LandingPage';
 
 export const HomePage = lazy(() => import('src/pages/home'));
 export const ValidateDocumentPage = lazy(() => import('src/pages/ValidateDocument'));
+export const MakePaymentPage = lazy(() => import('src/pages/make-payment'));
 
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
@@ -55,7 +56,7 @@ export function Router() {
         { path: '', element: <LandingPage /> },
         { path: '/request-list', element: <RequestsPage /> },
         { path: '/request-details/:id', element: <RequestDetailsPage /> },
-        { path: '/request-invoice/:id', element: <RequestInvoicePage />},
+        { path: '/request-invoice/:id', element: <RequestInvoicePage /> },
         { path: '/about', element: <AboutPage /> },
         {
           path: 'select-service',
@@ -63,6 +64,7 @@ export function Router() {
         },
         { path: '/contact', element: <ContactPage /> },
         { path: '/validate-document', element: <ValidateDocumentPage /> },
+        { path: '/make-payment', element: <MakePaymentPage /> },
       ],
     },
     {
